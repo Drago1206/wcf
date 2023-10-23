@@ -1519,7 +1519,7 @@ namespace WcfPedidos.Model
 
             bool resultado = false;
             _Datos = new DataSet();
-            mensaje = null;
+            mensaje = new string[2];
             try
             {
                 if (sqlConn != null)
@@ -1542,8 +1542,7 @@ namespace WcfPedidos.Model
                     catch (Exception ex)
                     {
                         msjError.Add(ex.Message);
-                        mensaje = new string[2];
-                        mensaje[0] = "040";
+                        mensaje[0] = "011";
                         mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
                     }
                 }

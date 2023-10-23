@@ -39,12 +39,12 @@ namespace WcfPedidos.Model
                 //se realiza la verififcacion de los dato spara comprobar si el usuario si existe 
                 ExisteUsuario VerificarUsuario = new ExisteUsuario();
                 ExisteUsuario existe = new ExisteUsuario();
-                if (existe.Existe(usuario, contrasena, out string[] mensajeNuevo))
+                if (existe.Existe(usuario, contrasena, out string[] mensajeNuevo, out string compania))
                 {
                     //se genera el token
                     pwdSyscom pwdSys = new pwdSyscom();
-                    DateTime _expiration = DateTime.Now.AddMinutes(5);
-                    pwdSys.Codificar(string.Concat(usuario, "=", contrasena, "=", _expiration.ToString("dd/MM/yyyy HH:mm:ss"), "=", Proyecto));
+                    DateTime _expiration = DateTime.Now.AddMinutes(144999);
+                    pwdSys.Codificar(string.Concat(usuario, "=", contrasena, "=", _expiration.ToString("dd/MM/yyyy HH:mm:ss"), "=", Proyecto, "=", compania));
 
                     var _claims = new[]{
                                  new Claim(JwtRegisteredClaimNames.UniqueName, pwdSys.Codificado),
@@ -95,11 +95,12 @@ namespace WcfPedidos.Model
         /// <param name="mensaje">Mensaje de respuesta.</param>
         /// <param name="Usuario">Devuelve el nombre del usuario que esta vinculado al token.</param>
         /// <returns></returns>
-        public bool VerificarToken(string token, string NomProyecto, out string[] mensaje, out string Usuario)
+        public bool VerificarToken(string token, string NomProyecto, out string[] mensaje, out string Usuario, out string comp)
         {
             DateTime dateTimeOffset = new DateTime();
             DateTime dateTimeActual = new DateTime();
             Usuario = "";
+            comp = "";
             // Validar el token de seguridad
             var handler = new JwtSecurityTokenHandler();
             JwtSecurityToken tokenD = handler.ReadJwtToken(token.Contains("Bearer") ? token.Replace("Bearer", "").Trim() : token) as JwtSecurityToken;
@@ -133,10 +134,11 @@ namespace WcfPedidos.Model
                     //se realiza la verififcacion de los dato spara comprobar si el usuario si existe 
                     ExisteUsuario VerificarUsuario = new ExisteUsuario();
                     ExisteUsuario existe = new ExisteUsuario();
-                    if (existe.Existe(tokendecod[0], tokendecod[1], out string[] mensajeNuevo))
+                    if (existe.Existe(tokendecod[0], tokendecod[1], out string[] mensajeNuevo, out string compania))
                     {
                         mensaje = mensajeNuevo;
                         Usuario = tokendecod[0];
+                        comp = compania;
                         return true;
                     }
                     else
