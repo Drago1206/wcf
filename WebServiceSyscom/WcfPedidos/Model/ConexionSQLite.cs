@@ -70,6 +70,7 @@ namespace WcfPedidos.Model
         /// </summary>
         public static void ComprobarBD()
         {
+
             //comprobar que el archivo este en el directorio 
             if (File.Exists(System.AppDomain.CurrentDomain.BaseDirectory + "\\BD.reg"))
             {

@@ -78,8 +78,8 @@ namespace WcfPedidos.Model
             else
             {
                 mensaje = new string[2];
-                mensaje[0] = "033";
-                mensaje[1] = "Error con la configuracion de la base de datos SQlite";
+                mensaje[0] = "074";
+                mensaje[1] = "Error con la configuracion de la base de datos SQlite"+ "Data Source=" + System.AppDomain.CurrentDomain.BaseDirectory + "\\BD.reg;Version=3;" + ConexionSQLite.error; 
                 return null;
             }
 
