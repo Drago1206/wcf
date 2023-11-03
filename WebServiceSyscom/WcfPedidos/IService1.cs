@@ -83,6 +83,11 @@ namespace WcfPedidos
         [return: MessageParameter(Name = "CarteraDef")]
         ResObtenerCarteraTotalDef resObtCartTotalDef(ObtCarTotalDef Info);
 
+        /// <summary>
+        /// Rests the anul pedido.
+        /// </summary>
+        /// <param name="Info">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/AnularPedido", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "AnularPedido")]
