@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos", "WcfPedidos\Wc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfSyscom50", "..\..\BACKUP\wcfSyscom50\wcfSyscom50\wcfSyscom50.csproj", "{3D931A49-DDD4-4463-B60C-872AD37E173C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfCortesEDS", "wcfCortesEDS\wcfCortesEDS.csproj", "{384579A9-68D2-4B86-8304-E5629C29661C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{3D931A49-DDD4-4463-B60C-872AD37E173C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D931A49-DDD4-4463-B60C-872AD37E173C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D931A49-DDD4-4463-B60C-872AD37E173C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{384579A9-68D2-4B86-8304-E5629C29661C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{384579A9-68D2-4B86-8304-E5629C29661C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{384579A9-68D2-4B86-8304-E5629C29661C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{384579A9-68D2-4B86-8304-E5629C29661C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
