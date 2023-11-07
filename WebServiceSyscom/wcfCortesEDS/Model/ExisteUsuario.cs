@@ -4,9 +4,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using WcfPedidos.Model;
+using wcfCortesEDS.Conexion;
 
-namespace WcfPedidos.Model
+namespace wcfCortesEDS.Model
 {
     public class ExisteUsuario
     {
@@ -27,10 +27,11 @@ namespace WcfPedidos.Model
         /// <param name="clave">contraseña.</param>
         /// <param name="mensaje">El mensaje en posicion 0 esta el codigo y en la posicion 1 la descripcion.</param>
         /// <returns></returns>
-        public bool Existe(string usuario, string clave, out string[] mensaje, out string compania)
+        public bool Existe(string usuario, string clave, out string[] mensaje)
         {
+            
             mensaje = null;
-            compania = "";
+            
             //se realiza la verificacion comprobar si existe 
             //conectar con la base de datos segun la  base que es 
 
@@ -43,18 +44,15 @@ namespace WcfPedidos.Model
                 DataSet TablaIncio = new DataSet();
                 List<SqlParameter> parametros = new List<SqlParameter>();
                 parametros.Add(new SqlParameter("@Usuario", usuario));
-                if (ClassConexion.ejecutarQuery("WSPedidosInicioSeccion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                if (ClassConexion.ejecutarQuery("wcfCortesEDSInicioSeccion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                 {
                     if (TablaIncio.Tables[0].Rows.Count > 0)
                     {
 
-                        pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-                        pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-                        if (infoCon != null)
-                            pwdDe = pwd.contrasenna.Split('=');
-                        if (infoCon != null ? ((usuario.ToUpper() + "=" + TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<int>("IdGrupo") + "=" + clave) == (pwdDe[0].ToUpper() + "=" + pwdDe[1] + "=" + pwdDe[2])) : ((clave.ToLower()) == pwd.contrasenna.ToLower()))
-                        {
-                            compania = TablaIncio.Tables[0].Rows[0]["Compania"].ToString();
+                        pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("Password"));
+                        pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("Password"));
+                        if (clave == pwd.contrasenna){                      
+                           
                             existe = true;
                         }
                         else
