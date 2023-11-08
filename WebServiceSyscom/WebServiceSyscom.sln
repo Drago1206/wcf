@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.33919.361
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos", "WcfPedidos\WcfPedidos.csproj", "{30CCC06D-D51C-4F55-ACFF-F0FFF9EFC970}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfSyscom50", "..\..\BACKUP\wcfSyscom50\wcfSyscom50\wcfSyscom50.csproj", "{3D931A49-DDD4-4463-B60C-872AD37E173C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfCortesEDS", "WcfCortesEDS\WcfCortesEDS.csproj", "{5443E2A2-55A2-406C-A603-A35B0D0F7002}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{30CCC06D-D51C-4F55-ACFF-F0FFF9EFC970}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30CCC06D-D51C-4F55-ACFF-F0FFF9EFC970}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30CCC06D-D51C-4F55-ACFF-F0FFF9EFC970}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D931A49-DDD4-4463-B60C-872AD37E173C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D931A49-DDD4-4463-B60C-872AD37E173C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D931A49-DDD4-4463-B60C-872AD37E173C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D931A49-DDD4-4463-B60C-872AD37E173C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5443E2A2-55A2-406C-A603-A35B0D0F7002}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5443E2A2-55A2-406C-A603-A35B0D0F7002}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5443E2A2-55A2-406C-A603-A35B0D0F7002}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5443E2A2-55A2-406C-A603-A35B0D0F7002}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
