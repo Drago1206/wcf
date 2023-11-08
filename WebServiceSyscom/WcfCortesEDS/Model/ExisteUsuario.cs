@@ -4,9 +4,9 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using wcfCortesEDS.Conexion;
+using WcfCortesEDS.Conexion;
 
-namespace wcfCortesEDS.Model
+namespace WcfCortesEDS.Model
 {
     public class ExisteUsuario
     {
@@ -29,9 +29,9 @@ namespace wcfCortesEDS.Model
         /// <returns></returns>
         public bool Existe(string usuario, string clave, out string[] mensaje)
         {
-            
+
             mensaje = null;
-            
+
             //se realiza la verificacion comprobar si existe 
             //conectar con la base de datos segun la  base que es 
 
@@ -51,8 +51,9 @@ namespace wcfCortesEDS.Model
 
                         pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("Password"));
                         pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("Password"));
-                        if (clave == pwd.contrasenna){                      
-                           
+                        if (clave == pwd.contrasenna)
+                        {
+
                             existe = true;
                         }
                         else
@@ -79,6 +80,6 @@ namespace wcfCortesEDS.Model
             }
             return existe;
         }
-        
+
     }
 }
