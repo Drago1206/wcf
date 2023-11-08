@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Data.SQLite;
 using System.Data;
 using System.Data.SqlClient;
+using System.Data.SQLite;
 using System.IO;
+using System.Linq;
+using System.Web;
 
-namespace wcfCortesEDS.Conexion
+
+namespace WcfCortesEDS.Conexion
 {
     public class ConexionSQLite
     {
@@ -234,7 +235,7 @@ namespace wcfCortesEDS.Conexion
             catch (Exception ex)
             {
                 exito = false;
-               
+
             }
             return exito;
 
@@ -273,7 +274,7 @@ namespace wcfCortesEDS.Conexion
             }
             catch (Exception ex)
             {
-               
+
                 error = true;
             }
             return error;
@@ -409,7 +410,7 @@ namespace wcfCortesEDS.Conexion
             catch (Exception ex)
             {
                 exito = true;
-               
+
             }
             return exito;
         }
@@ -488,7 +489,7 @@ namespace wcfCortesEDS.Conexion
                     }
                     catch (Exception ex2)
                     {
-                        
+
                     }
                 }
 
@@ -500,7 +501,7 @@ namespace wcfCortesEDS.Conexion
                     }
                     catch (Exception ex2)
                     {
-                       
+
                     }
                 }
 
@@ -512,7 +513,7 @@ namespace wcfCortesEDS.Conexion
             catch (Exception ex)
             {
                 exito = false;
-               
+
             }
             return exito;
         }
@@ -536,7 +537,7 @@ namespace wcfCortesEDS.Conexion
                     }
                     catch (Exception ex2)
                     {
-                        
+
                     }
                 }
 
@@ -545,7 +546,7 @@ namespace wcfCortesEDS.Conexion
             catch (Exception ex)
             {
                 exito = false;
-               
+
             }
 
             return exito;

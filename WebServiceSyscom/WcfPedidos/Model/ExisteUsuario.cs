@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using WcfPedidos.Model;
 
 namespace WcfPedidos.Model
 {

@@ -1,18 +1,15 @@
-﻿using System;
-
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Web;
-using System.Globalization;
-using System.Configuration;
-using wcfCortesEDS.Conexion;
-using System.IdentityModel.Tokens.Jwt;
+using WcfCortesEDS.Conexion;
 
-namespace wcfCortesEDS.Model
+namespace WcfCortesEDS.Model
 {
     public class GenerarToken
     {
@@ -74,18 +71,18 @@ namespace wcfCortesEDS.Model
                 else
                 {
                     mensaje = mensajeNuevo;
-                         return null;
+                    return null;
                 }
             }
             else
             {
                 mensaje = new string[2];
                 mensaje[0] = "074";
-                mensaje[1] = "Error con la configuracion de la base de datos SQlite"+ "Data Source=" + System.AppDomain.CurrentDomain.BaseDirectory + "\\BD.reg;Version=3;" + ConexionSQLite.error; 
+                mensaje[1] = "Error con la configuracion de la base de datos SQlite" + "Data Source=" + System.AppDomain.CurrentDomain.BaseDirectory + "\\BD.reg;Version=3;" + ConexionSQLite.error;
                 return null;
             }
 
-           
+
         }
 
 
@@ -140,7 +137,7 @@ namespace wcfCortesEDS.Model
                     {
                         mensaje = mensajeNuevo;
                         Usuario = tokendecod[0];
-                        
+
                         return true;
                     }
                     else

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -11,9 +10,8 @@ using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.ServiceModel;
 using System.Web;
-using System.Data.SqlClient;
 
-namespace wcfCortesEDS.Conexion
+namespace WcfCortesEDS.Conexion
 {
     public class ConexionBD
     {
@@ -46,7 +44,7 @@ namespace wcfCortesEDS.Conexion
         public List<string> Errores = new List<string>();
         private SqlDataAdapter adapter;
         private ConexionSQLite conSqlite = new ConexionSQLite("");
-       
+
 
 
         public ConexionBD()
@@ -115,8 +113,8 @@ namespace wcfCortesEDS.Conexion
             }
             catch (Exception ex)
             {
-             //   LogErrores.escribirError(ex);
-              //  LogErrores.write();
+                //   LogErrores.escribirError(ex);
+                //  LogErrores.write();
             }
             return resultado;
         }
@@ -792,7 +790,7 @@ namespace wcfCortesEDS.Conexion
                     }
                     catch (Exception e)
                     {
-                       // LogErrores.escribirError(e);
+                        // LogErrores.escribirError(e);
                         //LogErrores.write();
                     }
                     i = i + 1;
