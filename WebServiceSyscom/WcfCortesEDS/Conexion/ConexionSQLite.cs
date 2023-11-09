@@ -6,7 +6,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Web;
-
+using WcfCortesEDS.Model;
 
 namespace WcfCortesEDS.Conexion
 {
@@ -378,11 +378,6 @@ namespace WcfCortesEDS.Conexion
                 wsIntervalo INT not null,
                 PRIMARY KEY(wsExtension)
             );
-             CREATE TABLE wcfCortesEDSlogs (
-                logFecha varchar(50) NOT NULL,
-	            logOperacion varchar(50) NULL,
-	            LogMensaje varchar(250) NULL
-           );
 
  ", sql_con);
             sql_cmd.ExecuteNonQuery();

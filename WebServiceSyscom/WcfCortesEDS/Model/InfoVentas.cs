@@ -7,65 +7,56 @@ namespace WcfCortesEDS.Model
 {
     public class InfoVentas
     {
-    }
-    public class Pago
-    {
+        public int Consecutivo { get; set; }
+        public int ConsecutivoDetalle { get; set; }
+        public string Prefijo { get; set; }
+        public int Factura { get; set; }
+        public int Equipo { get; set; }
+        public int Cara { get; set; }
+        public int Posicion { get; set; }
+        public int Manguera { get; set; }
+        public int Isla { get; set; }
+        public string CodProducto { get; set; }
+        public string Producto { get; set; }
+        public float Cantidad { get; set; }
+        public float ValorUnitario { get; set; }
+        public float ValorTotal { get; set; }
+        public DateTime FechaInicial { get; set; }
+        public DateTime FechaFinal { get; set; }
+        public float LecturaVolumenInicial { get; set; }
+        public float LecturaVolumenFinal { get; set; }
+        public float LecturaDineroInicial { get; set; }
+        public float LecturaDineroFinal { get; set; }
+        public int IdTipoTransaccion { get; set; }
+        public string TipoTransaccion { get; set; }
         public int IdFormaPago { get; set; }
         public string FormaPago { get; set; }
-    }
-
-    public class Productos
-    {
-        public string CodProducto { get; set; }
-        public string Nombre { get; set; }
-    }
-
-    public class Empleados
-    {
-        public string Cedula { get; set; }
-        public string Nombre { get; set; }
-    }
-
-
-    public class ResultadoItem
-    {
-
-        public int IdRegistroVenta { get; set; }
-        public string Consecutivo { get; set; }
-        public string Prefijo { get; set; }
-        public int CodSurtidor { get; set; }
-        public int IdCara { get; set; }
-        public int CodCara { get; set; }
-        public int IdManguera { get; set; }
-        public int IdIsla { get; set; }
-
-        public float Cantidad { get; set; }
-        public float Precio { get; set; }
-        public float Valor { get; set; }
-        public DateTime HoraInicio { get; set; }
-        public DateTime HoraFin { get; set; }
-        public float LecturaInicial { get; set; }
-        public float LecturaFinal { get; set; }
-        public int Nit { get; set; }
+        public string Cuenta { get; set; }
+        public string NIT { get; set; }
         public string Placa { get; set; }
-        public string ROM { get; set; }
-        public string Kilometraje { get; set; }
-
-        public int IdTurno { get; set; }
-
-
-
-        public List<Pago> Pagos { get; set; }
-
-
-        public Empleados Empleado { get; set; }
-
-        public Productos Producto { get; set; }
+        public string IdRom { get; set; }
+        public int Kilometraje { get; set; }
+        public string CedulaConductor { get; set; }
+        public string NombreConductor { get; set; }
+        public int Turno { get; set; }
+        public string CedulaVendedor { get; set; }
+        public string NombreVendedor { get; set; }
+        public int Corte { get; set; }
+        public DateTime FEFechaFactura { get; set; }
+        public string FENumeroFactura { get; set; }
+        public string FETipoPersona { get; set; }
+        public string FETipoDocumento { get; set; }
+        public string FEDigitoVerificacion { get; set; }
+        public string FENumeroDocumento { get; set; }
+        public string FENombreCliente { get; set; }
+        public string FEDireccion { get; set; }
+        public string FETelefono { get; set; }
+        public string FECorreo { get; set; }
+        public string FECufe { get; set; }
+        public string FEQr { get; set; }
+        public int FacturaContingencia { get; set; }
+        public float ValorFP { get; set; }
 
     }
-
-    public class Root
-    {
-        public List<ResultadoItem> Resultado { get; set; }
-    }
+    
 }
