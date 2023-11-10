@@ -42,7 +42,7 @@ namespace WcfCortesEDS.Model
                 {
                     //se genera el token
                     pwdSyscom pwdSys = new pwdSyscom();
-                    DateTime _expiration = DateTime.Now.AddMinutes(144999);
+                    DateTime _expiration = DateTime.Now.AddMinutes(5);
                     pwdSys.Codificar(string.Concat(usuario, "=", contrasena, "=", _expiration.ToString("dd/MM/yyyy HH:mm:ss"), "=", Proyecto));
 
                     var _claims = new[]{

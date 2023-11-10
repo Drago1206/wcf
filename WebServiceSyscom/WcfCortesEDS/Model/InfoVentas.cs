@@ -21,8 +21,8 @@ namespace WcfCortesEDS.Model
         public float Cantidad { get; set; }
         public float ValorUnitario { get; set; }
         public float ValorTotal { get; set; }
-        public DateTime FechaInicial { get; set; }
-        public DateTime FechaFinal { get; set; }
+        public string FechaInicial { get; set; }
+        public string FechaFinal { get; set; }
         public float LecturaVolumenInicial { get; set; }
         public float LecturaVolumenFinal { get; set; }
         public float LecturaDineroInicial { get; set; }
@@ -42,7 +42,7 @@ namespace WcfCortesEDS.Model
         public string CedulaVendedor { get; set; }
         public string NombreVendedor { get; set; }
         public int Corte { get; set; }
-        public DateTime FEFechaFactura { get; set; }
+        public string FEFechaFactura { get; set; }
         public string FENumeroFactura { get; set; }
         public string FETipoPersona { get; set; }
         public string FETipoDocumento { get; set; }
@@ -56,6 +56,8 @@ namespace WcfCortesEDS.Model
         public string FEQr { get; set; }
         public int FacturaContingencia { get; set; }
         public float ValorFP { get; set; }
+
+
 
     }
     
