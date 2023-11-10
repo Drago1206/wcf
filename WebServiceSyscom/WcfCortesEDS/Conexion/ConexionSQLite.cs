@@ -112,7 +112,7 @@ namespace WcfCortesEDS.Conexion
 
 
                                             }
-                                            else if (cnfnombre.Contains("dbSyscom"))//comprobacion de base de datos 40
+                                            else if (cnfnombre.Contains("bdCortesEDS"))//comprobacion de base de datos 40
                                             {
                                                 BaseDedatos = 40;
                                                 configuracion = true;
