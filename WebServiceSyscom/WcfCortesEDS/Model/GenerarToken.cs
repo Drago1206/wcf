@@ -42,7 +42,7 @@ namespace WcfCortesEDS.Model
                 {
                     //se genera el token
                     pwdSyscom pwdSys = new pwdSyscom();
-                    DateTime _expiration = DateTime.Now.AddMinutes(144999);
+                    DateTime _expiration = DateTime.Now.AddMinutes(5);
                     pwdSys.Codificar(string.Concat(usuario, "=", contrasena, "=", _expiration.ToString("dd/MM/yyyy HH:mm:ss"), "=", Proyecto));
 
                     var _claims = new[]{
@@ -60,9 +60,10 @@ namespace WcfCortesEDS.Model
                     );
                     NuToken.Token = new JwtSecurityTokenHandler().WriteToken(Token);
                     //enviamos los mensajes 
-                    mensaje = new string[2];
+                    mensaje = new string[3];
                     mensaje[0] = "007";
                     mensaje[1] = "Token Creado Correctamente";
+                    
                     return NuToken;
 
                     //   _err = new ErrorRespuesta { Codigo = "007", Descripcion = "Token Creado Correctamente" + ConexionBD.BDSQLiteExiste };
@@ -94,12 +95,12 @@ namespace WcfCortesEDS.Model
         /// <param name="mensaje">Mensaje de respuesta.</param>
         /// <param name="Usuario">Devuelve el nombre del usuario que esta vinculado al token.</param>
         /// <returns></returns>
-        public bool VerificarToken(string token, string NomProyecto, out string[] mensaje, out string Usuario, out string comp)
+        public bool VerificarToken(string token, string NomProyecto, out string[] mensaje, out string Usuario)
         {
             DateTime dateTimeOffset = new DateTime();
             DateTime dateTimeActual = new DateTime();
             Usuario = "";
-            comp = "";
+          
             // Validar el token de seguridad
             var handler = new JwtSecurityTokenHandler();
             JwtSecurityToken tokenD = handler.ReadJwtToken(token.Contains("Bearer") ? token.Replace("Bearer", "").Trim() : token) as JwtSecurityToken;

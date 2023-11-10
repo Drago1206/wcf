@@ -17,7 +17,11 @@ namespace WcfCortesEDS
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerToken", BodyStyle = WebMessageBodyStyle.Bare)]
         RespToken generarToken(Usuarios usuario);
 
-      
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/InsertarVentas", BodyStyle = WebMessageBodyStyle.Bare)]
+        RestVentas Ventas(SolInfoVentas usuario);
+
+
 
 
     }
@@ -40,6 +44,19 @@ namespace WcfCortesEDS
         {
             get { return _token; }
             set { _token = value; }
+        }
+    }
+
+    [DataContract]
+    public class RestVentas
+    {
+        Log log;
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return log; }
+            set { log = value; }
         }
     }
 
@@ -72,7 +89,33 @@ namespace WcfCortesEDS
             set { _mensaje = value; }
         }
     }
+
+    [DataContract]
+    public class SolInfoVentas
+    {
+
+        GenerarToken _token;
+        InfoVentas _infoventas;
+
+
+        [DataMember]
+        public GenerarToken token
+        {
+            get { return _token; }
+            set { _token = value; }
+        }
+
+        [DataMember]
+        public InfoVentas Insert
+        {
+            get { return _infoventas; }
+            set { _infoventas = value; }
+        }
+
+
+
+    }
    
-   
-    
+
+
 }

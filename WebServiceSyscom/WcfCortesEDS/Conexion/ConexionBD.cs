@@ -1540,7 +1540,7 @@ namespace WcfCortesEDS.Conexion
                     catch (Exception ex)
                     {
                         msjError.Add(ex.Message);
-                        mensaje[0] = "011";
+                        mensaje[0] = "035";
                         mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
                     }
                 }
