@@ -768,15 +768,23 @@ namespace WcfPedidos
                                                                                             bool permisoPZO = false;
                                                                                             if (consulta.DatosDelPedido.pmDiasPlazo > 0)
                                                                                             {
-                                                                                                if ((Permisos.Field<string>("PermisoPZO") == "PZO") | (consulta.DatosDelPedido.pmDiasPlazo == Permisos.Field<int>("diasplazo")))
+                                                                                                try
                                                                                                 {
-                                                                                                    DiasDePlazo = consulta.DatosDelPedido.pmDiasPlazo.ToString();
-                                                                                                    permisoPZO = true;
+                                                                                                    if ((Permisos.Field<string>("PermisoPZO") == "PZO") | (consulta.DatosDelPedido.pmDiasPlazo == int.Parse(Permisos.Field<string>("diasplazo"))))
+                                                                                                    {
+                                                                                                        DiasDePlazo = consulta.DatosDelPedido.pmDiasPlazo.ToString();
+                                                                                                        permisoPZO = true;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        Codigo = "031";
+                                                                                                        Mensaje = "El usuario non tiene permisos para cambiar los dias de plazo";
+                                                                                                    }
                                                                                                 }
-                                                                                                else
+                                                                                                catch(Exception ex)
                                                                                                 {
                                                                                                     Codigo = "031";
-                                                                                                    Mensaje = "El usuario non tiene permisos para cambiar los dias de plazo";
+                                                                                                    Mensaje = "Los dias de plazo que estan en la base de datos estan mal configurados";
                                                                                                 }
                                                                                             }
                                                                                             else
