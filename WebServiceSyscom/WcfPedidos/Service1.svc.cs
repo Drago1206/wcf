@@ -415,673 +415,610 @@ namespace WcfPedidos
                                                 if (Permisos.Field<string>("ruta") != "denegado")
                                                 {
                                                     //verificamos el estado del pedido si tiene permisdo o no
-                                                    if ((Permisos.Field<string>("PermisoEST") != "denegado") | (string.IsNullOrEmpty(consulta.DatosDelPedido.pmEstadoPedido)) | (consulta.DatosDelPedido.pmEstadoPedido == "0001"))
+                                                    if ((Permisos.Field<string>("PermisoEST") != "den") | (string.IsNullOrEmpty(consulta.DatosDelPedido.pmEstadoPedido)) | (consulta.DatosDelPedido.pmEstadoPedido == "0002"))
                                                     {
                                                         if (string.IsNullOrEmpty(consulta.DatosDelPedido.pmEstadoPedido))
                                                         {
                                                             consulta.DatosDelPedido.pmEstadoPedido = "0001";
                                                         }
-                                                       
-                                                        //verificamos que el plazo ingresado sea el adecuado
-                                                        if (Permisos.Field<string>("Plazo") != "denegado")
-                                                        {
-                                                            //validar si esta en mora 
-                                                            if (Permisos.Field<string>("PermisoMor") == "MOR" | Permisos.Field<string>("EstadoMora") == "AlDia")
+
+                                                        if ((consulta.DatosDelPedido.pmEstadoPedido == "0002") | (consulta.DatosDelPedido.pmEstadoPedido == "0001"))
+                                                        {                                                     
+                                                            
+                                                            //verificamos que el plazo ingresado sea el adecuado
+                                                            if (Permisos.Field<string>("Plazo") != "denegado")
                                                             {
-                                                                //validamos la agencia
-                                                                bool permisoAgencia = false;
-
-                                                                if (!string.IsNullOrEmpty(consulta.Cliente.CdAgencia))
+                                                                //validar si esta en mora 
+                                                                if (Permisos.Field<string>("PermisoMor") == "MOR" | Permisos.Field<string>("EstadoMora") == "AlDia")
                                                                 {
-                                                                    if (Permisos.Field<string>("ExisteAgencia") != "denegado")
-                                                                    {
-                                                                        permisoAgencia = true;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        Codigo = "044";
-                                                                        Mensaje = "La agencia agregada no pertenece al cliente";
-                                                                    }
+                                                                    //validamos la agencia
+                                                                    bool permisoAgencia = false;
 
-                                                                }
-                                                                else
-                                                                {
-                                                                    permisoAgencia = true;
-                                                                    if (Permisos.Field<string>("AgenciaAsiganada") != "denegado")
+                                                                    if (!string.IsNullOrEmpty(consulta.Cliente.CdAgencia))
                                                                     {
-                                                                        agencia = Permisos.Field<string>("AgenciaAsiganada");
-                                                                    }
-                                                                }
-
-                                                                if (permisoAgencia)
-                                                                {
-                                                                    //validamos que la tarifa ingresada exita
-                                                                    if (Permisos.Field<string>("ExisteTarifa") != "dene" | string.IsNullOrEmpty(consulta.DatosDelPedido.pmTarifaComision))
-                                                                    {
-                                                                        bool permisoTarifa = false;
-
-                                                                        if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmTarifaComision))
+                                                                        if (Permisos.Field<string>("ExisteAgencia") != "denegado")
                                                                         {
-                                                                            if (Permisos.Field<string>("ExisteTarifa") == "dene")
-                                                                            {
-                                                                                Codigo = "046";
-                                                                                Mensaje = "El codigo de pmTarifaComision no existe en syscom";
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                //validamos para que sea igual 
-                                                                                if ((Permisos.Field<string>("PermisoCms") == "CMS") | (Permisos.Field<string>("ExisteTarifa") == Permisos.Field<string>("TarifaVendedor")))
-                                                                                {
-                                                                                    TarifaVendedor = Permisos.Field<string>("ExisteTarifa");
-                                                                                    ValorTarifaVendedor = Permisos.Field<decimal>("ValorTarifaIngre");
-                                                                                    permisoTarifa = true;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    Codigo = "047";
-                                                                                    Mensaje = "El usuario no tiene permiso CMS para cambiar la tarifa";
-                                                                                }
-                                                                            }
+                                                                            permisoAgencia = true;
                                                                         }
                                                                         else
                                                                         {
-                                                                            TarifaVendedor = Permisos.Field<string>("TarifaVendedor");
-                                                                            ValorTarifaVendedor = Permisos.Field<decimal>("ValorTarifaExis");
-                                                                            permisoTarifa = true;
+                                                                            Codigo = "044";
+                                                                            Mensaje = "La agencia agregada no pertenece al cliente";
                                                                         }
 
-                                                                        if (permisoTarifa)
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        permisoAgencia = true;
+                                                                        if (Permisos.Field<string>("AgenciaAsiganada") != "denegado")
                                                                         {
-                                                                            //validar que si tiene el permiso EGA y si ingreso un valor en diasEntrega
-                                                                            if ((Permisos.Field<string>("PermisoEGA") == "EGA") | (consulta.Cliente.DiasEntrega > 0) | (consulta.Cliente.DiasEntrega == Permisos.Field<int>("DiasEntrega")))
+                                                                            agencia = Permisos.Field<string>("AgenciaAsiganada");
+                                                                        }
+                                                                    }
+
+                                                                    if (permisoAgencia)
+                                                                    {
+                                                                        //validamos que la tarifa ingresada exita
+                                                                        if (Permisos.Field<string>("ExisteTarifa") != "dene" | string.IsNullOrEmpty(consulta.DatosDelPedido.pmTarifaComision))
+                                                                        {
+                                                                            bool permisoTarifa = false;
+
+                                                                            if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmTarifaComision))
                                                                             {
-                                                                                bool permisoParaFEC = false;
-                                                                                //se realiza la evaluacion de los datos para saber si cumple con las  condiciones para la fecha
-                                                                                if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmFechaPedido))
+                                                                                if (Permisos.Field<string>("ExisteTarifa") == "dene")
                                                                                 {
-                                                                                    if (DateTime.TryParse(consulta.DatosDelPedido.pmFechaPedido, out DateTime fechaingresada))
-                                                                                    {
-                                                                                        if (DateTime.TryParse(Permisos.Field<string>("FechaDelPedidod"), out DateTime fechabase))
-                                                                                        {
-                                                                                            if (fechaingresada.ToString("yyyyMMdd") == fechabase.ToString("yyyyMMdd"))
-                                                                                            {
-                                                                                                FechaPedido = fechaingresada;
-                                                                                                permisoParaFEC = true;
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                Codigo = "023";
-                                                                                                Mensaje = "No tiene el permiso habilitado fecha abierta";
-                                                                                            }
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            //verificamos que el formato que tenemos y si cumple 
-                                                                                            if (Permisos.Field<string>("PermisoFEC") == "FEC")
-                                                                                            {
-                                                                                                //comprobamos los valores que estan
-                                                                                                if (Permisos.Field<string>("FechaDelPedidod") == "D")
-                                                                                                {
-                                                                                                    if (fechaingresada.ToString("yyyyMMdd") == DateTime.Now.ToString("yyyyMMdd"))
-                                                                                                    {
-                                                                                                        FechaPedido = fechaingresada;
-                                                                                                        permisoParaFEC = true;
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        Codigo = "024";
-                                                                                                        Mensaje = "La fecha No validad debe ser la fecha del dia de hoy";
-                                                                                                    }
-                                                                                                }
-                                                                                                else if (Permisos.Field<string>("FechaDelPedidod") == "S")
-                                                                                                {
-                                                                                                    DateTime fechaActual = DateTime.Now; // Fecha y hora actual
-
-                                                                                                    // Calcular el primer día de la semana actual
-                                                                                                    DateTime primerDiaSemana = fechaActual.Date.AddDays(-(int)fechaActual.DayOfWeek);
-
-                                                                                                    // Calcular el último día de la semana actual
-                                                                                                    DateTime ultimoDiaSemana = primerDiaSemana.AddDays(6);
-
-                                                                                                    if (fechaingresada < primerDiaSemana || fechaingresada > ultimoDiaSemana)
-                                                                                                    {
-                                                                                                        Codigo = "025";
-                                                                                                        Mensaje = "la fecha ingresada debe coincidir con la semana actual";
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        FechaPedido = fechaingresada;
-                                                                                                        permisoParaFEC = true;
-                                                                                                    }
-
-                                                                                                }
-                                                                                                else if (Permisos.Field<string>("FechaDelPedidod") == "M")
-                                                                                                {
-                                                                                                    if (fechaingresada.ToString("yyyyMM") == DateTime.Now.ToString("yyyyMM"))
-                                                                                                    {
-                                                                                                        FechaPedido = fechaingresada;
-                                                                                                        permisoParaFEC = true;
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        Codigo = "026";
-                                                                                                        Mensaje = "La fecha ingresada debe coincidir con el mes actual";
-                                                                                                    }
-                                                                                                }
-                                                                                                else if (Permisos.Field<string>("FechaDelPedidod") == "A")
-                                                                                                {
-                                                                                                    if (fechaingresada.Year == DateTime.Now.Year)
-                                                                                                    {
-                                                                                                        FechaPedido = fechaingresada;
-                                                                                                        permisoParaFEC = true;
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        Codigo = "027";
-                                                                                                        Mensaje = "La fecha ingresada debe coincidir con el año actual";
-                                                                                                    }
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (double.TryParse(Permisos.Field<string>("FechaDelPedidod"), out double numero))
-                                                                                                    {
-                                                                                                        //se convierte el valor 
-                                                                                                        if (numero > 0)
-                                                                                                        {
-                                                                                                            DateTime fechaActual = DateTime.Now; // Fecha y hora actual
-
-                                                                                                            // Calcular el primer día de la semana actual
-                                                                                                            DateTime primerDia = fechaActual;
-
-                                                                                                            // Calcular el último día de la semana actual
-                                                                                                            DateTime ultimoDiaSemana = primerDia.AddDays(numero);
-
-                                                                                                            if (fechaingresada < primerDia || fechaingresada > ultimoDiaSemana)
-                                                                                                            {
-                                                                                                                Codigo = "035";
-                                                                                                                Mensaje = "la fecha ingresada debe coincidir con los dias establecidos";
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                FechaPedido = fechaingresada;
-                                                                                                                permisoParaFEC = true;
-                                                                                                            }
-
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            DateTime fechaActual = DateTime.Now; // Fecha y hora actual
-
-                                                                                                            // Calcular el primer día de la semana actual
-                                                                                                            DateTime primerDia = fechaActual.AddDays(numero);
-
-                                                                                                            // Calcular el último día de la semana actual
-                                                                                                            DateTime ultimoDiaSemana = fechaActual;
-
-                                                                                                            if (fechaingresada < primerDia || fechaingresada > ultimoDiaSemana)
-                                                                                                            {
-                                                                                                                Codigo = "035";
-                                                                                                                Mensaje = "la fecha ingresada debe coincidir con los dias establecidos";
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                FechaPedido = fechaingresada;
-                                                                                                                permisoParaFEC = true;
-                                                                                                            }
-
-                                                                                                        }
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        Codigo = "034";
-                                                                                                        Mensaje = "Formato de fecha establecida en syscom no establecidad en el sistema";
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        Codigo = "022";
-                                                                                        Mensaje = "el formato que ingreso EN pmFechaPedido no es valido";
-                                                                                    }
-
+                                                                                    Codigo = "046";
+                                                                                    Mensaje = "El codigo de pmTarifaComision no existe en syscom";
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    permisoParaFEC = true;
-                                                                                }
-
-                                                                                if (permisoParaFEC)
-                                                                                {
-                                                                                    //comprobar forma de pago del cliente
-                                                                                    bool permisoFOR = false;
-                                                                                    if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmFormaPago))
+                                                                                    //validamos para que sea igual 
+                                                                                    if ((Permisos.Field<string>("PermisoCms") == "CMS") | (Permisos.Field<string>("ExisteTarifa") == Permisos.Field<string>("TarifaVendedor")))
                                                                                     {
-                                                                                        if (Permisos.Field<string>("FormaDePagoIngresado") != "dene")
-                                                                                        {
-                                                                                            if (Permisos.Field<string>("FormaDePagoIngresado") == Permisos.Field<string>("FormaDePago"))
-                                                                                            {
-                                                                                                FormaDePago = Permisos.Field<string>("FormaDePago");
-                                                                                                permisoFOR = true;
-                                                                                            }
-                                                                                            else if (Permisos.Field<string>("PermisoFOR") == "FOR")
-                                                                                            {
-                                                                                                FormaDePago = Permisos.Field<string>("FormaDePagoIngresado");
-                                                                                                permisoFOR = true;
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                Codigo = "029";
-                                                                                                Mensaje = "El usuario no tiene permiso para cambiar la forma de pago";
-                                                                                            }
-
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            Codigo = "028";
-                                                                                            Mensaje = "la forma de pago ingresado no esta registrada en syscom";
-                                                                                        }
+                                                                                        TarifaVendedor = Permisos.Field<string>("ExisteTarifa");
+                                                                                        ValorTarifaVendedor = Permisos.Field<decimal>("ValorTarifaIngre");
+                                                                                        permisoTarifa = true;
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        FormaDePago = Permisos.Field<string>("FormaDePago");
-                                                                                        permisoFOR = true;
+                                                                                        Codigo = "047";
+                                                                                        Mensaje = "El usuario no tiene permiso CMS para cambiar la tarifa";
                                                                                     }
-                                                                                    if (permisoFOR)
+                                                                                }
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                TarifaVendedor = Permisos.Field<string>("TarifaVendedor");
+                                                                                ValorTarifaVendedor = Permisos.Field<decimal>("ValorTarifaExis");
+                                                                                permisoTarifa = true;
+                                                                            }
+
+                                                                            if (permisoTarifa)
+                                                                            {
+                                                                                //validar que si tiene el permiso EGA y si ingreso un valor en diasEntrega
+                                                                                if ((Permisos.Field<string>("PermisoEGA") == "EGA") | (consulta.Cliente.DiasEntrega > 0) | (consulta.Cliente.DiasEntrega == Permisos.Field<int>("DiasEntrega")))
+                                                                                {
+                                                                                    bool permisoParaFEC = false;
+                                                                                    //se realiza la evaluacion de los datos para saber si cumple con las  condiciones para la fecha
+                                                                                    if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmFechaPedido))
                                                                                     {
-                                                                                        //verificamos la informacion de contacto y si cuenta con el permiso 
-                                                                                        bool permisoMCO = false;
-                                                                                        //comprobamos si hay un valor ingresado
-                                                                                        if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.NitContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.NombreContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.TelefonoContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.EmailContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.CargoContacto))
+                                                                                        if (DateTime.TryParse(consulta.DatosDelPedido.pmFechaPedido, out DateTime fechaingresada))
                                                                                         {
-                                                                                            if (Permisos.Field<string>("PermisoMCO") == "MCO")
+                                                                                            if (DateTime.TryParse(Permisos.Field<string>("FechaDelPedidod"), out DateTime fechabase))
                                                                                             {
-                                                                                                if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.NitContacto))
+                                                                                                if (fechaingresada.ToString("yyyyMMdd") == fechabase.ToString("yyyyMMdd"))
                                                                                                 {
-                                                                                                    NitContacto = consulta.InformacionDeContacto.NitContacto;
+                                                                                                    FechaPedido = fechaingresada;
+                                                                                                    permisoParaFEC = true;
                                                                                                 }
                                                                                                 else
                                                                                                 {
-                                                                                                    NitContacto = Permisos.Field<string>("ContaNIt");
+                                                                                                    Codigo = "023";
+                                                                                                    Mensaje = "No tiene el permiso habilitado fecha abierta";
                                                                                                 }
-
-                                                                                                if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.NombreContacto))
-                                                                                                {
-                                                                                                    NitContacto = consulta.InformacionDeContacto.NombreContacto;
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    NitContacto = Permisos.Field<string>("ContaNombre");
-                                                                                                }
-
-                                                                                                if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.TelefonoContacto))
-                                                                                                {
-                                                                                                    NitContacto = consulta.InformacionDeContacto.TelefonoContacto;
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    NitContacto = Permisos.Field<string>("ContaTelefono");
-                                                                                                }
-
-                                                                                                if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.EmailContacto))
-                                                                                                {
-                                                                                                    NitContacto = consulta.InformacionDeContacto.EmailContacto;
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    NitContacto = Permisos.Field<string>("ContaEmail");
-                                                                                                }
-
-                                                                                                if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.CargoContacto))
-                                                                                                {
-                                                                                                    NitContacto = consulta.InformacionDeContacto.CargoContacto;
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    NitContacto = Permisos.Field<string>("ContaCargo");
-                                                                                                }
-                                                                                                permisoMCO = true;
-
-
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                                Codigo = "030";
-                                                                                                Mensaje = "El usuario no tiene permiso para cambiar la informacion de contacto";
+                                                                                                //verificamos que el formato que tenemos y si cumple 
+                                                                                                if (Permisos.Field<string>("PermisoFEC") == "FEC")
+                                                                                                {
+                                                                                                    //comprobamos los valores que estan
+                                                                                                    if (Permisos.Field<string>("FechaDelPedidod") == "D")
+                                                                                                    {
+                                                                                                        if (fechaingresada.ToString("yyyyMMdd") == DateTime.Now.ToString("yyyyMMdd"))
+                                                                                                        {
+                                                                                                            FechaPedido = fechaingresada;
+                                                                                                            permisoParaFEC = true;
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Codigo = "024";
+                                                                                                            Mensaje = "La fecha No validad debe ser la fecha del dia de hoy";
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else if (Permisos.Field<string>("FechaDelPedidod") == "S")
+                                                                                                    {
+                                                                                                        DateTime fechaActual = DateTime.Now; // Fecha y hora actual
+
+                                                                                                        // Calcular el primer día de la semana actual
+                                                                                                        DateTime primerDiaSemana = fechaActual.Date.AddDays(-(int)fechaActual.DayOfWeek);
+
+                                                                                                        // Calcular el último día de la semana actual
+                                                                                                        DateTime ultimoDiaSemana = primerDiaSemana.AddDays(6);
+
+                                                                                                        if (fechaingresada < primerDiaSemana || fechaingresada > ultimoDiaSemana)
+                                                                                                        {
+                                                                                                            Codigo = "025";
+                                                                                                            Mensaje = "la fecha ingresada debe coincidir con la semana actual";
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            FechaPedido = fechaingresada;
+                                                                                                            permisoParaFEC = true;
+                                                                                                        }
+
+                                                                                                    }
+                                                                                                    else if (Permisos.Field<string>("FechaDelPedidod") == "M")
+                                                                                                    {
+                                                                                                        if (fechaingresada.ToString("yyyyMM") == DateTime.Now.ToString("yyyyMM"))
+                                                                                                        {
+                                                                                                            FechaPedido = fechaingresada;
+                                                                                                            permisoParaFEC = true;
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Codigo = "026";
+                                                                                                            Mensaje = "La fecha ingresada debe coincidir con el mes actual";
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else if (Permisos.Field<string>("FechaDelPedidod") == "A")
+                                                                                                    {
+                                                                                                        if (fechaingresada.Year == DateTime.Now.Year)
+                                                                                                        {
+                                                                                                            FechaPedido = fechaingresada;
+                                                                                                            permisoParaFEC = true;
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Codigo = "027";
+                                                                                                            Mensaje = "La fecha ingresada debe coincidir con el año actual";
+                                                                                                        }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        if (double.TryParse(Permisos.Field<string>("FechaDelPedidod"), out double numero))
+                                                                                                        {
+                                                                                                            //se convierte el valor 
+                                                                                                            if (numero > 0)
+                                                                                                            {
+                                                                                                                DateTime fechaActual = DateTime.Now; // Fecha y hora actual
+
+                                                                                                                // Calcular el primer día de la semana actual
+                                                                                                                DateTime primerDia = fechaActual;
+
+                                                                                                                // Calcular el último día de la semana actual
+                                                                                                                DateTime ultimoDiaSemana = primerDia.AddDays(numero);
+
+                                                                                                                if (fechaingresada < primerDia || fechaingresada > ultimoDiaSemana)
+                                                                                                                {
+                                                                                                                    Codigo = "035";
+                                                                                                                    Mensaje = "la fecha ingresada debe coincidir con los dias establecidos";
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    FechaPedido = fechaingresada;
+                                                                                                                    permisoParaFEC = true;
+                                                                                                                }
+
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                DateTime fechaActual = DateTime.Now; // Fecha y hora actual
+
+                                                                                                                // Calcular el primer día de la semana actual
+                                                                                                                DateTime primerDia = fechaActual.AddDays(numero);
+
+                                                                                                                // Calcular el último día de la semana actual
+                                                                                                                DateTime ultimoDiaSemana = fechaActual;
+
+                                                                                                                if (fechaingresada < primerDia || fechaingresada > ultimoDiaSemana)
+                                                                                                                {
+                                                                                                                    Codigo = "035";
+                                                                                                                    Mensaje = "la fecha ingresada debe coincidir con los dias establecidos";
+                                                                                                                }
+                                                                                                                else
+                                                                                                                {
+                                                                                                                    FechaPedido = fechaingresada;
+                                                                                                                    permisoParaFEC = true;
+                                                                                                                }
+
+                                                                                                            }
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Codigo = "034";
+                                                                                                            Mensaje = "Formato de fecha establecida en syscom no establecidad en el sistema";
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
                                                                                             }
 
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            permisoMCO = true;
-                                                                                            NitContacto = Permisos.Field<string>("ContaNIt");
-                                                                                            NombreContacto = Permisos.Field<string>("ContaNombre");
-                                                                                            TelefonoContacto = Permisos.Field<string>("ContaTelefono");
-                                                                                            EmailContacto = Permisos.Field<string>("ContaEmail");
-                                                                                            CargoContacto = Permisos.Field<string>("ContaCargo");
+                                                                                            Codigo = "022";
+                                                                                            Mensaje = "el formato que ingreso EN pmFechaPedido no es valido";
                                                                                         }
-                                                                                        if (permisoMCO)
+
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        permisoParaFEC = true;
+                                                                                    }
+
+                                                                                    if (permisoParaFEC)
+                                                                                    {
+                                                                                        //comprobar forma de pago del cliente
+                                                                                        bool permisoFOR = false;
+                                                                                        if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmFormaPago))
                                                                                         {
-                                                                                            //verificar los dias de plazo 
-                                                                                            bool permisoPZO = false;
-                                                                                            if (consulta.DatosDelPedido.pmDiasPlazo > 0)
+                                                                                            if (Permisos.Field<string>("FormaDePagoIngresado") != "dene")
                                                                                             {
-                                                                                                try
+                                                                                                if (Permisos.Field<string>("FormaDePagoIngresado") == Permisos.Field<string>("FormaDePago"))
                                                                                                 {
-                                                                                                    if ((Permisos.Field<string>("PermisoPZO") == "PZO") | (consulta.DatosDelPedido.pmDiasPlazo == int.Parse(Permisos.Field<string>("diasplazo"))))
-                                                                                                    {
-                                                                                                        DiasDePlazo = consulta.DatosDelPedido.pmDiasPlazo.ToString();
-                                                                                                        permisoPZO = true;
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        Codigo = "031";
-                                                                                                        Mensaje = "El usuario non tiene permisos para cambiar los dias de plazo";
-                                                                                                    }
+                                                                                                    FormaDePago = Permisos.Field<string>("FormaDePago");
+                                                                                                    permisoFOR = true;
                                                                                                 }
-                                                                                                catch(Exception ex)
+                                                                                                else if (Permisos.Field<string>("PermisoFOR") == "FOR")
                                                                                                 {
-                                                                                                    Codigo = "031";
-                                                                                                    Mensaje = "Los dias de plazo que estan en la base de datos estan mal configurados";
+                                                                                                    FormaDePago = Permisos.Field<string>("FormaDePagoIngresado");
+                                                                                                    permisoFOR = true;
                                                                                                 }
+                                                                                                else
+                                                                                                {
+                                                                                                    Codigo = "029";
+                                                                                                    Mensaje = "El usuario no tiene permiso para cambiar la forma de pago";
+                                                                                                }
+
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                                DiasDePlazo = Permisos.Field<string>("diasplazo");
-                                                                                                permisoPZO = true;
+                                                                                                Codigo = "028";
+                                                                                                Mensaje = "la forma de pago ingresado no esta registrada en syscom";
                                                                                             }
-                                                                                            if (permisoPZO)
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            FormaDePago = Permisos.Field<string>("FormaDePago");
+                                                                                            permisoFOR = true;
+                                                                                        }
+                                                                                        if (permisoFOR)
+                                                                                        {
+                                                                                            //verificamos la informacion de contacto y si cuenta con el permiso 
+                                                                                            bool permisoMCO = false;
+                                                                                            //comprobamos si hay un valor ingresado
+                                                                                            if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.NitContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.NombreContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.TelefonoContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.EmailContacto) | !string.IsNullOrEmpty(consulta.InformacionDeContacto.CargoContacto))
                                                                                             {
-                                                                                                bool permisoVEN = false;
-                                                                                                //permiso para vender a un cliente que no tiene asignado el vendedor
-                                                                                                if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmIdVendedor))
+                                                                                                if (Permisos.Field<string>("PermisoMCO") == "MCO")
                                                                                                 {
-                                                                                                    if ((Permisos.Field<string>("PermisoVEN") == "VEN") | (consulta.DatosDelPedido.pmIdVendedor == Permisos.Field<string>("VendedorDelCLiente")))
+                                                                                                    if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.NitContacto))
                                                                                                     {
-                                                                                                        if (Permisos.Field<bool>("EsVendedorIngresado"))
-                                                                                                        {
-                                                                                                            permisoVEN = true;
-                                                                                                            IdVendedor = consulta.DatosDelPedido.pmIdVendedor;
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            Codigo = "036";
-                                                                                                            Mensaje = "El pmIdVendedor ingresado no esta marcado como vendedor";
-                                                                                                        }
+                                                                                                        NitContacto = consulta.InformacionDeContacto.NitContacto;
                                                                                                     }
                                                                                                     else
                                                                                                     {
-                                                                                                        Codigo = "034";
-                                                                                                        Mensaje = "El usuario no tiene permiso VEN para vender a otro cliente";
+                                                                                                        NitContacto = Permisos.Field<string>("ContaNIt");
+                                                                                                    }
+
+                                                                                                    if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.NombreContacto))
+                                                                                                    {
+                                                                                                        NitContacto = consulta.InformacionDeContacto.NombreContacto;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        NitContacto = Permisos.Field<string>("ContaNombre");
+                                                                                                    }
+
+                                                                                                    if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.TelefonoContacto))
+                                                                                                    {
+                                                                                                        NitContacto = consulta.InformacionDeContacto.TelefonoContacto;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        NitContacto = Permisos.Field<string>("ContaTelefono");
+                                                                                                    }
+
+                                                                                                    if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.EmailContacto))
+                                                                                                    {
+                                                                                                        NitContacto = consulta.InformacionDeContacto.EmailContacto;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        NitContacto = Permisos.Field<string>("ContaEmail");
+                                                                                                    }
+
+                                                                                                    if (!string.IsNullOrEmpty(consulta.InformacionDeContacto.CargoContacto))
+                                                                                                    {
+                                                                                                        NitContacto = consulta.InformacionDeContacto.CargoContacto;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        NitContacto = Permisos.Field<string>("ContaCargo");
+                                                                                                    }
+                                                                                                    permisoMCO = true;
+
+
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Codigo = "030";
+                                                                                                    Mensaje = "El usuario no tiene permiso para cambiar la informacion de contacto";
+                                                                                                }
+
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                permisoMCO = true;
+                                                                                                NitContacto = Permisos.Field<string>("ContaNIt");
+                                                                                                NombreContacto = Permisos.Field<string>("ContaNombre");
+                                                                                                TelefonoContacto = Permisos.Field<string>("ContaTelefono");
+                                                                                                EmailContacto = Permisos.Field<string>("ContaEmail");
+                                                                                                CargoContacto = Permisos.Field<string>("ContaCargo");
+                                                                                            }
+                                                                                            if (permisoMCO)
+                                                                                            {
+                                                                                                //verificar los dias de plazo 
+                                                                                                bool permisoPZO = false;
+                                                                                                if (consulta.DatosDelPedido.pmDiasPlazo > 0)
+                                                                                                {
+                                                                                                    try
+                                                                                                    {
+                                                                                                        if ((Permisos.Field<string>("PermisoPZO") == "PZO") | (consulta.DatosDelPedido.pmDiasPlazo == int.Parse(Permisos.Field<string>("diasplazo"))))
+                                                                                                        {
+                                                                                                            DiasDePlazo = consulta.DatosDelPedido.pmDiasPlazo.ToString();
+                                                                                                            permisoPZO = true;
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Codigo = "031";
+                                                                                                            Mensaje = "El usuario non tiene permisos para cambiar los dias de plazo";
+                                                                                                        }
+                                                                                                    }
+                                                                                                    catch (Exception ex)
+                                                                                                    {
+                                                                                                        Codigo = "031";
+                                                                                                        Mensaje = "Los dias de plazo que estan en la base de datos estan mal configurados";
                                                                                                     }
                                                                                                 }
                                                                                                 else
                                                                                                 {
-                                                                                                    if (usuario == Permisos.Field<string>("VendedorDelCLiente"))
+                                                                                                    DiasDePlazo = Permisos.Field<string>("diasplazo");
+                                                                                                    permisoPZO = true;
+                                                                                                }
+                                                                                                if (permisoPZO)
+                                                                                                {
+                                                                                                    bool permisoVEN = false;
+                                                                                                    //permiso para vender a un cliente que no tiene asignado el vendedor
+                                                                                                    if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmIdVendedor))
                                                                                                     {
-                                                                                                        permisoVEN = true;
-                                                                                                        IdVendedor = usuario;
+                                                                                                        if ((Permisos.Field<string>("PermisoVEN") == "VEN") | (consulta.DatosDelPedido.pmIdVendedor == Permisos.Field<string>("VendedorDelCLiente")))
+                                                                                                        {
+                                                                                                            if (Permisos.Field<bool>("EsVendedorIngresado"))
+                                                                                                            {
+                                                                                                                permisoVEN = true;
+                                                                                                                IdVendedor = consulta.DatosDelPedido.pmIdVendedor;
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                Codigo = "036";
+                                                                                                                Mensaje = "El pmIdVendedor ingresado no esta marcado como vendedor";
+                                                                                                            }
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Codigo = "034";
+                                                                                                            Mensaje = "El usuario no tiene permiso VEN para vender a otro cliente";
+                                                                                                        }
                                                                                                     }
                                                                                                     else
                                                                                                     {
-                                                                                                        Codigo = "032";
-                                                                                                        Mensaje = "El usuario no tiene permiso VEN para vender a otro cliente";
+                                                                                                        if (usuario == Permisos.Field<string>("VendedorDelCLiente"))
+                                                                                                        {
+                                                                                                            permisoVEN = true;
+                                                                                                            IdVendedor = usuario;
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            Codigo = "032";
+                                                                                                            Mensaje = "El usuario no tiene permiso VEN para vender a otro cliente";
+                                                                                                        }
+
                                                                                                     }
 
-                                                                                                }
-
-                                                                                                //comprobamos el valor de la compañia para registrarlo
-                                                                                                if ((Permisos.Field<string>("PermisoCia") == "CIA") | (consulta.DatosDelPedido.pmIdCompania == compania))
-                                                                                                {
-                                                                                                    Cia = consulta.DatosDelPedido.pmIdCompania;
-
-                                                                                                    //comprobamos para añadir una tarifa diferente a la del vendedor
-                                                                                                    if (permisoVEN)
+                                                                                                    //comprobamos el valor de la compañia para registrarlo
+                                                                                                    if ((Permisos.Field<string>("PermisoCia") == "CIA") | (consulta.DatosDelPedido.pmIdCompania == compania))
                                                                                                     {
+                                                                                                        Cia = consulta.DatosDelPedido.pmIdCompania;
 
-                                                                                                        if (TablaPermisos.Tables[2].Rows.Count > 0)
+                                                                                                        //comprobamos para añadir una tarifa diferente a la del vendedor
+                                                                                                        if (permisoVEN)
                                                                                                         {
 
-                                                                                                            bool permisoLTA = false;
+                                                                                                            if (TablaPermisos.Tables[2].Rows.Count > 0)
+                                                                                                            {
 
-                                                                                                            bool permisoDCT = false;
-                                                                                                            bool permisoOBQ = false;
-                                                                                                            bool permisoPEC = false;
-                                                                                                            bool permisoBOD = false;
-                                                                                                            bool verificacionCompleta = true;
-                                                                                                            //verificamos la lista preterminada 
-                                                                                                            if (Permisos.Field<string>("PermisoLTA") == "LTA")
-                                                                                                            {
-                                                                                                                permisoLTA = true;
-                                                                                                            }
+                                                                                                                bool permisoLTA = false;
 
-                                                                                                            //permiso para agregar una bodega 
-                                                                                                            if (Permisos.Field<string>("PermisoBod") == "BOD")
-                                                                                                            {
-                                                                                                                permisoBOD = true;
-                                                                                                            }
-                                                                                                            if (Permisos.Field<string>("PermisoDCT") == "DCT")
-                                                                                                            {
-                                                                                                                permisoDCT = true;
-                                                                                                            }
-
-                                                                                                            DataTable productosConsulta = TablaPermisos.Tables[1];
-                                                                                                            int recorrer = 0;
-                                                                                                            //creamos dos columnas nuevas para añadir los datos del precio y descuento
-                                                                                                            productosConsulta.Columns.Add("precio", typeof(decimal));
-                                                                                                            productosConsulta.Columns.Add("descuento", typeof(decimal));
-                                                                                                            productosConsulta.Columns.Add("PrecioTotalConIva", typeof(decimal));
-                                                                                                            productosConsulta.Columns.Add("TotalIten", typeof(int));
-                                                                                                            productosConsulta.Columns.Add("Obsequios", typeof(int));
-                                                                                                            productosConsulta.Columns.Add("Cantidad", typeof(int));
-                                                                                                            productosConsulta.Columns.Add("TotalIva", typeof(decimal));
-                                                                                                            productosConsulta.Columns.Add("SubTotal", typeof(decimal));
-                                                                                                            productosConsulta.Columns.Add("ValorUnitario", typeof(decimal));
-                                                                                                            foreach (ProductosPed productos in consulta.Productos)
-                                                                                                            {
-                                                                                                                //comprobamos que el producto exista
-                                                                                                                if (productosConsulta.Rows[recorrer].Field<string>("IdProducto") == productos.pmIdProducto)
+                                                                                                                bool permisoDCT = false;
+                                                                                                                bool permisoOBQ = false;
+                                                                                                                bool permisoPEC = false;
+                                                                                                                bool permisoBOD = false;
+                                                                                                                bool verificacionCompleta = true;
+                                                                                                                //verificamos la lista preterminada 
+                                                                                                                if (Permisos.Field<string>("PermisoLTA") == "LTA")
                                                                                                                 {
-                                                                                                                    int ListaProd = 1;
-                                                                                                                    //verificamos que el producto este disponible
-                                                                                                                    if (productosConsulta.Rows[recorrer].Field<string>("disponibleCia") == "disponible")
-                                                                                                                    {
+                                                                                                                    permisoLTA = true;
+                                                                                                                }
 
-                                                                                                                        //comprobamos el valor a escoger de la lista
-                                                                                                                        if (productos.pmIdListaDePrecio != 0)
+                                                                                                                //permiso para agregar una bodega 
+                                                                                                                if (Permisos.Field<string>("PermisoBod") == "BOD")
+                                                                                                                {
+                                                                                                                    permisoBOD = true;
+                                                                                                                }
+                                                                                                                if (Permisos.Field<string>("PermisoDCT") == "DCT")
+                                                                                                                {
+                                                                                                                    permisoDCT = true;
+                                                                                                                }
+
+                                                                                                                DataTable productosConsulta = TablaPermisos.Tables[1];
+                                                                                                                int recorrer = 0;
+                                                                                                                //creamos dos columnas nuevas para añadir los datos del precio y descuento
+                                                                                                                productosConsulta.Columns.Add("precio", typeof(decimal));
+                                                                                                                productosConsulta.Columns.Add("descuento", typeof(decimal));
+                                                                                                                productosConsulta.Columns.Add("PrecioTotalConIva", typeof(decimal));
+                                                                                                                productosConsulta.Columns.Add("TotalIten", typeof(int));
+                                                                                                                productosConsulta.Columns.Add("Obsequios", typeof(int));
+                                                                                                                productosConsulta.Columns.Add("Cantidad", typeof(int));
+                                                                                                                productosConsulta.Columns.Add("TotalIva", typeof(decimal));
+                                                                                                                productosConsulta.Columns.Add("SubTotal", typeof(decimal));
+                                                                                                                productosConsulta.Columns.Add("ValorUnitario", typeof(decimal));
+                                                                                                                foreach (ProductosPed productos in consulta.Productos)
+                                                                                                                {
+                                                                                                                    //comprobamos que el producto exista
+                                                                                                                    if (productosConsulta.Rows[recorrer].Field<string>("IdProducto") == productos.pmIdProducto)
+                                                                                                                    {
+                                                                                                                        int ListaProd = 1;
+                                                                                                                        //verificamos que el producto este disponible
+                                                                                                                        if (productosConsulta.Rows[recorrer].Field<string>("disponibleCia") == "disponible")
                                                                                                                         {
-                                                                                                                            if (permisoLTA)
+
+                                                                                                                            //comprobamos el valor a escoger de la lista
+                                                                                                                            if (productos.pmIdListaDePrecio != 0)
                                                                                                                             {
-                                                                                                                                if (productos.pmIdListaDePrecio <= 5 & productos.pmIdListaDePrecio > 0)
+                                                                                                                                if (permisoLTA)
                                                                                                                                 {
-                                                                                                                                    //realizamos el cambio del precio a la primera fila
+                                                                                                                                    if (productos.pmIdListaDePrecio <= 5 & productos.pmIdListaDePrecio > 0)
+                                                                                                                                    {
+                                                                                                                                        //realizamos el cambio del precio a la primera fila
+                                                                                                                                        string nomColumPrecio = "pmVrPrecio" + productos.pmIdListaDePrecio;
+                                                                                                                                        string nomColumDescuentp = "CdDct" + productos.pmIdListaDePrecio;
+                                                                                                                                        productosConsulta.Rows[recorrer]["precio"] = productosConsulta.Rows[recorrer][nomColumPrecio];
+                                                                                                                                        productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer][nomColumDescuentp];
+                                                                                                                                        ListaProd = productos.pmIdListaDePrecio;
+
+                                                                                                                                    }
+                                                                                                                                    else
+                                                                                                                                    {
+                                                                                                                                        Codigo = "039";
+                                                                                                                                        Mensaje = "La lista ingresada es incorrecta debe estar en un valor entre 1 y 5";
+                                                                                                                                        verificacionCompleta = false;
+                                                                                                                                        break;
+                                                                                                                                    }
+                                                                                                                                }
+                                                                                                                                else if (productos.pmIdListaDePrecio == productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio"))
+                                                                                                                                {
                                                                                                                                     string nomColumPrecio = "pmVrPrecio" + productos.pmIdListaDePrecio;
                                                                                                                                     string nomColumDescuentp = "CdDct" + productos.pmIdListaDePrecio;
                                                                                                                                     productosConsulta.Rows[recorrer]["precio"] = productosConsulta.Rows[recorrer][nomColumPrecio];
                                                                                                                                     productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer][nomColumDescuentp];
                                                                                                                                     ListaProd = productos.pmIdListaDePrecio;
-
                                                                                                                                 }
                                                                                                                                 else
                                                                                                                                 {
-                                                                                                                                    Codigo = "039";
-                                                                                                                                    Mensaje = "La lista ingresada es incorrecta debe estar en un valor entre 1 y 5";
+                                                                                                                                    Codigo = "041";
+                                                                                                                                    Mensaje = "No tiene permisos para ingresar una lista diferente a la establecidad";
                                                                                                                                     verificacionCompleta = false;
                                                                                                                                     break;
                                                                                                                                 }
                                                                                                                             }
-                                                                                                                            else if (productos.pmIdListaDePrecio == productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio"))
-                                                                                                                            {
-                                                                                                                                string nomColumPrecio = "pmVrPrecio" + productos.pmIdListaDePrecio;
-                                                                                                                                string nomColumDescuentp = "CdDct" + productos.pmIdListaDePrecio;
-                                                                                                                                productosConsulta.Rows[recorrer]["precio"] = productosConsulta.Rows[recorrer][nomColumPrecio];
-                                                                                                                                productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer][nomColumDescuentp];
-                                                                                                                                ListaProd = productos.pmIdListaDePrecio;
-                                                                                                                            }
                                                                                                                             else
                                                                                                                             {
-                                                                                                                                Codigo = "041";
-                                                                                                                                Mensaje = "No tiene permisos para ingresar una lista diferente a la establecidad";
-                                                                                                                                verificacionCompleta = false;
-                                                                                                                                break;
+                                                                                                                                string nomColumPrecio = "pmVrPrecio" + productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio");
+                                                                                                                                string nomColumDescuentp = "CdDct" + productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio");
+                                                                                                                                productosConsulta.Rows[recorrer]["precio"] = productosConsulta.Rows[recorrer][nomColumPrecio];
+                                                                                                                                productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer][nomColumDescuentp];
+                                                                                                                                ListaProd = productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio");
                                                                                                                             }
-                                                                                                                        }
-                                                                                                                        else
-                                                                                                                        {
-                                                                                                                            string nomColumPrecio = "pmVrPrecio" + productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio");
-                                                                                                                            string nomColumDescuentp = "CdDct" + productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio");
-                                                                                                                            productosConsulta.Rows[recorrer]["precio"] = productosConsulta.Rows[recorrer][nomColumPrecio];
-                                                                                                                            productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer][nomColumDescuentp];
-                                                                                                                            ListaProd = productosConsulta.Rows[recorrer].Field<int>("ListaDePrecio");
-                                                                                                                        }
 
-                                                                                                                        //validamos la bodega del producto
-                                                                                                                        if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmIdBodega))
-                                                                                                                        {
-                                                                                                                            //comprobamos si el valor es distintop para el correspondiente cambio
-                                                                                                                            if (consulta.DatosDelPedido.pmIdBodega != productosConsulta.Rows[recorrer].Field<string>("Bodega"))
+                                                                                                                            //validamos la bodega del producto
+                                                                                                                            if (!string.IsNullOrEmpty(consulta.DatosDelPedido.pmIdBodega))
                                                                                                                             {
-                                                                                                                                if (permisoBOD)
+                                                                                                                                //comprobamos si el valor es distintop para el correspondiente cambio
+                                                                                                                                if (consulta.DatosDelPedido.pmIdBodega != productosConsulta.Rows[recorrer].Field<string>("Bodega"))
                                                                                                                                 {
-                                                                                                                                    if (Permisos.Field<string>("BodegaPermitida") != "dene")
+                                                                                                                                    if (permisoBOD)
                                                                                                                                     {
-                                                                                                                                        productosConsulta.Rows[recorrer]["Bodega"] = Permisos.Field<string>("BodegaPermitida");
+                                                                                                                                        if (Permisos.Field<string>("BodegaPermitida") != "dene")
+                                                                                                                                        {
+                                                                                                                                            productosConsulta.Rows[recorrer]["Bodega"] = Permisos.Field<string>("BodegaPermitida");
+                                                                                                                                        }
+                                                                                                                                        else
+                                                                                                                                        {
+                                                                                                                                            Codigo = "043";
+                                                                                                                                            Mensaje = "La bodega ingresada no esta permitida en la compañia";
+                                                                                                                                            verificacionCompleta = false;
+                                                                                                                                            break;
+                                                                                                                                        }
                                                                                                                                     }
                                                                                                                                     else
                                                                                                                                     {
-                                                                                                                                        Codigo = "043";
-                                                                                                                                        Mensaje = "La bodega ingresada no esta permitida en la compañia";
+                                                                                                                                        Codigo = "042";
+                                                                                                                                        Mensaje = "El usuario no tiene permiso BOD para cambiar la bodega";
                                                                                                                                         verificacionCompleta = false;
                                                                                                                                         break;
                                                                                                                                     }
                                                                                                                                 }
+                                                                                                                            }
+
+                                                                                                                            //se realiza la modificacion del precio para saber si obsequio 
+                                                                                                                            if ((productos.pmCantObsequio > 0) & (productos.pmCantidad == 0))
+                                                                                                                            {
+                                                                                                                                //si solo esta la cantida de obsequio se cambia el valor para registarar el nuevo valor de solo el iva
+                                                                                                                                productosConsulta.Rows[recorrer]["precio"] = (productosConsulta.Rows[recorrer].Field<decimal>("precio") * productosConsulta.Rows[recorrer].Field<decimal>("IVA")) / 100;
+                                                                                                                            }
+
+                                                                                                                            //varificamos que el valor del producto sea igual a cero y que tenga el permiso PEC
+                                                                                                                            if (productos.pmVrPrecio == 0)
+                                                                                                                            {
+                                                                                                                                if (Permisos.Field<string>("PermisoPEC") == "PEC")
+                                                                                                                                {
+                                                                                                                                    productosConsulta.Rows[recorrer]["precio"] = productos.pmVrPrecio;
+                                                                                                                                }
                                                                                                                                 else
                                                                                                                                 {
-                                                                                                                                    Codigo = "042";
-                                                                                                                                    Mensaje = "El usuario no tiene permiso BOD para cambiar la bodega";
+                                                                                                                                    //se verifica que el producto 
+                                                                                                                                    Codigo = "048";
+                                                                                                                                    Mensaje = "El usuario no tiene permiso PEC para registrar el producto en valor cero";
                                                                                                                                     verificacionCompleta = false;
                                                                                                                                     break;
                                                                                                                                 }
                                                                                                                             }
-                                                                                                                        }
-
-                                                                                                                        //se realiza la modificacion del precio para saber si obsequio 
-                                                                                                                        if ((productos.pmCantObsequio > 0) & (productos.pmCantidad == 0))
-                                                                                                                        {
-                                                                                                                            //si solo esta la cantida de obsequio se cambia el valor para registarar el nuevo valor de solo el iva
-                                                                                                                            productosConsulta.Rows[recorrer]["precio"] = (productosConsulta.Rows[recorrer].Field<decimal>("precio") * productosConsulta.Rows[recorrer].Field<decimal>("IVA")) / 100;
-                                                                                                                        }
-
-                                                                                                                        //varificamos que el valor del producto sea igual a cero y que tenga el permiso PEC
-                                                                                                                        if (productos.pmVrPrecio == 0)
-                                                                                                                        {
-                                                                                                                            if (Permisos.Field<string>("PermisoPEC") == "PEC")
+                                                                                                                            else if (productosConsulta.Rows[recorrer].Field<decimal>("precio") == productos.pmVrPrecio)
                                                                                                                             {
+                                                                                                                                //validacion que el precio sea igual a de la lista
                                                                                                                                 productosConsulta.Rows[recorrer]["precio"] = productos.pmVrPrecio;
                                                                                                                             }
-                                                                                                                            else
+                                                                                                                            else if (productosConsulta.Rows[recorrer].Field<decimal>("precio") != productos.pmVrPrecio)
                                                                                                                             {
-                                                                                                                                //se verifica que el producto 
-                                                                                                                                Codigo = "048";
-                                                                                                                                Mensaje = "El usuario no tiene permiso PEC para registrar el producto en valor cero";
-                                                                                                                                verificacionCompleta = false;
-                                                                                                                                break;
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                        else if (productosConsulta.Rows[recorrer].Field<decimal>("precio") == productos.pmVrPrecio)
-                                                                                                                        {
-                                                                                                                            //validacion que el precio sea igual a de la lista
-                                                                                                                            productosConsulta.Rows[recorrer]["precio"] = productos.pmVrPrecio;
-                                                                                                                        }
-                                                                                                                        else if (productosConsulta.Rows[recorrer].Field<decimal>("precio") != productos.pmVrPrecio)
-                                                                                                                        {
-                                                                                                                            //asiganamos una tabla para agregar la tabla de tarifas expeciales y saber en que parte esta el desceunto 
-                                                                                                                            DataTable TablaTarifaEspecial = TablaPermisos.Tables[2];
-                                                                                                                            //verificamos qu en la tabla tenga resultados para realizar el proceso 
-                                                                                                                            if (TablaPermisos.Tables[2].Rows.Count > 0)
-                                                                                                                            {
-                                                                                                                                //Se realiza la consulta del valor
-                                                                                                                                var filasCoincidentes = TablaTarifaEspecial.AsEnumerable()
-                                                                                                                                    .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("simb") == "$")
-                                                                                                                                      .CopyToDataTable();
-
-                                                                                                                                //se verifica si encuentra resultados
-                                                                                                                                if (filasCoincidentes.Rows.Count > 0)
-                                                                                                                                {
-                                                                                                                                    //se realiza la comprobacion si cumple con los criterios del producto
-                                                                                                                                    bool ValorExiste = filasCoincidentes.AsEnumerable()
-                                                                                                                                    .Any(row => row.Field<string>("CdProducto") == productos.pmIdProducto ||
-                                                                                                                                                row.Field<string>("CdMarca") == productosConsulta.Rows[recorrer].Field<string>("Marca") ||
-                                                                                                                                                row.Field<string>("CdSubgrupo") == productosConsulta.Rows[recorrer].Field<string>("subgrupo") ||
-                                                                                                                                                row.Field<string>("CdGrupo") == productosConsulta.Rows[recorrer].Field<string>("Grupo") ||
-                                                                                                                                                row.Field<string>("cdlinea") == productosConsulta.Rows[recorrer].Field<string>("Linea"));
-
-                                                                                                                                    if (ValorExiste)
-                                                                                                                                    {
-                                                                                                                                        productosConsulta.Rows[recorrer]["precio"] = productos.pmVrPrecio;
-                                                                                                                                    }
-                                                                                                                                }
-
-
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                        // se realiza la vrificacion si l precio ya coincide o sino se procede a verificar los permisos 
-                                                                                                                        if (productosConsulta.Rows[recorrer].Field<decimal>("precio") != productos.pmVrPrecio)
-                                                                                                                        {
-                                                                                                                            string permisoMP = "PermisoMP" + ListaProd;
-                                                                                                                            string MP = "MP" + ListaProd;
-                                                                                                                            if (Permisos.Field<string>(permisoMP) == MP)
-                                                                                                                            {
-                                                                                                                                productosConsulta.Rows[recorrer]["precio"] = productos.pmVrPrecio;
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-                                                                                                                                Codigo = "049";
-                                                                                                                                Mensaje = "El usuario no tiene permiso " + MP + " para cambiar el valor del producto";
-                                                                                                                                verificacionCompleta = false;
-                                                                                                                                break;
-                                                                                                                            }
-                                                                                                                        }
-
-                                                                                                                        //validamos la tarifa de descuento 
-                                                                                                                        //varificamos que el usuario ingreso una tarifa
-                                                                                                                        if (!string.IsNullOrEmpty(productos.pmIdTarDcto))
-                                                                                                                        {
-                                                                                                                            //verificamos la tarifa ingresada sea validad
-                                                                                                                            if (productosConsulta.Rows[recorrer].Field<string>("ExisteTarifa") == "dene")
-                                                                                                                            {
-                                                                                                                                Codigo = "050";
-                                                                                                                                Mensaje = "La tarifa de descuento " + productos.pmIdTarDcto + " no Existe";
-                                                                                                                                verificacionCompleta = false;
-                                                                                                                                break;
-                                                                                                                            }
-                                                                                                                            else if (productosConsulta.Rows[recorrer].Field<decimal>("descuento") == productosConsulta.Rows[recorrer].Field<decimal>("Tarifa"))
-                                                                                                                            {
-                                                                                                                                //si los valores coinciden se dejan igual 
-                                                                                                                            }
-                                                                                                                            else if (permisoDCT)
-                                                                                                                            {
-                                                                                                                                //se cambia el valor por tener el permiso de cambiar la< tarifa
-                                                                                                                                productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer]["Tarifa"];
-
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-                                                                                                                                // se realiza la comprobacion con la tarifa en especial si no cumple arrojar error
-
-
                                                                                                                                 //asiganamos una tabla para agregar la tabla de tarifas expeciales y saber en que parte esta el desceunto 
-                                                                                                                                DataTable TablaTarifaDescuento = TablaPermisos.Tables[2];
+                                                                                                                                DataTable TablaTarifaEspecial = TablaPermisos.Tables[2];
                                                                                                                                 //verificamos qu en la tabla tenga resultados para realizar el proceso 
                                                                                                                                 if (TablaPermisos.Tables[2].Rows.Count > 0)
                                                                                                                                 {
-                                                                                                                                    //Se realiza la consulta del valor
-                                                                                                                                    var filasCoincidentes = TablaTarifaDescuento.AsEnumerable()
-                                                                                                                                        .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("simb") == "%")
-                                                                                                                                          .CopyToDataTable();
-
+                                                                                                                                    try
+                                                                                                                                    {
+                                                                                                                                        //Se realiza la consulta del valor
+                                                                                                                                        var filasCoincidentess = TablaTarifaEspecial.AsEnumerable()
+                                                                                                                                             .Where(row => row.Field<decimal>("Tarifa") == productos.pmVrPrecio)
+                                                                                                                                              .CopyToDataTable();
+                                                                                                                                    }
+                                                                                                                                    catch (Exception ex)
+                                                                                                                                    {
+                                                                                                                                        string eeee = ex.Message;
+                                                                                                                                    }
+                                                                                                                                    var filasCoincidentes = TablaTarifaEspecial.AsEnumerable()
+                                                                                                                                          .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("SimbTfa") == "$")
+                                                                                                                                            .CopyToDataTable();
                                                                                                                                     //se verifica si encuentra resultados
                                                                                                                                     if (filasCoincidentes.Rows.Count > 0)
                                                                                                                                     {
@@ -1095,7 +1032,91 @@ namespace WcfPedidos
 
                                                                                                                                         if (ValorExiste)
                                                                                                                                         {
-                                                                                                                                            productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer]["Tarifa"];
+                                                                                                                                            productosConsulta.Rows[recorrer]["precio"] = productos.pmVrPrecio;
+                                                                                                                                        }
+                                                                                                                                    }
+
+
+                                                                                                                                }
+                                                                                                                            }
+                                                                                                                            // se realiza la vrificacion si l precio ya coincide o sino se procede a verificar los permisos 
+                                                                                                                            if (productosConsulta.Rows[recorrer].Field<decimal>("precio") != productos.pmVrPrecio)
+                                                                                                                            {
+                                                                                                                                string permisoMP = "PermisoMP" + ListaProd;
+                                                                                                                                string MP = "MP" + ListaProd;
+                                                                                                                                if (Permisos.Field<string>(permisoMP) == MP)
+                                                                                                                                {
+                                                                                                                                    productosConsulta.Rows[recorrer]["precio"] = productos.pmVrPrecio;
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    Codigo = "049";
+                                                                                                                                    Mensaje = "El usuario no tiene permiso " + MP + " para cambiar el valor del producto";
+                                                                                                                                    verificacionCompleta = false;
+                                                                                                                                    break;
+                                                                                                                                }
+                                                                                                                            }
+
+                                                                                                                            //validamos la tarifa de descuento 
+                                                                                                                            //varificamos que el usuario ingreso una tarifa
+                                                                                                                            if (!string.IsNullOrEmpty(productos.pmIdTarDcto))
+                                                                                                                            {
+                                                                                                                                //verificamos la tarifa ingresada sea validad
+                                                                                                                                if (productosConsulta.Rows[recorrer].Field<string>("ExisteTarifa") == "dene")
+                                                                                                                                {
+                                                                                                                                    Codigo = "050";
+                                                                                                                                    Mensaje = "La tarifa de descuento " + productos.pmIdTarDcto + " no Existe";
+                                                                                                                                    verificacionCompleta = false;
+                                                                                                                                    break;
+                                                                                                                                }
+                                                                                                                                else if (productosConsulta.Rows[recorrer].Field<decimal>("descuento") == productosConsulta.Rows[recorrer].Field<decimal>("Tarifa"))
+                                                                                                                                {
+                                                                                                                                    //si los valores coinciden se dejan igual 
+                                                                                                                                }
+                                                                                                                                else if (permisoDCT)
+                                                                                                                                {
+                                                                                                                                    //se cambia el valor por tener el permiso de cambiar la< tarifa
+                                                                                                                                    productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer]["Tarifa"];
+
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    // se realiza la comprobacion con la tarifa en especial si no cumple arrojar error
+
+
+                                                                                                                                    //asiganamos una tabla para agregar la tabla de tarifas expeciales y saber en que parte esta el desceunto 
+                                                                                                                                    DataTable TablaTarifaDescuento = TablaPermisos.Tables[2];
+                                                                                                                                    //verificamos qu en la tabla tenga resultados para realizar el proceso 
+                                                                                                                                    if (TablaPermisos.Tables[2].Rows.Count > 0)
+                                                                                                                                    {
+
+                                                                                                                                        //Se realiza la consulta del valor
+                                                                                                                                        var filasCoincidentes = TablaTarifaDescuento.AsEnumerable()
+                                                                                                                                            .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("simb") == "%")
+                                                                                                                                              .CopyToDataTable();
+
+                                                                                                                                        //se verifica si encuentra resultados
+                                                                                                                                        if (filasCoincidentes.Rows.Count > 0)
+                                                                                                                                        {
+                                                                                                                                            //se realiza la comprobacion si cumple con los criterios del producto
+                                                                                                                                            bool ValorExiste = filasCoincidentes.AsEnumerable()
+                                                                                                                                            .Any(row => row.Field<string>("CdProducto") == productos.pmIdProducto ||
+                                                                                                                                                        row.Field<string>("CdMarca") == productosConsulta.Rows[recorrer].Field<string>("Marca") ||
+                                                                                                                                                        row.Field<string>("CdSubgrupo") == productosConsulta.Rows[recorrer].Field<string>("subgrupo") ||
+                                                                                                                                                        row.Field<string>("CdGrupo") == productosConsulta.Rows[recorrer].Field<string>("Grupo") ||
+                                                                                                                                                        row.Field<string>("cdlinea") == productosConsulta.Rows[recorrer].Field<string>("Linea"));
+
+                                                                                                                                            if (ValorExiste)
+                                                                                                                                            {
+                                                                                                                                                productosConsulta.Rows[recorrer]["descuento"] = productosConsulta.Rows[recorrer]["Tarifa"];
+                                                                                                                                            }
+                                                                                                                                            else
+                                                                                                                                            {
+                                                                                                                                                Codigo = "051";
+                                                                                                                                                Mensaje = "El usuario no tiene permiso DCT para cambiar la tarifa de descuento";
+                                                                                                                                                verificacionCompleta = false;
+                                                                                                                                                break;
+                                                                                                                                            }
                                                                                                                                         }
                                                                                                                                         else
                                                                                                                                         {
@@ -1104,6 +1125,8 @@ namespace WcfPedidos
                                                                                                                                             verificacionCompleta = false;
                                                                                                                                             break;
                                                                                                                                         }
+
+
                                                                                                                                     }
                                                                                                                                     else
                                                                                                                                     {
@@ -1112,485 +1135,481 @@ namespace WcfPedidos
                                                                                                                                         verificacionCompleta = false;
                                                                                                                                         break;
                                                                                                                                     }
-
-
                                                                                                                                 }
-                                                                                                                                else
-                                                                                                                                {
-                                                                                                                                    Codigo = "051";
-                                                                                                                                    Mensaje = "El usuario no tiene permiso DCT para cambiar la tarifa de descuento";
-                                                                                                                                    verificacionCompleta = false;
-                                                                                                                                    break;
-                                                                                                                                }
+
+
                                                                                                                             }
 
-
-                                                                                                                        }
-
-                                                                                                                        //se realiza la suma total para saber el valor total del producto
-                                                                                                                        //obtenemos a valor con el descuento
+                                                                                                                            //se realiza la suma total para saber el valor total del producto
+                                                                                                                            //obtenemos a valor con el descuento
 
 
-                                                                                                                        decimal valor = productosConsulta.Rows[recorrer].Field<decimal>("precio") + ((productosConsulta.Rows[recorrer].Field<decimal>("precio") * (productosConsulta.Rows[recorrer].Field<decimal?>("descuento") ?? 0)) * 100);
+                                                                                                                            decimal valor = productosConsulta.Rows[recorrer].Field<decimal>("precio") + ((productosConsulta.Rows[recorrer].Field<decimal>("precio") * (productosConsulta.Rows[recorrer].Field<decimal?>("descuento") ?? 0)) * 100);
 
-                                                                                                                        productosConsulta.Rows[recorrer]["SubTotal"] = valor;
+                                                                                                                            productosConsulta.Rows[recorrer]["SubTotal"] = valor;
 
-                                                                                                                        //obtenemos el valor con el iva
-                                                                                                                        valor = ((valor * (productosConsulta.Rows[recorrer].Field<decimal?>("IVA") ?? 0)) / 100) + valor;
+                                                                                                                            //obtenemos el valor con el iva
+                                                                                                                            valor = ((valor * (productosConsulta.Rows[recorrer].Field<decimal?>("IVA") ?? 0)) / 100) + valor;
 
-                                                                                                                        //obtenemos el valor para obsequios
-                                                                                                                        decimal CanObsequio = (productosConsulta.Rows[recorrer].Field<decimal>("precio") * (productosConsulta.Rows[recorrer].Field<decimal?>("IVA") ?? 0)) / 100;
-                                                                                                                        CanObsequio = CanObsequio * productos.pmCantObsequio;
+                                                                                                                            //obtenemos el valor para obsequios
+                                                                                                                            decimal CanObsequio = (productosConsulta.Rows[recorrer].Field<decimal>("precio") * (productosConsulta.Rows[recorrer].Field<decimal?>("IVA") ?? 0)) / 100;
+                                                                                                                            CanObsequio = CanObsequio * productos.pmCantObsequio;
 
 
 
-                                                                                                                        productosConsulta.Rows[recorrer]["PrecioTotalConIva"] = valor * productos.pmCantidad;
-                                                                                                                        productosConsulta.Rows[recorrer]["ValorUnitario"] = valor;
+                                                                                                                            productosConsulta.Rows[recorrer]["PrecioTotalConIva"] = valor * productos.pmCantidad;
+                                                                                                                            productosConsulta.Rows[recorrer]["ValorUnitario"] = valor;
 
-                                                                                                                        valor = valor * productos.pmCantObsequio;
-                                                                                                                        productosConsulta.Rows[recorrer]["PrecioTotalConIva"] = productosConsulta.Rows[recorrer].Field<decimal>("PrecioTotalConIva") + CanObsequio;
-                                                                                                                        productosConsulta.Rows[recorrer]["TotalIten"] = productos.pmCantidad + productos.pmCantObsequio;
-                                                                                                                        productosConsulta.Rows[recorrer]["Obsequios"] = productos.pmCantObsequio;
-                                                                                                                        productosConsulta.Rows[recorrer]["Cantidad"] = productos.pmCantidad;
-                                                                                                                        productosConsulta.Rows[recorrer]["TotalIva"] = (productosConsulta.Rows[recorrer].Field<decimal>("precio") * (productosConsulta.Rows[recorrer].Field<decimal?>("IVA") ?? 0)) / 100;
-
-                                                                                                                    }
-                                                                                                                    else
-                                                                                                                    {
-                                                                                                                        Codigo = "047";
-                                                                                                                        Mensaje = "El producto ingresado con codigo " + productos.pmIdProducto + "y descripcion " + productosConsulta.Rows[recorrer].Field<string>("DescripProd") + " No esta disponible en la compañia";
-                                                                                                                        verificacionCompleta = false;
-                                                                                                                        break;
-                                                                                                                    }
-
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    Codigo = "040";
-                                                                                                                    Mensaje = "El producto ingresado " + productos.pmIdProducto + " No Existe";
-                                                                                                                    verificacionCompleta = false;
-                                                                                                                    break;
-                                                                                                                }
-                                                                                                                recorrer++;
-                                                                                                            }
-
-                                                                                                            if (verificacionCompleta)
-                                                                                                            {
-                                                                                                                //verificamos el cupo si cumple 
-                                                                                                                decimal sumaPrecio = productosConsulta.AsEnumerable()
-                                                                                                                         .Sum(row => row.Field<decimal>("PrecioTotalConIva"));
-
-                                                                                                                int sumaIten = productosConsulta.AsEnumerable()
-                                                                                                                    .Sum(row => row.Field<int>("TotalIten"));
-
-                                                                                                                decimal TotalIva = productosConsulta.AsEnumerable()
-                                                                                                                         .Sum(row => row.Field<decimal>("TotalIva"));
-
-                                                                                                                decimal SubTotal = productosConsulta.AsEnumerable()
-                                                                                                                         .Sum(row => row.Field<decimal>("SubTotal"));
-
-                                                                                                                int cantidad = productosConsulta.AsEnumerable()
-                                                                                                                  .Sum(row => row.Field<int>("Cantidad"));
-
-                                                                                                                int Obsequio = productosConsulta.AsEnumerable()
-                                                                                                                  .Sum(row => row.Field<int>("Obsequios"));
-
-                                                                                                                decimal precio = productosConsulta.AsEnumerable()
-                                                                                                                        .Sum(row => row.Field<decimal>("precio"));
-
-                                                                                                                if (sumaPrecio <= decimal.Parse(Permisos.Field<string>("saldo")) | (Permisos.Field<string>("PermisoCupo") == "CUP"))
-                                                                                                                {
-
-
-                                                                                                                    string TipDoc = "PED";
-                                                                                                                    int Pedido = 0; //consecutivo para factura
-                                                                                                                    string IdCia = Cia;
-                                                                                                                    string Fecha = FechaPedido.ToString("yyyy-MM-dd  HH:mm:ss");
-                                                                                                                    string FechaVence = FechaPedido.AddDays(DiasEntrega).ToString("yyyy-MM-dd HH:mm:ss");
-                                                                                                                    string IdConcepto = "PED";
-                                                                                                                    string IdCliente = consulta.Cliente.Documento ?? "";
-                                                                                                                    string IdAgencia = agencia;
-                                                                                                                    string IdClieFact = consulta.Cliente.Documento ?? "";
-                                                                                                                    decimal VrSubTotal = SubTotal;
-                                                                                                                    decimal VrDescuento = SubTotal - precio;
-                                                                                                                    decimal VrImpuesto = TotalIva;
-                                                                                                                    float VrFletes = 0;
-                                                                                                                    float VrOtros = 0;
-                                                                                                                    float VrCargos = 0;
-                                                                                                                    float VrOtrDcto = 0;
-                                                                                                                    float VrSobretasa = 0;
-                                                                                                                    float VrImpGlobal = 0;
-                                                                                                                    decimal VrNeto = sumaPrecio;
-                                                                                                                    int Cantidad = cantidad;
-                                                                                                                    string IdVend = IdVendedor;
-                                                                                                                    decimal TarifaCom = ValorTarifaVendedor;
-                                                                                                                    string CodTarCom = TarifaVendedor;
-                                                                                                                    string DirEnvio = consulta.Cliente.Direccion ?? "";
-                                                                                                                    string IdLocEnv = consulta.Cliente.Municipio ?? "";
-                                                                                                                    string LugarEnvio = Permisos.Field<string>("Localidad");
-                                                                                                                    int DiasEntraga = DiasEntrega;
-                                                                                                                    string NitContac = NitContacto;
-                                                                                                                    string NomContac = NombreContacto;
-                                                                                                                    string TelContac = TelefonoContacto;
-                                                                                                                    string emlContac = EmailContacto;
-                                                                                                                    string CargoContac = CargoContacto;
-                                                                                                                    string IdForma = FormaDePago;
-                                                                                                                    string DetallePago = "";
-                                                                                                                    bool MulPlazos = false;
-                                                                                                                    string IdPlazo = Plazo;
-                                                                                                                    string CdMney = Permisos.Field<string>("CodMon");
-                                                                                                                    string NitEmpTrans = "0";
-                                                                                                                    string EmpTrans = "";
-                                                                                                                    bool AsignarVeh = false;
-                                                                                                                    string pVehiculo = "0";
-                                                                                                                    string CdConductor = "0";
-                                                                                                                    string CdRuta = Ruta;
-                                                                                                                    int ListaPrec = 0;
-                                                                                                                    string RefPedido = "CONTADO"; //falta
-                                                                                                                    string Modalidad = "INVENTARIO";
-                                                                                                                    string Vigencia = "NORMAL";
-                                                                                                                    int NumAutoriza = 0;
-                                                                                                                    int NumAutCupo = 0;
-                                                                                                                    int NumAutCheq = 0;
-                                                                                                                    int NumAprob = 0;
-                                                                                                                    string IdCiaApr = Cia;
-                                                                                                                    string FecAprob = ""; //falta
-                                                                                                                    string DetalleAprob = "APROBADO WS"; //falta
-                                                                                                                    string CdUsuAprob = usuario;
-                                                                                                                    string TipFac = "0"; //falta
-                                                                                                                    int Factura = 0; //falta
-                                                                                                                    string IdCiaFac = "00"; //falta
-                                                                                                                    string FechaFact = DBNull.Value.ToString(); //falta
-                                                                                                                    string TipRem = "0"; //falta
-                                                                                                                    int Remision = 0; //falta
-                                                                                                                    string IdCiaRem = "00"; //falta
-                                                                                                                    string FechaRem = DBNull.Value.ToString(); //falta
-                                                                                                                    int NumCotizac = 0;
-                                                                                                                    string CdCiaCotizac = compania;
-                                                                                                                    string OrigenAdd = "WS";
-                                                                                                                    int ZonaFrontera = 0;
-                                                                                                                    int TipoTrans = 0;
-                                                                                                                    string TipoOrden = ""; //falta
-                                                                                                                    string TipoModifica = "";
-                                                                                                                    bool Anulado = false;
-                                                                                                                    string FecDev = DBNull.Value.ToString(); //falta
-                                                                                                                    string Observacion = "Generado interfaz Web Services Incko"; //falta
-                                                                                                                    string IdEstado = consulta.DatosDelPedido.pmEstadoPedido;
-                                                                                                                    string TimeSys = DateTime.Now.ToString("yyyy-MM-dd  HH:mm:ss"); //falta
-                                                                                                                    string FecUpdate = DBNull.Value.ToString(); //falta
-                                                                                                                    string IdCiaCrea = compania;
-                                                                                                                    string IdUsuario = usuario;
-                                                                                                                    string NumAutSicom = "";
-                                                                                                                    float VrImpCarbono = 0;
-                                                                                                                    float BaseIvaIgp = 0;
-                                                                                                                    float VrIvaIngProd = 0;
-
-
-
-                                                                                                                    //realizamos la insercion en la base de datos 
-                                                                                                                    DataSet TablaInsert = new DataSet();
-                                                                                                                    List<SqlParameter> parametro = new List<SqlParameter>();
-
-                                                                                                                    parametro.Add(new SqlParameter("@TipDoc", TipDoc));
-                                                                                                                    parametro.Add(new SqlParameter("@Pedido", Pedido));
-                                                                                                                    parametro.Add(new SqlParameter("@IdCia", IdCia));
-                                                                                                                    parametro.Add(new SqlParameter("@Fecha", Fecha));
-                                                                                                                    parametro.Add(new SqlParameter("@FechaVence", FechaVence));
-                                                                                                                    parametro.Add(new SqlParameter("@IdConcepto", IdConcepto));
-                                                                                                                    parametro.Add(new SqlParameter("@IdCliente", IdCliente));
-                                                                                                                    parametro.Add(new SqlParameter("@IdAgencia", IdAgencia));
-                                                                                                                    parametro.Add(new SqlParameter("@IdClieFact", IdClieFact));
-                                                                                                                    parametro.Add(new SqlParameter("@VrSubTotal", VrSubTotal));
-                                                                                                                    parametro.Add(new SqlParameter("@VrDescuento", VrDescuento));
-                                                                                                                    parametro.Add(new SqlParameter("@VrImpuesto", VrImpuesto));
-                                                                                                                    parametro.Add(new SqlParameter("@VrFletes", VrFletes));
-                                                                                                                    parametro.Add(new SqlParameter("@VrOtros", VrOtros));
-                                                                                                                    parametro.Add(new SqlParameter("@VrCargos", VrCargos));
-                                                                                                                    parametro.Add(new SqlParameter("@VrOtrDcto", VrOtrDcto));
-                                                                                                                    parametro.Add(new SqlParameter("@VrSobretasa", VrSobretasa));
-                                                                                                                    parametro.Add(new SqlParameter("@VrImpGlobal", VrImpGlobal));
-                                                                                                                    parametro.Add(new SqlParameter("@VrNeto", VrNeto));
-                                                                                                                    parametro.Add(new SqlParameter("@Cantidad", Cantidad));
-                                                                                                                    parametro.Add(new SqlParameter("@IdVend", IdVend));
-                                                                                                                    parametro.Add(new SqlParameter("@TarifaCom", TarifaCom));
-                                                                                                                    parametro.Add(new SqlParameter("@CodTarCom", CodTarCom));
-                                                                                                                    parametro.Add(new SqlParameter("@DirEnvio", DirEnvio));
-                                                                                                                    parametro.Add(new SqlParameter("@IdLocEnv", IdLocEnv));
-                                                                                                                    parametro.Add(new SqlParameter("@LugarEnvio", LugarEnvio));
-                                                                                                                    parametro.Add(new SqlParameter("@DiasEntraga", DiasEntraga));
-                                                                                                                    parametro.Add(new SqlParameter("@NitContac", NitContac));
-                                                                                                                    parametro.Add(new SqlParameter("@NomContac", NomContac));
-                                                                                                                    parametro.Add(new SqlParameter("@TelContac", TelContac));
-                                                                                                                    parametro.Add(new SqlParameter("@emlContac", emlContac));
-                                                                                                                    parametro.Add(new SqlParameter("@CargoContac", CargoContac));
-                                                                                                                    parametro.Add(new SqlParameter("@IdForma", IdForma));
-                                                                                                                    parametro.Add(new SqlParameter("@DetallePago", DetallePago));
-                                                                                                                    parametro.Add(new SqlParameter("@MulPlazos", MulPlazos));
-                                                                                                                    parametro.Add(new SqlParameter("@IdPlazo", IdPlazo));
-                                                                                                                    parametro.Add(new SqlParameter("@CdMney", CdMney));
-                                                                                                                    parametro.Add(new SqlParameter("@NitEmpTrans", NitEmpTrans));
-                                                                                                                    parametro.Add(new SqlParameter("@EmpTrans", EmpTrans));
-                                                                                                                    parametro.Add(new SqlParameter("@AsignarVeh", AsignarVeh));
-                                                                                                                    parametro.Add(new SqlParameter("@pVehiculo", pVehiculo));
-                                                                                                                    parametro.Add(new SqlParameter("@CdConductor", CdConductor));
-                                                                                                                    parametro.Add(new SqlParameter("@CdRuta", CdRuta));
-                                                                                                                    parametro.Add(new SqlParameter("@ListaPrec", ListaPrec));
-                                                                                                                    parametro.Add(new SqlParameter("@RefPedido", RefPedido));
-                                                                                                                    parametro.Add(new SqlParameter("@Modalidad", Modalidad));
-                                                                                                                    parametro.Add(new SqlParameter("@Vigencia", Vigencia));
-                                                                                                                    parametro.Add(new SqlParameter("@NumAutoriza", NumAutoriza));
-                                                                                                                    parametro.Add(new SqlParameter("@NumAutCupo", NumAutCupo));
-                                                                                                                    parametro.Add(new SqlParameter("@NumAutCheq", NumAutCheq));
-                                                                                                                    parametro.Add(new SqlParameter("@NumAprob", NumAprob));
-                                                                                                                    parametro.Add(new SqlParameter("@IdCiaApr", IdCiaApr));
-                                                                                                                    parametro.Add(new SqlParameter("@FecAprob", FecAprob));
-                                                                                                                    parametro.Add(new SqlParameter("@DetalleAprob", DetalleAprob));
-                                                                                                                    parametro.Add(new SqlParameter("@CdUsuAprob", CdUsuAprob));
-                                                                                                                    parametro.Add(new SqlParameter("@TipFac", TipFac));
-                                                                                                                    parametro.Add(new SqlParameter("@Factura", Factura));
-                                                                                                                    parametro.Add(new SqlParameter("@IdCiaFac", IdCiaFac));
-                                                                                                                    parametro.Add(new SqlParameter("@FechaFact", FechaFact));
-                                                                                                                    parametro.Add(new SqlParameter("@TipRem", TipRem));
-                                                                                                                    parametro.Add(new SqlParameter("@Remision", Remision));
-                                                                                                                    parametro.Add(new SqlParameter("@IdCiaRem", IdCiaRem));
-                                                                                                                    parametro.Add(new SqlParameter("@FechaRem", FechaRem));
-                                                                                                                    parametro.Add(new SqlParameter("@NumCotizac", NumCotizac));
-                                                                                                                    parametro.Add(new SqlParameter("@CdCiaCotizac", CdCiaCotizac));
-                                                                                                                    parametro.Add(new SqlParameter("@OrigenAdd", OrigenAdd));
-                                                                                                                    parametro.Add(new SqlParameter("@ZonaFrontera", ZonaFrontera));
-                                                                                                                    parametro.Add(new SqlParameter("@TipoTrans", TipoTrans));
-                                                                                                                    parametro.Add(new SqlParameter("@TipoOrden", TipoOrden));
-                                                                                                                    parametro.Add(new SqlParameter("@TipoModifica", TipoModifica));
-                                                                                                                    parametro.Add(new SqlParameter("@Anulado", Anulado));
-                                                                                                                    parametro.Add(new SqlParameter("@FecDev", FecDev));
-                                                                                                                    parametro.Add(new SqlParameter("@Observacion", Observacion));
-                                                                                                                    parametro.Add(new SqlParameter("@IdEstado", IdEstado));
-                                                                                                                    parametro.Add(new SqlParameter("@TimeSys", TimeSys));
-                                                                                                                    parametro.Add(new SqlParameter("@FecUpdate", FecUpdate));
-                                                                                                                    parametro.Add(new SqlParameter("@IdCiaCrea", IdCiaCrea));
-                                                                                                                    parametro.Add(new SqlParameter("@IdUsuario", IdUsuario));
-                                                                                                                    parametro.Add(new SqlParameter("@NumAutSicom", NumAutSicom));
-                                                                                                                    parametro.Add(new SqlParameter("@VrImpCarbono", VrImpCarbono));
-                                                                                                                    parametro.Add(new SqlParameter("@BaseIvaIgp", BaseIvaIgp));
-                                                                                                                    parametro.Add(new SqlParameter("@VrIvaIngProd", VrIvaIngProd));
-
-
-
-                                                                                                                    if (ClassConexion.ejecutarQuery("WSPedido_ConsAgregarPedido", parametro, out TablaInsert, out string[] nuevoMennsajes, CommandType.StoredProcedure))
-                                                                                                                    {
-                                                                                                                        bool guardarProd = true;
-
-                                                                                                                        Pedido = TablaInsert.Tables[0].Rows[0].Field<int>("Pedido");
-                                                                                                                        int iten = 1;
-                                                                                                                        foreach (DataRow dr in productosConsulta.Rows)
-                                                                                                                        {
-
-                                                                                                                            int ItemProducto = iten;
-                                                                                                                            string IdProducto = dr.Field<string>("IdProducto");
-
-                                                                                                                            string IdBodega = dr.Field<string>("Bodega");
-                                                                                                                            string CdTanque = dr.Field<string>("Bodega"); ;
-
-                                                                                                                            float Salidas = dr.Field<int>("TotalIten");
-                                                                                                                            string IdUnd = dr.Field<string>("presentacion");
-                                                                                                                            decimal VrUnitario = dr.Field<decimal?>("ValorUnitario") ?? 0m;
-                                                                                                                            decimal VrPrecio = dr.Field<decimal?>("SubTotal") ?? 0m;
-                                                                                                                            decimal VrCostProm = 0;
-                                                                                                                            decimal TarifaIva = dr.Field<decimal?>("IVA") ?? 0m;
-
-                                                                                                                            decimal VrIvaSal = dr.Field<decimal?>("TotalIva") ?? 0m;
-                                                                                                                            decimal TarifaDct = dr.Field<decimal?>("descuento") ?? 0m;
-
-                                                                                                                            decimal VrDctoSal = dr.Field<decimal?>("SubTotal") ?? 0m;
-
-                                                                                                                            decimal VrCostoSal = dr.Field<int>("Cantidad");
-
-                                                                                                                            decimal VrBruto = dr.Field<decimal>("PrecioTotalConIva");
-
-                                                                                                                            string CdCCosto = consulta.Cliente.CentroCosto;
-                                                                                                                            string CdSubCos = consulta.Cliente.SubCCosto;
-                                                                                                                            string CdLocal = Permisos.Field<string>("IDLocal");
-                                                                                                                            string CdSzona = Permisos.Field<string>("SZona");
-
-                                                                                                                            decimal Comision = ValorTarifaVendedor;
-
-                                                                                                                            string Referencia = "";
-                                                                                                                            if (dr.Field<int>("Obsequios") > 0 & dr.Field<int>("Cantidad") == 0)
-                                                                                                                            {
-                                                                                                                                Referencia = "Producto Obsequio";
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-                                                                                                                                Referencia = "Producto";
-                                                                                                                            }
-                                                                                                                            string Descripcion = dr.Field<string>("DescripProd");
-
-                                                                                                                            bool EsCombo = false;
-                                                                                                                            if (dr.Field<int>("Obsequios") > 0 & dr.Field<int>("Cantidad") > 0)
-                                                                                                                            {
-                                                                                                                                EsCombo = true;
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-
-                                                                                                                                EsCombo = false;
-                                                                                                                            }
-
-                                                                                                                            string CdMoneda = Permisos.Field<string>("CodMon");
-
-                                                                                                                            string CodTarDct = dr.Field<string>("descuento") ?? "";
-                                                                                                                            string CodTarIva = dr.Field<string>("CodigoIVA");
-                                                                                                                            int ListaPrecc = dr.Field<int>("ListaDePrecio");
-                                                                                                                            decimal VrBase = dr.Field<decimal>("TotalIva");
-
-
-                                                                                                                            int CantObseq = dr.Field<int>("Obsequios");
-                                                                                                                            decimal VrIvaObseq = dr.Field<decimal>("TotalIva");
-
-                                                                                                                            //realizamos la insercion en la base de datos de productos 
-                                                                                                                            DataSet TablaProductos = new DataSet();
-                                                                                                                            List<SqlParameter> parametroProduc = new List<SqlParameter>();
-
-
-                                                                                                                            parametroProduc.Add(new SqlParameter("@TipDoc", TipDoc));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@Pedido", Pedido));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdCia", IdCia));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@ItemProducto", ItemProducto));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@Fecha", Fecha));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdProducto", IdProducto));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdBodega", IdBodega));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CdTanque", CdTanque));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@Salidas", Salidas));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdUnd", IdUnd));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrUnitario", VrUnitario));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrPrecio", VrPrecio));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrCostProm", VrCostProm));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@TarifaIva", TarifaIva));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrIvaSal", VrIvaSal));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@TarifaDct", TarifaDct));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrDctoSal", VrDctoSal));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrCostoSal", VrCostoSal));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrBruto", VrBruto));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdCliente", IdCliente));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdAgencia", IdAgencia));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CdCCosto", CdCCosto));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CdSubCos", CdSubCos));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CdLocal", CdLocal));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CdSzona", CdSzona));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdVend", IdVend));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@Comision", Comision));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@Referencia", Referencia));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@Descripcion", Descripcion));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@EsCombo", EsCombo));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CodTarDct", CodTarDct));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CodTarIva", CodTarIva));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@ListaPrecc", ListaPrecc));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrBase", VrBase));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CdMoneda", CdMoneda));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@TimeSys", TimeSys));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@IdUsuario", IdUsuario));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@CantObseq", CantObseq));
-                                                                                                                            parametroProduc.Add(new SqlParameter("@VrIvaObseq", VrIvaObseq));
-
-
-                                                                                                                            if (ClassConexion.ejecutarQuery("WSPedido_ConsAgregarProductos", parametroProduc, out TablaProductos, out string[] nuevoMennsajeprod, CommandType.StoredProcedure))
-                                                                                                                            {
-
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-                                                                                                                                Codigo = nuevoMennsajeprod[0];
-                                                                                                                                Mensaje = nuevoMennsajeprod[1];
-                                                                                                                                guardarProd = false;
-                                                                                                                                break;
-                                                                                                                            }
-                                                                                                                            iten++;
-
-
-                                                                                                                        }
-
-                                                                                                                        if (guardarProd)
-                                                                                                                        {
-                                                                                                                            respuesta.IdCia = IdCia;
-                                                                                                                            respuesta.TipoDoc = TipDoc;
-                                                                                                                            respuesta.CdAgencia = IdAgencia;
-                                                                                                                            respuesta.Fecha = Fecha;
-                                                                                                                            Codigo = "066";
-                                                                                                                            Mensaje = "Se ha registrado el pedido exitosamente con numero de factura " + Pedido;
+                                                                                                                            valor = valor * productos.pmCantObsequio;
+                                                                                                                            productosConsulta.Rows[recorrer]["PrecioTotalConIva"] = productosConsulta.Rows[recorrer].Field<decimal>("PrecioTotalConIva") + CanObsequio;
+                                                                                                                            productosConsulta.Rows[recorrer]["TotalIten"] = productos.pmCantidad + productos.pmCantObsequio;
+                                                                                                                            productosConsulta.Rows[recorrer]["Obsequios"] = productos.pmCantObsequio;
+                                                                                                                            productosConsulta.Rows[recorrer]["Cantidad"] = productos.pmCantidad;
+                                                                                                                            productosConsulta.Rows[recorrer]["TotalIva"] = (productosConsulta.Rows[recorrer].Field<decimal>("precio") * (productosConsulta.Rows[recorrer].Field<decimal?>("IVA") ?? 0)) / 100;
 
                                                                                                                         }
                                                                                                                         else
                                                                                                                         {
-
+                                                                                                                            Codigo = "047";
+                                                                                                                            Mensaje = "El producto ingresado con codigo " + productos.pmIdProducto + "y descripcion " + productosConsulta.Rows[recorrer].Field<string>("DescripProd") + " No esta disponible en la compañia";
+                                                                                                                            verificacionCompleta = false;
+                                                                                                                            break;
                                                                                                                         }
 
                                                                                                                     }
                                                                                                                     else
                                                                                                                     {
-                                                                                                                        Codigo = nuevoMennsajes[0];
-                                                                                                                        Mensaje = nuevoMennsajes[1];
+                                                                                                                        Codigo = "040";
+                                                                                                                        Mensaje = "El producto ingresado " + productos.pmIdProducto + " No Existe";
+                                                                                                                        verificacionCompleta = false;
+                                                                                                                        break;
                                                                                                                     }
+                                                                                                                    recorrer++;
+                                                                                                                }
 
-                                                                                                                }
-                                                                                                                else
+                                                                                                                if (verificacionCompleta)
                                                                                                                 {
-                                                                                                                    Codigo = "052";
-                                                                                                                    Mensaje = "El usuario no tiene permiso para Superar el cupo del cliente";
+                                                                                                                    //verificamos el cupo si cumple 
+                                                                                                                    decimal sumaPrecio = productosConsulta.AsEnumerable()
+                                                                                                                             .Sum(row => row.Field<decimal>("PrecioTotalConIva"));
+
+                                                                                                                    int sumaIten = productosConsulta.AsEnumerable()
+                                                                                                                        .Sum(row => row.Field<int>("TotalIten"));
+
+                                                                                                                    decimal TotalIva = productosConsulta.AsEnumerable()
+                                                                                                                             .Sum(row => row.Field<decimal>("TotalIva"));
+
+                                                                                                                    decimal SubTotal = productosConsulta.AsEnumerable()
+                                                                                                                             .Sum(row => row.Field<decimal>("SubTotal"));
+
+                                                                                                                    int cantidad = productosConsulta.AsEnumerable()
+                                                                                                                      .Sum(row => row.Field<int>("Cantidad"));
+
+                                                                                                                    int Obsequio = productosConsulta.AsEnumerable()
+                                                                                                                      .Sum(row => row.Field<int>("Obsequios"));
+
+                                                                                                                    decimal precio = productosConsulta.AsEnumerable()
+                                                                                                                            .Sum(row => row.Field<decimal>("precio"));
+
+                                                                                                                    if (sumaPrecio <= decimal.Parse(Permisos.Field<string>("saldo")) | (Permisos.Field<string>("PermisoCupo") == "CUP"))
+                                                                                                                    {
+
+
+                                                                                                                        string TipDoc = "PED";
+                                                                                                                        int Pedido = 0; //consecutivo para factura
+                                                                                                                        string IdCia = Cia;
+                                                                                                                        string Fecha = FechaPedido.ToString("yyyy-MM-dd  HH:mm:ss");
+                                                                                                                        string FechaVence = FechaPedido.AddDays(DiasEntrega).ToString("yyyy-MM-dd HH:mm:ss");
+                                                                                                                        string IdConcepto = "PED";
+                                                                                                                        string IdCliente = consulta.Cliente.Documento ?? "";
+                                                                                                                        string IdAgencia = agencia;
+                                                                                                                        string IdClieFact = consulta.Cliente.Documento ?? "";
+                                                                                                                        decimal VrSubTotal = SubTotal;
+                                                                                                                        decimal VrDescuento = SubTotal - precio;
+                                                                                                                        decimal VrImpuesto = TotalIva;
+                                                                                                                        float VrFletes = 0;
+                                                                                                                        float VrOtros = 0;
+                                                                                                                        float VrCargos = 0;
+                                                                                                                        float VrOtrDcto = 0;
+                                                                                                                        float VrSobretasa = 0;
+                                                                                                                        float VrImpGlobal = 0;
+                                                                                                                        decimal VrNeto = sumaPrecio;
+                                                                                                                        int Cantidad = cantidad;
+                                                                                                                        string IdVend = IdVendedor;
+                                                                                                                        decimal TarifaCom = ValorTarifaVendedor;
+                                                                                                                        string CodTarCom = TarifaVendedor;
+                                                                                                                        string DirEnvio = consulta.Cliente.Direccion ?? "";
+                                                                                                                        string IdLocEnv = consulta.Cliente.Municipio ?? "";
+                                                                                                                        string LugarEnvio = Permisos.Field<string>("Localidad");
+                                                                                                                        int DiasEntraga = DiasEntrega;
+                                                                                                                        string NitContac = NitContacto;
+                                                                                                                        string NomContac = NombreContacto;
+                                                                                                                        string TelContac = TelefonoContacto;
+                                                                                                                        string emlContac = EmailContacto;
+                                                                                                                        string CargoContac = CargoContacto;
+                                                                                                                        string IdForma = FormaDePago;
+                                                                                                                        string DetallePago = "";
+                                                                                                                        bool MulPlazos = false;
+                                                                                                                        string IdPlazo = Plazo;
+                                                                                                                        string CdMney = Permisos.Field<string>("CodMon");
+                                                                                                                        string NitEmpTrans = "0";
+                                                                                                                        string EmpTrans = "";
+                                                                                                                        bool AsignarVeh = false;
+                                                                                                                        string pVehiculo = "0";
+                                                                                                                        string CdConductor = "0";
+                                                                                                                        string CdRuta = Ruta;
+                                                                                                                        int ListaPrec = 0;
+                                                                                                                        string RefPedido = "CONTADO"; //falta
+                                                                                                                        string Modalidad = "INVENTARIO";
+                                                                                                                        string Vigencia = "NORMAL";
+                                                                                                                        int NumAutoriza = 0;
+                                                                                                                        int NumAutCupo = 0;
+                                                                                                                        int NumAutCheq = 0;
+                                                                                                                        int NumAprob = 0;
+                                                                                                                        string IdCiaApr = Cia;
+                                                                                                                        string FecAprob = ""; //falta
+                                                                                                                        string DetalleAprob = "APROBADO WS"; //falta
+                                                                                                                        string CdUsuAprob = usuario;
+                                                                                                                        string TipFac = "0"; //falta
+                                                                                                                        int Factura = 0; //falta
+                                                                                                                        string IdCiaFac = "00"; //falta
+                                                                                                                        string FechaFact = DBNull.Value.ToString(); //falta
+                                                                                                                        string TipRem = "0"; //falta
+                                                                                                                        int Remision = 0; //falta
+                                                                                                                        string IdCiaRem = "00"; //falta
+                                                                                                                        string FechaRem = DBNull.Value.ToString(); //falta
+                                                                                                                        int NumCotizac = 0;
+                                                                                                                        string CdCiaCotizac = compania;
+                                                                                                                        string OrigenAdd = "WS";
+                                                                                                                        int ZonaFrontera = 0;
+                                                                                                                        int TipoTrans = 0;
+                                                                                                                        string TipoOrden = ""; //falta
+                                                                                                                        string TipoModifica = "";
+                                                                                                                        bool Anulado = false;
+                                                                                                                        string FecDev = DBNull.Value.ToString(); //falta
+                                                                                                                        string Observacion = "Generado interfaz Web Services"; //falta
+                                                                                                                        string IdEstado = consulta.DatosDelPedido.pmEstadoPedido;
+                                                                                                                        string TimeSys = DateTime.Now.ToString("yyyy-MM-dd  HH:mm:ss"); //falta
+                                                                                                                        string FecUpdate = DBNull.Value.ToString(); //falta
+                                                                                                                        string IdCiaCrea = compania;
+                                                                                                                        string IdUsuario = usuario;
+                                                                                                                        string NumAutSicom = "";
+                                                                                                                        float VrImpCarbono = 0;
+                                                                                                                        float BaseIvaIgp = 0;
+                                                                                                                        float VrIvaIngProd = 0;
+
+
+
+                                                                                                                        //realizamos la insercion en la base de datos 
+                                                                                                                        DataSet TablaInsert = new DataSet();
+                                                                                                                        List<SqlParameter> parametro = new List<SqlParameter>();
+
+                                                                                                                        parametro.Add(new SqlParameter("@TipDoc", TipDoc));
+                                                                                                                        parametro.Add(new SqlParameter("@Pedido", Pedido));
+                                                                                                                        parametro.Add(new SqlParameter("@IdCia", IdCia));
+                                                                                                                        parametro.Add(new SqlParameter("@Fecha", Fecha));
+                                                                                                                        parametro.Add(new SqlParameter("@FechaVence", FechaVence));
+                                                                                                                        parametro.Add(new SqlParameter("@IdConcepto", IdConcepto));
+                                                                                                                        parametro.Add(new SqlParameter("@IdCliente", IdCliente));
+                                                                                                                        parametro.Add(new SqlParameter("@IdAgencia", IdAgencia));
+                                                                                                                        parametro.Add(new SqlParameter("@IdClieFact", IdClieFact));
+                                                                                                                        parametro.Add(new SqlParameter("@VrSubTotal", VrSubTotal));
+                                                                                                                        parametro.Add(new SqlParameter("@VrDescuento", VrDescuento));
+                                                                                                                        parametro.Add(new SqlParameter("@VrImpuesto", VrImpuesto));
+                                                                                                                        parametro.Add(new SqlParameter("@VrFletes", VrFletes));
+                                                                                                                        parametro.Add(new SqlParameter("@VrOtros", VrOtros));
+                                                                                                                        parametro.Add(new SqlParameter("@VrCargos", VrCargos));
+                                                                                                                        parametro.Add(new SqlParameter("@VrOtrDcto", VrOtrDcto));
+                                                                                                                        parametro.Add(new SqlParameter("@VrSobretasa", VrSobretasa));
+                                                                                                                        parametro.Add(new SqlParameter("@VrImpGlobal", VrImpGlobal));
+                                                                                                                        parametro.Add(new SqlParameter("@VrNeto", VrNeto));
+                                                                                                                        parametro.Add(new SqlParameter("@Cantidad", Cantidad));
+                                                                                                                        parametro.Add(new SqlParameter("@IdVend", IdVend));
+                                                                                                                        parametro.Add(new SqlParameter("@TarifaCom", TarifaCom));
+                                                                                                                        parametro.Add(new SqlParameter("@CodTarCom", CodTarCom));
+                                                                                                                        parametro.Add(new SqlParameter("@DirEnvio", DirEnvio));
+                                                                                                                        parametro.Add(new SqlParameter("@IdLocEnv", IdLocEnv));
+                                                                                                                        parametro.Add(new SqlParameter("@LugarEnvio", LugarEnvio));
+                                                                                                                        parametro.Add(new SqlParameter("@DiasEntraga", DiasEntraga));
+                                                                                                                        parametro.Add(new SqlParameter("@NitContac", NitContac));
+                                                                                                                        parametro.Add(new SqlParameter("@NomContac", NomContac));
+                                                                                                                        parametro.Add(new SqlParameter("@TelContac", TelContac));
+                                                                                                                        parametro.Add(new SqlParameter("@emlContac", emlContac));
+                                                                                                                        parametro.Add(new SqlParameter("@CargoContac", CargoContac));
+                                                                                                                        parametro.Add(new SqlParameter("@IdForma", IdForma));
+                                                                                                                        parametro.Add(new SqlParameter("@DetallePago", DetallePago));
+                                                                                                                        parametro.Add(new SqlParameter("@MulPlazos", MulPlazos));
+                                                                                                                        parametro.Add(new SqlParameter("@IdPlazo", IdPlazo));
+                                                                                                                        parametro.Add(new SqlParameter("@CdMney", CdMney));
+                                                                                                                        parametro.Add(new SqlParameter("@NitEmpTrans", NitEmpTrans));
+                                                                                                                        parametro.Add(new SqlParameter("@EmpTrans", EmpTrans));
+                                                                                                                        parametro.Add(new SqlParameter("@AsignarVeh", AsignarVeh));
+                                                                                                                        parametro.Add(new SqlParameter("@pVehiculo", pVehiculo));
+                                                                                                                        parametro.Add(new SqlParameter("@CdConductor", CdConductor));
+                                                                                                                        parametro.Add(new SqlParameter("@CdRuta", CdRuta));
+                                                                                                                        parametro.Add(new SqlParameter("@ListaPrec", ListaPrec));
+                                                                                                                        parametro.Add(new SqlParameter("@RefPedido", RefPedido));
+                                                                                                                        parametro.Add(new SqlParameter("@Modalidad", Modalidad));
+                                                                                                                        parametro.Add(new SqlParameter("@Vigencia", Vigencia));
+                                                                                                                        parametro.Add(new SqlParameter("@NumAutoriza", NumAutoriza));
+                                                                                                                        parametro.Add(new SqlParameter("@NumAutCupo", NumAutCupo));
+                                                                                                                        parametro.Add(new SqlParameter("@NumAutCheq", NumAutCheq));
+                                                                                                                        parametro.Add(new SqlParameter("@NumAprob", NumAprob));
+                                                                                                                        parametro.Add(new SqlParameter("@IdCiaApr", IdCiaApr));
+                                                                                                                        parametro.Add(new SqlParameter("@FecAprob", FecAprob));
+                                                                                                                        parametro.Add(new SqlParameter("@DetalleAprob", DetalleAprob));
+                                                                                                                        parametro.Add(new SqlParameter("@CdUsuAprob", CdUsuAprob));
+                                                                                                                        parametro.Add(new SqlParameter("@TipFac", TipFac));
+                                                                                                                        parametro.Add(new SqlParameter("@Factura", Factura));
+                                                                                                                        parametro.Add(new SqlParameter("@IdCiaFac", IdCiaFac));
+                                                                                                                        parametro.Add(new SqlParameter("@FechaFact", FechaFact));
+                                                                                                                        parametro.Add(new SqlParameter("@TipRem", TipRem));
+                                                                                                                        parametro.Add(new SqlParameter("@Remision", Remision));
+                                                                                                                        parametro.Add(new SqlParameter("@IdCiaRem", IdCiaRem));
+                                                                                                                        parametro.Add(new SqlParameter("@FechaRem", FechaRem));
+                                                                                                                        parametro.Add(new SqlParameter("@NumCotizac", NumCotizac));
+                                                                                                                        parametro.Add(new SqlParameter("@CdCiaCotizac", CdCiaCotizac));
+                                                                                                                        parametro.Add(new SqlParameter("@OrigenAdd", OrigenAdd));
+                                                                                                                        parametro.Add(new SqlParameter("@ZonaFrontera", ZonaFrontera));
+                                                                                                                        parametro.Add(new SqlParameter("@TipoTrans", TipoTrans));
+                                                                                                                        parametro.Add(new SqlParameter("@TipoOrden", TipoOrden));
+                                                                                                                        parametro.Add(new SqlParameter("@TipoModifica", TipoModifica));
+                                                                                                                        parametro.Add(new SqlParameter("@Anulado", Anulado));
+                                                                                                                        parametro.Add(new SqlParameter("@FecDev", FecDev));
+                                                                                                                        parametro.Add(new SqlParameter("@Observacion", Observacion));
+                                                                                                                        parametro.Add(new SqlParameter("@IdEstado", IdEstado));
+                                                                                                                        parametro.Add(new SqlParameter("@TimeSys", TimeSys));
+                                                                                                                        parametro.Add(new SqlParameter("@FecUpdate", FecUpdate));
+                                                                                                                        parametro.Add(new SqlParameter("@IdCiaCrea", IdCiaCrea));
+                                                                                                                        parametro.Add(new SqlParameter("@IdUsuario", IdUsuario));
+                                                                                                                        parametro.Add(new SqlParameter("@NumAutSicom", NumAutSicom));
+                                                                                                                        parametro.Add(new SqlParameter("@VrImpCarbono", VrImpCarbono));
+                                                                                                                        parametro.Add(new SqlParameter("@BaseIvaIgp", BaseIvaIgp));
+                                                                                                                        parametro.Add(new SqlParameter("@VrIvaIngProd", VrIvaIngProd));
+
+
+
+                                                                                                                        if (ClassConexion.ejecutarQuery("WSPedido_ConsAgregarPedido", parametro, out TablaInsert, out string[] nuevoMennsajes, CommandType.StoredProcedure))
+                                                                                                                        {
+                                                                                                                            bool guardarProd = true;
+
+                                                                                                                            Pedido = TablaInsert.Tables[0].Rows[0].Field<int>("Pedido");
+                                                                                                                            int iten = 1;
+                                                                                                                            foreach (DataRow dr in productosConsulta.Rows)
+                                                                                                                            {
+
+                                                                                                                                int ItemProducto = iten;
+                                                                                                                                string IdProducto = dr.Field<string>("IdProducto");
+
+                                                                                                                                string IdBodega = dr.Field<string>("Bodega");
+                                                                                                                                string CdTanque = dr.Field<string>("Bodega"); ;
+
+                                                                                                                                float Salidas = dr.Field<int>("TotalIten");
+                                                                                                                                string IdUnd = dr.Field<string>("presentacion");
+                                                                                                                                decimal VrUnitario = dr.Field<decimal?>("ValorUnitario") ?? 0m;
+                                                                                                                                decimal VrPrecio = dr.Field<decimal?>("SubTotal") ?? 0m;
+                                                                                                                                decimal VrCostProm = 0;
+                                                                                                                                decimal TarifaIva = dr.Field<decimal?>("IVA") ?? 0m;
+
+                                                                                                                                decimal VrIvaSal = dr.Field<decimal?>("TotalIva") ?? 0m;
+                                                                                                                                decimal TarifaDct = dr.Field<decimal?>("descuento") ?? 0m;
+
+                                                                                                                                decimal VrDctoSal = dr.Field<decimal?>("SubTotal") ?? 0m;
+
+                                                                                                                                decimal VrCostoSal = dr.Field<int>("Cantidad");
+
+                                                                                                                                decimal VrBruto = dr.Field<decimal>("PrecioTotalConIva");
+
+                                                                                                                                string CdCCosto = consulta.Cliente.CentroCosto;
+                                                                                                                                string CdSubCos = consulta.Cliente.SubCCosto;
+                                                                                                                                string CdLocal = Permisos.Field<string>("IDLocal");
+                                                                                                                                string CdSzona = Permisos.Field<string>("SZona");
+
+                                                                                                                                decimal Comision = ValorTarifaVendedor;
+
+                                                                                                                                string Referencia = "";
+                                                                                                                                if (dr.Field<int>("Obsequios") > 0 & dr.Field<int>("Cantidad") == 0)
+                                                                                                                                {
+                                                                                                                                    Referencia = "Producto Obsequio";
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    Referencia = "Producto";
+                                                                                                                                }
+                                                                                                                                string Descripcion = dr.Field<string>("DescripProd");
+
+                                                                                                                                bool EsCombo = false;
+                                                                                                                                if (dr.Field<int>("Obsequios") > 0 & dr.Field<int>("Cantidad") > 0)
+                                                                                                                                {
+                                                                                                                                    EsCombo = true;
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+
+                                                                                                                                    EsCombo = false;
+                                                                                                                                }
+
+                                                                                                                                string CdMoneda = Permisos.Field<string>("CodMon");
+
+                                                                                                                                string CodTarDct = dr.Field<string>("descuento") ?? "";
+                                                                                                                                string CodTarIva = dr.Field<string>("CodigoIVA");
+                                                                                                                                int ListaPrecc = dr.Field<int>("ListaDePrecio");
+                                                                                                                                decimal VrBase = dr.Field<decimal>("TotalIva");
+
+
+                                                                                                                                int CantObseq = dr.Field<int>("Obsequios");
+                                                                                                                                decimal VrIvaObseq = dr.Field<decimal>("TotalIva");
+
+                                                                                                                                //realizamos la insercion en la base de datos de productos 
+                                                                                                                                DataSet TablaProductos = new DataSet();
+                                                                                                                                List<SqlParameter> parametroProduc = new List<SqlParameter>();
+
+
+                                                                                                                                parametroProduc.Add(new SqlParameter("@TipDoc", TipDoc));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@Pedido", Pedido));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdCia", IdCia));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@ItemProducto", ItemProducto));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@Fecha", Fecha));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdProducto", IdProducto));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdBodega", IdBodega));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CdTanque", CdTanque));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@Salidas", Salidas));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdUnd", IdUnd));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrUnitario", VrUnitario));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrPrecio", VrPrecio));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrCostProm", VrCostProm));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@TarifaIva", TarifaIva));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrIvaSal", VrIvaSal));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@TarifaDct", TarifaDct));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrDctoSal", VrDctoSal));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrCostoSal", VrCostoSal));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrBruto", VrBruto));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdCliente", IdCliente));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdAgencia", IdAgencia));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CdCCosto", CdCCosto));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CdSubCos", CdSubCos));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CdLocal", CdLocal));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CdSzona", CdSzona));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdVend", IdVend));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@Comision", Comision));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@Referencia", Referencia));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@Descripcion", Descripcion));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@EsCombo", EsCombo));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CodTarDct", CodTarDct));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CodTarIva", CodTarIva));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@ListaPrecc", ListaPrecc));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrBase", VrBase));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CdMoneda", CdMoneda));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@TimeSys", TimeSys));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@IdUsuario", IdUsuario));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@CantObseq", CantObseq));
+                                                                                                                                parametroProduc.Add(new SqlParameter("@VrIvaObseq", VrIvaObseq));
+
+
+                                                                                                                                if (ClassConexion.ejecutarQuery("WSPedido_ConsAgregarProductos", parametroProduc, out TablaProductos, out string[] nuevoMennsajeprod, CommandType.StoredProcedure))
+                                                                                                                                {
+
+                                                                                                                                }
+                                                                                                                                else
+                                                                                                                                {
+                                                                                                                                    Codigo = nuevoMennsajeprod[0];
+                                                                                                                                    Mensaje = nuevoMennsajeprod[1];
+                                                                                                                                    guardarProd = false;
+                                                                                                                                    break;
+                                                                                                                                }
+                                                                                                                                iten++;
+
+
+                                                                                                                            }
+
+                                                                                                                            if (guardarProd)
+                                                                                                                            {
+                                                                                                                                respuesta.IdCia = IdCia;
+                                                                                                                                respuesta.TipoDoc = TipDoc;
+                                                                                                                                respuesta.CdAgencia = IdAgencia;
+                                                                                                                                respuesta.Fecha = Fecha;
+                                                                                                                                Codigo = "066";
+                                                                                                                                Mensaje = "Se ha registrado el pedido exitosamente con numero de factura " + Pedido;
+
+                                                                                                                            }
+                                                                                                                            else
+                                                                                                                            {
+
+                                                                                                                            }
+
+                                                                                                                        }
+                                                                                                                        else
+                                                                                                                        {
+                                                                                                                            Codigo = nuevoMennsajes[0];
+                                                                                                                            Mensaje = nuevoMennsajes[1];
+                                                                                                                        }
+
+                                                                                                                    }
+                                                                                                                    else
+                                                                                                                    {
+                                                                                                                        Codigo = "052";
+                                                                                                                        Mensaje = "El usuario no tiene permiso para Superar el cupo del cliente";
+                                                                                                                    }
                                                                                                                 }
+
+
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                Codigo = "037";
+                                                                                                                Mensaje = "No se han encontrado los productos";
                                                                                                             }
 
 
+
+
                                                                                                         }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            Codigo = "037";
-                                                                                                            Mensaje = "No se han encontrado los productos";
-                                                                                                        }
-
-
-
-
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        Codigo = "038";
+                                                                                                        Mensaje = "El usuario no tiene permiso CIA para registrar el pedido en otra compañia";
                                                                                                     }
                                                                                                 }
-                                                                                                else
-                                                                                                {
-                                                                                                    Codigo = "038";
-                                                                                                    Mensaje = "El usuario no tiene permiso CIA para registrar el pedido en otra compañia";
-                                                                                                }
                                                                                             }
+
                                                                                         }
 
                                                                                     }
 
                                                                                 }
-
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                Codigo = "022";
-                                                                                Mensaje = "No tiene el usuario el permiso EGA para ingresar una fecha diferente a la establecida";
+                                                                                else
+                                                                                {
+                                                                                    Codigo = "022";
+                                                                                    Mensaje = "No tiene el usuario el permiso EGA para ingresar una fecha diferente a la establecida";
+                                                                                }
                                                                             }
                                                                         }
+                                                                        else
+                                                                        {
+                                                                            Codigo = "045";
+                                                                            Mensaje = "El codigo de pmTarifaComision no existe en syscom";
+                                                                        }
                                                                     }
-                                                                    else
-                                                                    {
-                                                                        Codigo = "045";
-                                                                        Mensaje = "El codigo de pmTarifaComision no existe en syscom";
-                                                                    }
+
+
                                                                 }
-
-
+                                                                else
+                                                                {
+                                                                    Codigo = "022";
+                                                                    Mensaje = "El cliente se encuentra en mora y el usuario no tiene el permiso MOR";
+                                                                }
                                                             }
                                                             else
                                                             {
-                                                                Codigo = "022";
-                                                                Mensaje = "El cliente se encuentra en mora y el usuario no tiene el permiso MOR";
+                                                                Codigo = "055";
+                                                                Mensaje = "El codigo de plazo ingresado no existe";
                                                             }
                                                         }
                                                         else
                                                         {
                                                             Codigo = "055";
-                                                            Mensaje = "El codigo de plazo ingresado no existe";
+                                                            Mensaje = "El codigo de pmEstadoPedido no esta permitido solo estan 0001 y 0002";
                                                         }
                                                     }
                                                     else
