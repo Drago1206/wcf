@@ -786,7 +786,7 @@ namespace WcfPedidos
                                                                                                     }
                                                                                                     catch (Exception ex)
                                                                                                     {
-                                                                                                        Codigo = "031";
+                                                                                                        Codigo = "077";
                                                                                                         Mensaje = "Los dias de plazo que estan en la base de datos estan mal configurados";
                                                                                                     }
                                                                                                 }
@@ -882,8 +882,16 @@ namespace WcfPedidos
                                                                                                                 productosConsulta.Columns.Add("TotalIva", typeof(decimal));
                                                                                                                 productosConsulta.Columns.Add("SubTotal", typeof(decimal));
                                                                                                                 productosConsulta.Columns.Add("ValorUnitario", typeof(decimal));
+                                                                                                               
                                                                                                                 foreach (ProductosPed productos in consulta.Productos)
                                                                                                                 {
+                                                                                                                    if (productosConsulta.Rows.Count == 0)
+                                                                                                                    {
+                                                                                                                        Codigo = "078";
+                                                                                                                        Mensaje = "El producto ingresado " + productos.pmIdProducto + " No Existe";
+                                                                                                                        verificacionCompleta = false;
+                                                                                                                        break;
+                                                                                                                    }
                                                                                                                     //comprobamos que el producto exista
                                                                                                                     if (productosConsulta.Rows[recorrer].Field<string>("IdProducto") == productos.pmIdProducto)
                                                                                                                     {
@@ -1005,25 +1013,17 @@ namespace WcfPedidos
                                                                                                                                 //verificamos qu en la tabla tenga resultados para realizar el proceso 
                                                                                                                                 if (TablaPermisos.Tables[2].Rows.Count > 0)
                                                                                                                                 {
-                                                                                                                                    try
-                                                                                                                                    {
-                                                                                                                                        //Se realiza la consulta del valor
-                                                                                                                                        var filasCoincidentess = TablaTarifaEspecial.AsEnumerable()
-                                                                                                                                             .Where(row => row.Field<decimal>("Tarifa") == productos.pmVrPrecio)
-                                                                                                                                              .CopyToDataTable();
-                                                                                                                                    }
-                                                                                                                                    catch (Exception ex)
-                                                                                                                                    {
-                                                                                                                                        string eeee = ex.Message;
-                                                                                                                                    }
+                                                                                                                                    DataTable PrecioEspecial = null;
+
                                                                                                                                     var filasCoincidentes = TablaTarifaEspecial.AsEnumerable()
-                                                                                                                                          .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("SimbTfa") == "$")
-                                                                                                                                            .CopyToDataTable();
+                                                                                                                                          .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("SimbTfa") == "$");
+
                                                                                                                                     //se verifica si encuentra resultados
-                                                                                                                                    if (filasCoincidentes.Rows.Count > 0)
+                                                                                                                                    if (filasCoincidentes.Any())
                                                                                                                                     {
+                                                                                                                                        PrecioEspecial = filasCoincidentes.CopyToDataTable();
                                                                                                                                         //se realiza la comprobacion si cumple con los criterios del producto
-                                                                                                                                        bool ValorExiste = filasCoincidentes.AsEnumerable()
+                                                                                                                                        bool ValorExiste = PrecioEspecial.AsEnumerable()
                                                                                                                                         .Any(row => row.Field<string>("CdProducto") == productos.pmIdProducto ||
                                                                                                                                                     row.Field<string>("CdMarca") == productosConsulta.Rows[recorrer].Field<string>("Marca") ||
                                                                                                                                                     row.Field<string>("CdSubgrupo") == productosConsulta.Rows[recorrer].Field<string>("subgrupo") ||
@@ -1069,7 +1069,7 @@ namespace WcfPedidos
                                                                                                                                     verificacionCompleta = false;
                                                                                                                                     break;
                                                                                                                                 }
-                                                                                                                                else if (productosConsulta.Rows[recorrer].Field<decimal>("descuento") == productosConsulta.Rows[recorrer].Field<decimal>("Tarifa"))
+                                                                                                                                else if (productosConsulta.Rows[recorrer].Field<decimal?>("descuento") == productosConsulta.Rows[recorrer].Field<decimal?>("Tarifa"))
                                                                                                                                 {
                                                                                                                                     //si los valores coinciden se dejan igual 
                                                                                                                                 }
@@ -1089,17 +1089,17 @@ namespace WcfPedidos
                                                                                                                                     //verificamos qu en la tabla tenga resultados para realizar el proceso 
                                                                                                                                     if (TablaPermisos.Tables[2].Rows.Count > 0)
                                                                                                                                     {
-
+                                                                                                                                        DataTable TablaTarDescuento = null;
                                                                                                                                         //Se realiza la consulta del valor
                                                                                                                                         var filasCoincidentes = TablaTarifaDescuento.AsEnumerable()
-                                                                                                                                            .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("simb") == "%")
-                                                                                                                                              .CopyToDataTable();
+                                                                                                                                            .Where(row => row.Field<decimal>("tarifa") == productos.pmVrPrecio && row.Field<string>("SimbTfa") == "%");
 
                                                                                                                                         //se verifica si encuentra resultados
-                                                                                                                                        if (filasCoincidentes.Rows.Count > 0)
+                                                                                                                                        if (filasCoincidentes.Any())
                                                                                                                                         {
+                                                                                                                                            TablaTarDescuento = filasCoincidentes.CopyToDataTable();
                                                                                                                                             //se realiza la comprobacion si cumple con los criterios del producto
-                                                                                                                                            bool ValorExiste = filasCoincidentes.AsEnumerable()
+                                                                                                                                            bool ValorExiste = TablaTarDescuento.AsEnumerable()
                                                                                                                                             .Any(row => row.Field<string>("CdProducto") == productos.pmIdProducto ||
                                                                                                                                                         row.Field<string>("CdMarca") == productosConsulta.Rows[recorrer].Field<string>("Marca") ||
                                                                                                                                                         row.Field<string>("CdSubgrupo") == productosConsulta.Rows[recorrer].Field<string>("subgrupo") ||
