@@ -98,11 +98,11 @@ namespace WcfPedidos.Model
                 {
                     pagina = pa.pagina.Pagina;
                 }
-                if (pa.pagina.NumResgitroPagina > 0)
+                if (pa.pagina.NumRegistroPagina > 0)
                 {
-                    resPagina = pa.pagina.NumResgitroPagina;
-                    fin = pa.pagina.NumResgitroPagina * pagina;
-                    inicio = (fin - pa.pagina.NumResgitroPagina) + 1;
+                    resPagina = pa.pagina.NumRegistroPagina;
+                    fin = pa.pagina.NumRegistroPagina * pagina;
+                    inicio = (fin - pa.pagina.NumRegistroPagina) + 1;
                 }
 
                 ConexionSQLite conSqlite = new ConexionSQLite("");
@@ -167,7 +167,7 @@ namespace WcfPedidos.Model
                 {
                     mensaje = new string[2];
                     mensaje[0] = "014";
-                    mensaje[1] = "No se encuentran Clientes disponibles";
+                    mensaje[1] = "No se encuentran productos disponibles";
                 }
             }
             catch (Exception ex)
