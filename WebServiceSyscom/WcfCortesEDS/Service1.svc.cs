@@ -340,10 +340,9 @@ namespace WcfCortesEDS
                 if (validacion)
                 {                    
                     ConexionBD ClassConexion = new ConexionBD();
-                    ConexionSQLite conSqlite = new ConexionSQLite("");
-                    string connectionString = conSqlite.obtenerConexionSyscom().ConnectionString;
-                    ClassConexion.setConnection(conSqlite.obtenerConexionSyscom());
-                    SqlConnectionStringBuilder infoCon = conSqlite.obtenerConexionSQLServer("dbsyscom");
+                    ConexionSQLite conSqlite = new ConexionSQLite("");                 
+                    ClassConexion.setConnection(conSqlite.obtenerConexionSyscom("bdCortesEDS"));
+                    SqlConnectionStringBuilder infoCon = conSqlite.obtenerConexionSQLServer("bdCortesEDS");
                     DataSet TablaInfo = new DataSet();
                     List<SqlParameter> parametros = new List<SqlParameter>();
                     parametros.Add(new SqlParameter("@Consecutivo", Info.Insert.Consecutivo));
