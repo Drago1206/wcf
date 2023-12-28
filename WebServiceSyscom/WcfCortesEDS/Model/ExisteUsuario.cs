@@ -15,9 +15,9 @@ namespace WcfCortesEDS.Model
 
         public ExisteUsuario()
         {
-            string connectionString = conSqlite.obtenerConexionSyscom().ConnectionString;
+            string connectionString = conSqlite.obtenerConexionSyscom("bdCortesEDS").ConnectionString;
 
-            ClassConexion.setConnection(conSqlite.obtenerConexionSyscom());
+            ClassConexion.setConnection(conSqlite.obtenerConexionSyscom("bdCortesEDS"));
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace WcfCortesEDS.Model
             {
                 int ResTotal = 0;
                 string[] pwdDe = null;
-                SqlConnectionStringBuilder infoCon = conSqlite.obtenerConexionSQLServer("dbsyscom");
+                SqlConnectionStringBuilder infoCon = conSqlite.obtenerConexionSQLServer("bdCortesEDS");
                 DataSet TablaIncio = new DataSet();
                 List<SqlParameter> parametros = new List<SqlParameter>();
                 parametros.Add(new SqlParameter("@Usuario", usuario));
