@@ -43,7 +43,7 @@ namespace WcfPedidos.Model
                 {
                     //se genera el token
                     pwdSyscom pwdSys = new pwdSyscom();
-                    DateTime _expiration = DateTime.Now.AddMinutes(144999);
+                    DateTime _expiration = DateTime.Now.AddMinutes(5);
                     pwdSys.Codificar(string.Concat(usuario, "=", contrasena, "=", _expiration.ToString("dd/MM/yyyy HH:mm:ss"), "=", Proyecto, "=", compania));
 
                     var _claims = new[]{
@@ -78,7 +78,7 @@ namespace WcfPedidos.Model
             else
             {
                 mensaje = new string[2];
-                mensaje[0] = "074";
+                mensaje[0] = "079";
                 mensaje[1] = "Error con la configuracion de la base de datos SQlite"+ "Data Source=" + System.AppDomain.CurrentDomain.BaseDirectory + "\\BD.reg;Version=3;" + ConexionSQLite.error; 
                 return null;
             }
