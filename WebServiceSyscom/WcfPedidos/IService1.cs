@@ -31,6 +31,7 @@ namespace WcfPedidos
         /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Producto")]
         RespProducto ConProducto(ObtProducto obtProducto);
 
         /// <summary>
@@ -185,7 +186,7 @@ namespace WcfPedidos
         /// Numero de registro por pagina.
         /// </value>
         [DataMember]
-        public int NumResgitroPagina { get; set; }
+        public int NumRegistroPagina { get; set; }
     }
 
     [DataContract]
@@ -665,7 +666,7 @@ namespace WcfPedidos
         }
 
         [DataMember]
-        public string NitClinte { get; set; }
+        public string NitCliente { get; set; }
 
         [DataMember]
         public PaginaAcceder Pagina{

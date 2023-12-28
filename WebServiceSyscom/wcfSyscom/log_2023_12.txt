@@ -1,0 +1,771 @@
+12/12/2023 15:09:46: ============================================================================
+12/12/2023 15:09:46: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "12/12/2023 11:11:47"
+  },
+  "Cliente": {
+    "Documento": "1003866340",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "000002",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED",
+  "cdAgencia": "0"
+}
+12/12/2023 15:09:46: [
+  "No se han encontrado los productos solicitados.",
+  "No ha sido posible guardar la información del pedido. Verifique y corrija los errores."
+]
+12/12/2023 15:18:54: Ha ocurrido un error al intentar ejecutar la consulta: Error relacionado con la red o específico de la instancia mientras se establecía una conexión con el servidor SQL Server. No se encontró el servidor o éste no estaba accesible. Compruebe que el nombre de la instancia es correcto y que SQL Server está configurado para admitir conexiones remotas. (provider: Named Pipes Provider, error: 40 - No se pudo abrir una conexión con SQL Server)
+12/12/2023 15:19:14: Pedido No.  PED-298-01/PED Del cliente 1005155282 / 0
+26/12/2023 15:05:45: ============================================================================
+26/12/2023 15:05:45: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "1234567890",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0001",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:05:45: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:14:33: ============================================================================
+26/12/2023 15:14:33: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "1234567890",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0001",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:14:33: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:17:13: ============================================================================
+26/12/2023 15:17:13: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "1234567890",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0001",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:17:13: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:17:44: ============================================================================
+26/12/2023 15:17:44: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "1234567890",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0001",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED4",
+  "cdAgencia": "0"
+}
+26/12/2023 15:17:44: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:18:50: ============================================================================
+26/12/2023 15:18:50: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "1234567890",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED4",
+  "cdAgencia": "0"
+}
+26/12/2023 15:18:50: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:20:50: ============================================================================
+26/12/2023 15:20:50: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "1234567890",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED",
+  "cdAgencia": "0"
+}
+26/12/2023 15:20:50: Ya se ha realizado un pedido con las mismas caracteristicas al cliente 1234567890'PED-301-01'
+26/12/2023 15:22:38: ============================================================================
+26/12/2023 15:22:38: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "900857526",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED",
+  "cdAgencia": "0"
+}
+26/12/2023 15:22:38: [
+  "Ha ocurrido un error al intentar generar el pedido: El Cliente no existe.",
+  "Ha ocurrido un error al intentar generar el pedido: No hay ninguna fila en la posición 0."
+]
+26/12/2023 15:23:01: Pedido No.  PED-303-01/PED Del cliente 900587526 / 0
+26/12/2023 15:23:29: ============================================================================
+26/12/2023 15:23:29: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "901283639",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:23:29: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:34:15: ============================================================================
+26/12/2023 15:34:15: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "901283639",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:34:15: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:34:53: ============================================================================
+26/12/2023 15:34:53: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "901283639",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED4",
+  "cdAgencia": "0"
+}
+26/12/2023 15:34:53: [
+  "Error al ejecutar la consultawcfSycom_AgregarPedido ha ocurrido  The INSERT statement conflicted with the FOREIGN KEY constraint \"FK_Trn_Opedido_Conceptos\". The conflict occurred in database \"DBSYSCOMSOPORTE\", table \"dbo.Conceptos\", column 'IdConcepto'.]"
+]
+26/12/2023 15:40:03: ============================================================================
+26/12/2023 15:40:03: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "901283639",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED4",
+  "cdAgencia": "0"
+}
+26/12/2023 15:40:03: [
+  "El vendedor 1234567890 no tiene una compañia asignada",
+  "Ha ocurrido un error al intentar obtener la lista de precios: No hay ninguna fila en la posición 0."
+]
+26/12/2023 15:40:16: Ha ocurrido un error al intentar ejecutar la consulta: Invalid column name 'ExcImpBACU'.
+Invalid column name 'Procedencia'.
+Invalid column name 'TipoIBAICU'.
+Invalid column name 'Procedencia'.
+Invalid column name 'TipoIBAICU'.
+Invalid column name 'Procedencia'.
+Invalid column name 'TipoIBAICU'.
+Invalid column name 'CantAzucar'.
+Invalid column name 'Procedencia'.
+Invalid column name 'TipoIBAICU'.
+Invalid column name 'CdTarifIcu'.
+Invalid column name 'CdTarifIcu'.
+26/12/2023 15:40:16: ============================================================================
+26/12/2023 15:40:16: {
+  "Usuario": {
+    "IdUsuario": "1095938454",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "21468639",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "2520",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:40:16: [
+  "Ha ocurrido un error al intentar obtener la lista de precios: Error interno en el runtime.",
+  "Ha ocurrido un error al intentar generar el pedido: La columna 'VrImpuBA' no pertenece a la tabla Table."
+]
+26/12/2023 15:44:34: ============================================================================
+26/12/2023 15:44:34: {
+  "Usuario": {
+    "IdUsuario": "1095938454",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "21468639",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "2520",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:44:34: [
+  "El vendedor 1095938454 no tiene una compañia asignada",
+  "Ha ocurrido un error al intentar obtener la lista de precios: No hay ninguna fila en la posición 0."
+]
+26/12/2023 15:44:57: Pedido No.  PED-306-01/PED3 Del cliente 901283639 / 0
+26/12/2023 15:45:03: Pedido No.  PED-307-01/PED4 Del cliente 901283639 / 0
+26/12/2023 15:45:45: Pedido No.  PED-308-01/PED4 Del cliente 830091550 / 0
+26/12/2023 15:45:53: Pedido No.  PED-309-01/PED3 Del cliente 830091550 / 0
+26/12/2023 15:45:55: ============================================================================
+26/12/2023 15:45:55: {
+  "Usuario": {
+    "IdUsuario": "1234567890",
+    "Fecha_Act": "01/12/2023 14:02:02"
+  },
+  "Cliente": {
+    "Documento": "830091550",
+    "Nombres": null,
+    "Apellidos": null,
+    "TipoDoc": null,
+    "Direccion": null,
+    "Municipio": null,
+    "Telefono": null,
+    "ActEconomica": null,
+    "RegimenDIAN": null,
+    "TipEnte": null,
+    "MunExpedicion": null,
+    "DiasEntrega": null,
+    "Zona": null,
+    "Grupo": null,
+    "Plazo": null,
+    "Ruta": null,
+    "CentroCosto": null,
+    "SubCCosto": null
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0003",
+      "pmDescripProd": null,
+      "pmIvaInc": null,
+      "pmLtPreDef": null,
+      "pmVrPrecio1": 0.0,
+      "pmVrPrecio2": 0.0,
+      "pmVrPrecio3": 0.0,
+      "pmVrPrecio4": 0.0,
+      "pmVrPrecio5": 0.0,
+      "pmTarifaIva": 0.0,
+      "pmExcluidoImp": false,
+      "pmCantidad": 1,
+      "pmEsObsequio": false,
+      "pmDisponibleEnConpania": null
+    }
+  ],
+  "TipoPedido": "PED3",
+  "cdAgencia": "0"
+}
+26/12/2023 15:45:55: Ya se ha realizado un pedido con las mismas caracteristicas al cliente 830091550'PED-309-01'
+26/12/2023 15:48:10: Pedido No.  PED-311-01/PED Del cliente 830091550 / 0

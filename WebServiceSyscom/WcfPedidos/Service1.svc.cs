@@ -101,9 +101,9 @@ namespace WcfPedidos
                 con.setConnection(conSQLite.obtenerConexionSyscom());
                 List<ClienteResponse> clientes = new List<ClienteResponse>();
                 //variables para saber que datos traer
-                if (consulta.Pagina.NumResgitroPagina > 0)
+                if (consulta.Pagina.NumRegistroPagina > 0)
                 {
-                    ResPorPagina = consulta.Pagina.NumResgitroPagina;
+                    ResPorPagina = consulta.Pagina.NumRegistroPagina;
                     fin = ResPorPagina;
                 }
                 if (consulta.Pagina.Pagina > 0)
@@ -113,9 +113,9 @@ namespace WcfPedidos
                     inicio = (fin - ResPorPagina) + 1;
                 }
 
-                if (!(consulta.NitClinte == null || String.IsNullOrWhiteSpace(consulta.NitClinte)))
+                if (!(consulta.NitCliente == null || String.IsNullOrWhiteSpace(consulta.NitCliente)))
                 {
-                    cliente = consulta.NitClinte;
+                    cliente = consulta.NitCliente;
                     inicio = 1;
                     fin = 1;
                     NumPagina = 1;
@@ -1879,11 +1879,11 @@ namespace WcfPedidos
                         {
                             pagina = Info.pagina.Pagina;
                         }
-                        if (Info.pagina.NumResgitroPagina > 0)
+                        if (Info.pagina.NumRegistroPagina > 0)
                         {
-                            resPagina = Info.pagina.NumResgitroPagina;
-                            fin = Info.pagina.NumResgitroPagina * pagina;
-                            inicio = (fin - Info.pagina.NumResgitroPagina) + 1;
+                            resPagina = Info.pagina.NumRegistroPagina;
+                            fin = Info.pagina.NumRegistroPagina * pagina;
+                            inicio = (fin - Info.pagina.NumRegistroPagina) + 1;
                         }
 
                         ConexionBD ClassConexion = new ConexionBD();
