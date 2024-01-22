@@ -285,6 +285,7 @@ namespace WcfPedidos
 
     }
 
+    //los que estan comentados son los que no se utilizan y se tendra encuenta para una version de crear cliente 
     [DataContract]
     public class ClientePedido
     {
@@ -294,8 +295,8 @@ namespace WcfPedidos
         [DataMember]
         public string Documento { get; set; }
 
-        [DataMember]
-        public string DigitoDeVerificacion { get; set; }
+        //[DataMember]
+        //public string DigitoDeVerificacion { get; set; }
 
         [DataMember]
         public string CdAgencia { get; set; }
@@ -306,8 +307,8 @@ namespace WcfPedidos
         //[DataMember]
         //public string Apellidos { get; set; }
 
-        [DataMember]
-        public string RazonSocial { get; set; }
+        //[DataMember]
+        //public string RazonSocial { get; set; }
 
         [DataMember]
         public string Direccion { get; set; }
@@ -315,26 +316,26 @@ namespace WcfPedidos
         [DataMember]
         public string Municipio { get; set; }
 
-        [DataMember]
-        public string Telefono { get; set; }
+        //[DataMember]
+        //public string Telefono { get; set; }
 
-        [DataMember]
-        public string GrupoCliente { get; set; }
+        //[DataMember]
+        //public string GrupoCliente { get; set; }
 
-        [DataMember]
-        public string ActEconomica { get; set; }
+        //[DataMember]
+        //public string ActEconomica { get; set; }
 
-        [DataMember]
-        public string RegimnDian { get; set; }
+        //[DataMember]
+        //public string RegimnDian { get; set; }
 
-        [DataMember]
-        public string Profesion { get; set; }
+        //[DataMember]
+        //public string Profesion { get; set; }
 
-        [DataMember]
-        public string Zona { get; set; }
+        //[DataMember]
+        //public string Zona { get; set; }
 
-        [DataMember]
-        public string SubZona { get; set; }
+        //[DataMember]
+        //public string SubZona { get; set; }
 
         [DataMember]
         public string Ruta { get; set; }
@@ -345,17 +346,17 @@ namespace WcfPedidos
         [DataMember]
         public string IdVendedor { get; set; }
 
-        [DataMember]
-        public string MunExpedicion { get; set; }
+        //[DataMember]
+        //public string MunExpedicion { get; set; }
 
         [DataMember]
         public int DiasEntrega { get; set; }
 
-        [DataMember]
-        public string CentroCosto { get; set; }
+        //[DataMember]
+        //public string CentroCosto { get; set; }
 
-        [DataMember]
-        public string SubCCosto { get; set; }
+        //[DataMember]
+        //public string SubCCosto { get; set; }
 
        
 
@@ -368,9 +369,7 @@ namespace WcfPedidos
         public string pmFechaPedido { get; set; }
 
         [DataMember]
-        public string pmFormaPago { get; set; }
-        [DataMember]
-        public int pmDiasPlazo { get; set; }
+        public string pmFormaPago { get; set; }        
         [DataMember]
         public string pmIdVendedor { get; set; }
         [DataMember]

@@ -141,6 +141,8 @@
     <Compile Include="Model\ConexionSQLite.cs" />
     <Compile Include="Model\ExisteUsuario.cs" />
     <Compile Include="Model\GenerarToken.cs" />
+    <Compile Include="Model\LogErrores.cs" />
+    <Compile Include="Model\Pedido.cs" />
     <Compile Include="Model\Producto.cs" />
     <Compile Include="Model\pwdSyscom.cs" />
     <Compile Include="Model\Usuarios.cs" />
