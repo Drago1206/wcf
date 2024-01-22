@@ -1,0 +1,651 @@
+22/01/2024 10:05:26: ============================================================================
+22/01/2024 10:05:26: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IsWSxaFcdTAwQTBoeuKCrMWSXHUwMDkw4oCdxaFY4oCiXFzCo13Co154aMWhxaFlXHUwMEEwxaFlXHUwMEEwxaFLxZLigJ1cdTAwQTDigJ1axaFcdTAwQTBa4oCd4oCdaMWhxaHFknRZX-KAomjihKJd4oC6wqNfIiwianRpIjoiODJiZDcxNjItYmYxZi00YjJjLWExYmMtYjdmMzY1NTdiNTc0IiwiZXhwIjoxNzA1OTM2MjExfQ.6evTEiwp1naGudZETxXZl3uOPcKwCpJ-ptJSLLhd3w4"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "20240122",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "03",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    },
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    }
+  ]
+}
+22/01/2024 10:05:26: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "015",
+    "Descripcion": "El Usuario no está registrado  como vendedor"
+  }
+}
+22/01/2024 10:09:10: ============================================================================
+22/01/2024 10:09:10: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InrFvcWhYnR64oCgxaDFveKAnVJcdTAwOEZWXHUwMDlEV1x1MDA5RFhyYmbigKBfxaHigJ1fxaHigJ1F4oCgxb3FocW9VOKAncWhVMW9xb1ixaFmam50euKAoMWgxb3igJ1ixaFmam50euKAoMWgxb3igJ0iLCJqdGkiOiI2ZjNiYjdjMy01ZmE3LTQxZWQtODQ5ZC1mZmI5YmVkNmZhZWMiLCJleHAiOjE3MDU5MzYyNDl9.-9diRt6apGBCP730vSUaRsbQN4J8tkzHAdbL2ssDj9M"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "20240122",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "03",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    },
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    }
+  ]
+}
+22/01/2024 10:09:10: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "022",
+    "Descripcion": "el formato que ingresó EN pmFechaPedido no es válido."
+  }
+}
+22/01/2024 10:09:18: ============================================================================
+22/01/2024 10:09:18: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InrFvcWhYnR64oCgxaDFveKAnVJcdTAwOEZWXHUwMDlEV1x1MDA5RFhyYmbigKBfxaHigJ1fxaHigJ1F4oCgxb3FocW9VOKAncWhVMW9xb1ixaFmam50euKAoMWgxb3igJ1ixaFmam50euKAoMWgxb3igJ0iLCJqdGkiOiI2ZjNiYjdjMy01ZmE3LTQxZWQtODQ5ZC1mZmI5YmVkNmZhZWMiLCJleHAiOjE3MDU5MzYyNDl9.-9diRt6apGBCP730vSUaRsbQN4J8tkzHAdbL2ssDj9M"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "20240122",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "03",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    },
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    }
+  ]
+}
+22/01/2024 10:09:18: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "022",
+    "Descripcion": "el formato que ingresó EN pmFechaPedido no es válido."
+  }
+}
+22/01/2024 10:09:34: ============================================================================
+22/01/2024 10:09:34: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6InrFvcWhYnR64oCgxaDFveKAnVJcdTAwOEZWXHUwMDlEV1x1MDA5RFhyYmbigKBfxaHigJ1fxaHigJ1F4oCgxb3FocW9VOKAncWhVMW9xb1ixaFmam50euKAoMWgxb3igJ1ixaFmam50euKAoMWgxb3igJ0iLCJqdGkiOiI2ZjNiYjdjMy01ZmE3LTQxZWQtODQ5ZC1mZmI5YmVkNmZhZWMiLCJleHAiOjE3MDU5MzYyNDl9.-9diRt6apGBCP730vSUaRsbQN4J8tkzHAdbL2ssDj9M"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "20240122",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "03",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    },
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    }
+  ]
+}
+22/01/2024 10:09:34: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "022",
+    "Descripcion": "el formato que ingresó EN pmFechaPedido no es válido."
+  }
+}
+22/01/2024 10:17:11: ============================================================================
+22/01/2024 10:17:11: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IuKCrFx1MDA5MMWTZHZ8y4bFklx1MDA5MOKAk1TigJhYxbhZxbhadGTFk1x1MDA5MGFo4oCTYcWT4oCTR8uGXHUwMDkwxZNcdTAwOTBW4oCTxZNWXHUwMDkwXHUwMDkwZMWTaGxwdnzLhsWSXHUwMDkw4oCTZMWTaGxwdnzLhsWSXHUwMDkw4oCTIiwianRpIjoiZjM0MWY0MDMtNTY0MS00ZmVkLWE0YjktNWRjZWUzNzdiM2IyIiwiZXhwIjoxNzA1OTM2NzYwfQ._QQD1wDQJpJUyOGNAT9EyVbOTuTj49dq794t7rsrnyA"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "2024-01-22 00:00:00",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "03",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    },
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 4
+    }
+  ]
+}
+22/01/2024 10:17:11: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "081",
+    "Descripcion": "el usuario no tiene permiso FEC 'Habilitar Fecha Abierta'"
+  }
+}
+22/01/2024 10:29:00: Se ha registrado el pedido exitosamente con número de factura 160-03 Cliente: 900064324 Agencia:0
+22/01/2024 14:08:34: ============================================================================
+22/01/2024 14:08:34: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IsK2xb7CrnbLhsW9xaHFvsKiwqhmwqNqwrFrwrFs4oCgdsKuwqJzxb7CqHPFocKoWcWhwqLCrsKiaMKowq5owqLConbCrnp-4oCay4bFvcWhxb7CosKodsKuen7igJrLhsW9xaHFvsKiwqgiLCJqdGkiOiJlMDllNGEyNS1hODYwLTQ5MmQtOTQ4My1jY2IwMjdiMjNkODMiLCJleHAiOjE3MDU5NTA4MDB9.OTGEo3IuxXYnVhwqaYkgpOscSiR1wIEKfdG96HGcepU"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "2024-01-22 00:00:00",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "01",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 1
+    }
+  ]
+}
+22/01/2024 14:08:34: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "081",
+    "Descripcion": "el usuario no tiene permiso FEC 'Habilitar Fecha Abierta'"
+  }
+}
+22/01/2024 14:09:11: ============================================================================
+22/01/2024 14:09:11: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IsK2xb7CrnbLhsW9xaHFvsKiwqhmwqNqwrFrwrFs4oCgdsKuwqJzxb7CqHPFocKoWcWhwqLCrsKiaMKowq5owqLConbCrnp-4oCay4bFvcWhxb7CosKodsKuen7igJrLhsW9xaHFvsKiwqgiLCJqdGkiOiJlMDllNGEyNS1hODYwLTQ5MmQtOTQ4My1jY2IwMjdiMjNkODMiLCJleHAiOjE3MDU5NTA4MDB9.OTGEo3IuxXYnVhwqaYkgpOscSiR1wIEKfdG96HGcepU"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "2024-01-22 00:00:00",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "01",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 1
+    }
+  ]
+}
+22/01/2024 14:09:11: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "011",
+    "Descripcion": "Error al ejecutar la consultaWSPedido_ConsPerVenta ha ocurrido  Conversion failed when converting the varchar value 'denegado' to data type bit.]"
+  }
+}
+22/01/2024 14:14:03: ============================================================================
+22/01/2024 14:14:03: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IsKwxZPCrHTigKDFksucxZNcdTAwQTDCpmTCoWjCr2nCr2rigJ50fMuccXzCpnHLnMKmV8ucXHUwMEEwwqxcdTAwQTBmwqbCrGZcdTAwQTBcdTAwQTB0wqx4fOKCrOKAoMWSy5zFk1x1MDBBMMKmdMKseHzigqzigKDFksucxZNcdTAwQTDCpiIsImp0aSI6IjRhNzlhOTUwLTE3NjAtNDFiMi1hZTQxLTEyZjQ3Yjk4Nzc1NSIsImV4cCI6MTcwNTk1MTEyOH0.KKvWy0PNWlyVjxU6kQ3lT9PviHzyqC2qZsUbeC1kcZk"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "2024-01-22 00:00:00",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "01",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 1
+    }
+  ]
+}
+22/01/2024 14:14:03: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "011",
+    "Descripcion": "Error al ejecutar la consultaWSPedido_ConsPerVenta ha ocurrido  Conversion failed when converting the varchar value 'denegado' to data type bit.]"
+  }
+}
+22/01/2024 14:25:43: ============================================================================
+22/01/2024 14:25:43: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IsKwxZPCrHTigKDFksucxZNcdTAwQTDCpmTCoWjCr2nCr2rigJ50fMuccXzCpnHLnMKmV8ucXHUwMEEwwqxcdTAwQTBmwqbCrGZcdTAwQTBcdTAwQTB0wqx4fOKCrOKAoMWSy5zFk1x1MDBBMMKmdMKseHzigqzigKDFksucxZNcdTAwQTDCpiIsImp0aSI6IjRhNzlhOTUwLTE3NjAtNDFiMi1hZTQxLTEyZjQ3Yjk4Nzc1NSIsImV4cCI6MTcwNTk1MTEyOH0.KKvWy0PNWlyVjxU6kQ3lT9PviHzyqC2qZsUbeC1kcZk"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "2024-01-22 00:00:00",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "01",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 1
+    }
+  ]
+}
+22/01/2024 14:25:43: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "011",
+    "Descripcion": "Error al ejecutar la consultaWSPedido_ConsPerVenta ha ocurrido  Conversion failed when converting the varchar value 'denegado' to data type bit.]"
+  }
+}
+22/01/2024 14:30:47: ============================================================================
+22/01/2024 14:30:47: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IuKAmeKAmcKianzigJrFveKAmeKAk8WTWuKAlF7CpV_CpWB6auKAmeKAmWfigJrigJlnxb3Fk03FveKAk8Ki4oCTXFzFk8KiXFzigJPigJNqwqJucnZ84oCaxb3igJnigJPFk2rCom5ydnzigJrFveKAmeKAk8WTIiwianRpIjoiNzNjMWJkZDYtYjA3NC00ZmZiLWE4NTktMmViMDBlNzdhMjZiIiwiZXhwIjoxNzA1OTUyMTMzfQ.Wiz4pnSrccnVNwSFSaZvuvPvDN-XvsEAvm_7A6kc9FM"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "2024-01-22 00:00:00",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "01",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 1
+    }
+  ]
+}
+22/01/2024 14:30:47: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "011",
+    "Descripcion": "Error al ejecutar la consultaWSPedido_ConsPerVenta ha ocurrido  Conversion failed when converting the varchar value 'denegado' to data type bit.]"
+  }
+}
+22/01/2024 14:31:06: ============================================================================
+22/01/2024 14:31:06: {
+  "token": {
+    "Token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IuKAmeKAmcKianzigJrFveKAmeKAk8WTWuKAlF7CpV_CpWB6auKAmeKAmWfigJrigJlnxb3Fk03FveKAk8Ki4oCTXFzFk8KiXFzigJPigJNqwqJucnZ84oCaxb3igJnigJPFk2rCom5ydnzigJrFveKAmeKAk8WTIiwianRpIjoiNzNjMWJkZDYtYjA3NC00ZmZiLWE4NTktMmViMDBlNzdhMjZiIiwiZXhwIjoxNzA1OTUyMTMzfQ.Wiz4pnSrccnVNwSFSaZvuvPvDN-XvsEAvm_7A6kc9FM"
+  },
+  "Cliente": {
+    "TipoDoc": "Contenido de la cadena",
+    "Documento": "900064324",
+    "CdAgencia": "",
+    "Direccion": "",
+    "Municipio": "08001",
+    "Ruta": "0",
+    "Plazo": "0005",
+    "IdVendedor": "1234567890",
+    "DiasEntrega": 15
+  },
+  "DatosDelPedido": {
+    "pmFechaPedido": "2024-01-22 00:00:00",
+    "pmFormaPago": "EFE",
+    "pmIdVendedor": "91222222",
+    "pmIdCompania": "01",
+    "pmIdBodega": "0005",
+    "pmTarifaComision": "C001",
+    "pmEstadoPedido": "0002"
+  },
+  "InformacionDeContacto": {
+    "NitContacto": "860026518",
+    "NombreContacto": "ANDRES GELVEZ",
+    "TelefonoContacto": "3694932",
+    "EmailContacto": "agelvez@syscom.com.co",
+    "CargoContacto": "860026518"
+  },
+  "Productos": [
+    {
+      "pmIdProducto": "0021",
+      "pmIdTanque": "Contenido de la cadena",
+      "pmCantidad": 1,
+      "pmVrPrecio": 4000.0,
+      "pmCantObsequio": 0,
+      "pmIdTarDcto": "",
+      "pmIdListaDePrecio": 1
+    }
+  ]
+}
+22/01/2024 14:31:06: {
+  "TipoDoc": null,
+  "IdCia": null,
+  "CdAgencia": null,
+  "Fecha": null,
+  "Registro": {
+    "Fecha": null,
+    "Codigo": "081",
+    "Descripcion": "el usuario no tiene permiso FEC 'Habilitar Fecha Abierta'"
+  }
+}
