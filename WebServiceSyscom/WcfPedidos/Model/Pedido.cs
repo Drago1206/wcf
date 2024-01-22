@@ -39,7 +39,7 @@ namespace WcfPedidos.Model
                 string DiasDePlazo = "";
                 string IdVendedor = "";
                 //validar la informacion para la cvompañia de registro del pedido
-                string Cia = "";
+                string Cia = compania;
                 string Bodega = "";
                 string TarifaVendedor = "";
                 decimal ValorTarifaVendedor = 0;
@@ -415,10 +415,15 @@ namespace WcfPedidos.Model
                                                                                                             }
                                                                                                             else
                                                                                                             {
-                                                                                                                Codigo = "034";
-                                                                                                                Mensaje = "Formato de fecha indicado en SYSCOM no corresponde al establecido en el sistema.";
+                                                                                                                Codigo = "082";
+                                                                                                                Mensaje = "No se ha establecido la fecha abierta en Syscom en la compañia";
                                                                                                             }
                                                                                                         }
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        Codigo = "081";
+                                                                                                        Mensaje = "el usuario no tiene permiso FEC 'Habilitar Fecha Abierta'";
                                                                                                     }
                                                                                                 }
 
@@ -426,7 +431,7 @@ namespace WcfPedidos.Model
                                                                                             else
                                                                                             {
                                                                                                 Codigo = "022";
-                                                                                                Mensaje = "el formato que ingresó EN pmFechaPedido no es válido.";
+                                                                                                Mensaje = "el formato de pmFechaPedido que ingreso no es el correcto. el formato correcto es año-mes-día hora:minuto:segundo ejemplo 2024-01-25 13:13:00 ";
                                                                                             }
 
                                                                                         }
@@ -1368,7 +1373,7 @@ namespace WcfPedidos.Model
                                                                                     else
                                                                                     {
                                                                                         Codigo = "022";
-                                                                                        Mensaje = "No tiene el usuario el permiso EGA para ingresar una fecha diferente a la establecida";
+                                                                                        Mensaje = "No tiene el usuario el permiso EGA para modificar Días y fecha de entrega";
                                                                                     }
                                                                                 }
                                                                             }
