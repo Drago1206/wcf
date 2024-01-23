@@ -44,6 +44,7 @@ namespace WcfPedidos
         [return: MessageParameter(Name = "Clientes")]
         RespClientes GetClientes(ObtInfoClientes obtenerConFecha);
 
+
         /// <summary>
         /// Resources the generar pedido.
         /// </summary>
@@ -675,5 +676,6 @@ namespace WcfPedidos
         
 
     }
-    
+
+
 }
