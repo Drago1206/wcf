@@ -124,15 +124,18 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Agencia.cs" />
+    <Compile Include="Model\Cliente.cs" />
     <Compile Include="Model\ConexionBD.cs" />
     <Compile Include="Model\ConexionSQLite.cs" />
     <Compile Include="Model\LogErrores.cs" />
+    <Compile Include="Model\Productos.cs" />
     <Compile Include="Model\pwdSyscom.cs" />
     <Compile Include="Model\Usuarios.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>
-    <Compile Include="IService1.cs" />
+    <Compile Include="IPedido30.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
