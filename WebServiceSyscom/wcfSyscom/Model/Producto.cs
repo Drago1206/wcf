@@ -26,7 +26,7 @@ namespace wcfSyscom.Model
         private List<string> DisponibleEnCia { get; set; }
 
         [DataMember] 
-        public string pmIdProducto { get { return IdProducto; }set { IdProducto = value; } }
+        public string pmIdProducto { get { return pmIdProducto; }set { pmIdProducto = value; } }
         
         [DataMember] 
         public string pmDescripProd { get { return DescripProd; }set { DescripProd = value; } }
@@ -66,6 +66,8 @@ namespace wcfSyscom.Model
 
         [DataMember]
         public List<string> pmDisponibleEnConpania { get { return DisponibleEnCia; } set { DisponibleEnCia = value; } }
+
+        
     }
 
 

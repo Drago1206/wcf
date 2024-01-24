@@ -158,7 +158,7 @@ namespace WcfSyscom30.Models
             ClassConexion.beginTran();
             try
             {
-                ClassConexion.setCustomQuery("Update adm_Usuarios Set Conectado = '1', FechaAcc = CONVERT(DATETIME, REPLACE('" + Fech + "','/','')) Where IdUsuario = '" + Modelo.UserName.ToUpper() + "'");
+                ClassConexion.setCustomQuery(_sqlQuery: "Update adm_Usuarios Set Conectado = '1', FechaAcc = CONVERT(DATETIME, REPLACE('" + Fech + "','/','')) Where IdUsuario = '" + Modelo.UserName.ToUpper() + "'");
                 ClassConexion.ejecutarQuery();
                 ClassConexion.commitTran();
             }

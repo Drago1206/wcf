@@ -5,9 +5,7 @@ using System.Web;
 
 namespace WcfSyscom30.Models
 {
-    public class ItemAgencia
+    public class Agencia
     {
-        public string CodAge { get; set; }
-        public string NomAge { get; set; }
     }
 }

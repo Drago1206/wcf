@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using wcfSyscom.Model;
 using WcfSyscom30.Models;
 
 namespace WcfSyscom30
@@ -13,297 +14,632 @@ namespace WcfSyscom30
     [ServiceContract]
     public interface IService1
     {
-        #region
-        //[OperationContract]
-        //string GetData(int value);
-
-        //[OperationContract]
-        //CompositeType GetDataUsingDataContract(CompositeType composite);
-
-        // TODO: agregue aquí sus operaciones de servicio
-        #endregion
-        //ObtenerUsuario
+        /// <summary>
+        /// Consultar un producto en especifico.
+        /// </summary>
+        /// <param name="obtProducto">The obt producto.</param>
+        /// <returns></returns>
         [OperationContract]
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerUsuario", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Usuario")]
-        ResDatosUsuario getUsuario(DtUsuario usuario);
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Producto")]
+        RespProducto ConProducto(ObtProducto obtProducto);
 
-        //ObtenerClientes
+        /// <summary>
+        /// Metodo para consultar todos los clientes y uno en especial.
+        /// </summary>
+        /// <param name="obtenerConFecha">The obtener con fecha.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerClientes", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Cliente")]
-        ResObtenerClientes getClientes(DtCliente cliente);
+        [return: MessageParameter(Name = "Clientes")]
+        RespClientes GetClientes(ObtInfoClientes obtenerConFecha);
 
-        //ObtenerProductos
-        [OperationContract]
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductos", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Productos")]
-        ResObtenerProductos getProductos(DtProducto producto);
 
-        //GenerarPedido
+        /// <summary>
+        /// Resources the generar pedido.
+        /// </summary>
+        /// <param name="pedido">The pedido.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GenerarPedido", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Pedido")]
-        ResGenerarPedido setPedido(DtPedido pedido);
+        ResGenerarPedido resGenerarPedido(GenPedido pedido);
 
-        //ObtenerCartera
+        /// <summary>
+        /// Resources the information maestra.
+        /// </summary>
+        /// <param name="Info">The information.</param>
+        /// <returns></returns>
         [OperationContract]
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCartera", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Cartera")]
-        ResObtenerCartera getCartera(DtCliente cliente);
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerInfMaestra", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "InfMaestra")]
+        ResInfoMaestra resInfoMaestra(InfoMaestra Info);
 
-        //Consolidado Clientes
+        /// <summary>
+        /// Resources the obt cart total.
+        /// </summary>
+        /// <param name="Info">The information.</param>
+        /// <returns></returns>
         [OperationContract]
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ConsolidadoClientes", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "cliente")]
-        ResObtenerConsClientes getConsClientes(DtClientes cliente);
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCarteraTotal", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "CarteraTotal")]
+        ResObtenerCarteraTotal resObtCartTotal(ObtCarTotal Info);
+
+        /// <summary>
+        /// Resources the obt cart total definition.
+        /// </summary>
+        /// <param name="Info">The information.</param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCarteraTotalDef", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "CarteraDef")]
+        ResObtenerCarteraTotalDef resObtCartTotalDef(ObtCarTotalDef Info);
+
+        /// <summary>
+        /// Rests the anul pedido.
+        /// </summary>
+        /// <param name="Info">The information.</param>
+        /// <returns></returns>
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/AnularPedido", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "AnularPedido")]
+        RestAnulPedido restAnulPedido(AnulPedido Info);
+
     }
 
-    [DataContract]
-    public class DtUsuario
-    {
-        Usuario _usuario;
-
-        [DataMember]
-        public Usuario Usuarios
-        {
-            get { return _usuario; }
-            set { _usuario = value; }
-        }
-    }
 
     [DataContract]
-    public class ResDatosUsuario
+    public class Log
     {
-        DatosUsuario _DatosUsuario;
-        Errores _error;
+        string _fecha;
+        Int32 _registros;
+        string _codigo;
+        string _mensaje;
 
         [DataMember]
-        public DatosUsuario DatosUsuarios
+        public string Fecha
         {
-            get { return _DatosUsuario; }
-            set { _DatosUsuario = value; }
+            get { return _fecha; }
+            set { _fecha = value; }
         }
 
         [DataMember]
-        public Errores Error
+        public string Codigo
         {
-            get { return _error; }
-            set { _error = value; }
-        }
-    }
-
-    [DataContract]
-    public class DtCliente
-    {
-        Usuario _usuario;
-        Cliente _cliente;
-
-        [DataMember]
-        public Usuario Usuarios
-        {
-            get { return _usuario; }
-            set { _usuario = value; }
+            get { return _codigo; }
+            set { _codigo = value; }
         }
 
         [DataMember]
-        public Cliente Cliente
+        public string Descripcion
         {
-            get { return _cliente; }
-            set { _cliente = value; }
-        }
-    }
-
-    [DataContract]
-    public class DtClientes
-    {
-        Usuario _usuario;
-        Clientes _clientes;
-
-        [DataMember]
-        public Usuario Usuarios
-        {
-            get { return _usuario; }
-            set { _usuario = value; }
-        }
-
-        [DataMember]
-        public Clientes Clientes
-        {
-            get { return _clientes; }
-            set { _clientes = value; }
+            get { return _mensaje; }
+            set { _mensaje = value; }
         }
     }
 
     [DataContract]
-    public class ResObtenerClientes
+    public class OrganizadorPagina
     {
-        List<DatosCliente> _DatosCliente;
-        Errores _error;
+        [DataMember]
+        public int NumeroDePaginas { get; set; }
 
         [DataMember]
-        public List<DatosCliente> DatosClientes
-        {
-            get { return _DatosCliente; }
-            set { _DatosCliente = value; }
-        }
+        public int PaginaActual { get; set; }
 
         [DataMember]
-        public Errores Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public int RegistroPorPagina { get; set; }
+
+        [DataMember]
+        public int RegistroTotal { get; set; }
+
     }
 
     [DataContract]
-    public class ResObtenerConsClientes
+    public class PaginaAcceder
     {
-        public PaginadorCliente<DatosCliente> _DatosCliente;
-        Errores _error;
-
+        /// <summary>
+        /// Pagina que desea acceder.
+        /// </summary>
+        /// <value>
+        /// La pagina.
+        /// </value>
         [DataMember]
-        public PaginadorCliente<DatosCliente> ListadoClientes
-        {
-            get { return _DatosCliente; }
-            set { _DatosCliente = value; }
-        }
+        public int Pagina { get; set; }
 
+        /// <summary>
+        /// Numero de registro por pagina.
+        /// </summary>
+        /// <value>
+        /// Numero de registro por pagina.
+        /// </value>
         [DataMember]
-        public Errores Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public int NumRegistroPagina { get; set; }
     }
 
     [DataContract]
-    public class DtProducto
+    public class ObtProducto
     {
-        Usuario _usuario;
-        //List<Productos> _productos;
-        //string _codOrDesProd;
-        DatosProducto _productos;
+        Usuario usuario;
+        PaginaAcceder paginaAcceder;
+
 
         [DataMember]
-        public Usuario Usuarios
+        public Usuario _usuario
         {
             get { return _usuario; }
             set { _usuario = value; }
         }
 
         [DataMember]
-        public DatosProducto DatosProducto
+        public string IdProducto { get; set; }
+
+        [DataMember]
+        public string IdCia { get; set; }
+
+        [DataMember]
+        public string IdBodega { get; set; }
+
+        [DataMember]
+        public PaginaAcceder pagina
         {
-            get { return _productos; }
-            set { _productos = value; }
+            get { return paginaAcceder; }
+            set { paginaAcceder = value; }
         }
+
+    }
+
+
+    [DataContract]
+    public class RespProducto
+    {
+        OrganizadorPagina _organizadorPagina;
+        Log _registro;
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
+        }
+
+        [DataMember]
+        public List<Producto> Productos { get; set; }
+
+        [DataMember]
+        public OrganizadorPagina paginas
+        {
+            get { return _organizadorPagina; }
+            set { _organizadorPagina = value; }
+        }
+
+
     }
 
     [DataContract]
-    public class ResObtenerProductos
+    public class GenPedido
     {
-        PaginadorProducto<ItemProducto> _DatosProducto;
-        Errores _error;
+       
+        ClientePedido clientePedido;
+        DatosPedido datosPedido;
+        infContactoCliente infContacto;
+
+
 
         [DataMember]
-        public PaginadorProducto<ItemProducto> ListaProductos
+        public ClientePedido Cliente
         {
-            get { return _DatosProducto; }
-            set { _DatosProducto = value; }
+            get { return clientePedido; }
+            set { clientePedido = value; }
         }
+        [DataMember]
+        public DatosPedido DatosDelPedido
+        {
+            get { return datosPedido; }
+            set { datosPedido = value; }
+        }
+        [DataMember]
+        public infContactoCliente InformacionDeContacto
+        {
+            get { return infContacto; }
+            set { infContacto = value; }
+        }
+        [DataMember]
+        public List<ProductosPed> Productos { get; set; }
+
+    }
+
+    //los que estan comentados son los que no se utilizan y se tendra encuenta para una version de crear cliente 
+    [DataContract]
+    public class ClientePedido
+    {
+        [DataMember]
+        public string TipoDoc { get; set; }
 
         [DataMember]
-        public Errores Error
-        {
-            get { return _error; }
-            set { _error = value; }
-        }
+        public string Documento { get; set; }
+
+        //[DataMember]
+        //public string DigitoDeVerificacion { get; set; }
+
+        [DataMember]
+        public string CdAgencia { get; set; }
+
+        //[DataMember]
+        //public string Nombre { get; set; }
+
+        //[DataMember]
+        //public string Apellidos { get; set; }
+
+        //[DataMember]
+        //public string RazonSocial { get; set; }
+
+        [DataMember]
+        public string Direccion { get; set; }
+
+        [DataMember]
+        public string Municipio { get; set; }
+
+        //[DataMember]
+        //public string Telefono { get; set; }
+
+        //[DataMember]
+        //public string GrupoCliente { get; set; }
+
+        //[DataMember]
+        //public string ActEconomica { get; set; }
+
+        //[DataMember]
+        //public string RegimnDian { get; set; }
+
+        //[DataMember]
+        //public string Profesion { get; set; }
+
+        //[DataMember]
+        //public string Zona { get; set; }
+
+        //[DataMember]
+        //public string SubZona { get; set; }
+
+        [DataMember]
+        public string Ruta { get; set; }
+
+        [DataMember]
+        public string Plazo { get; set; }
+
+        [DataMember]
+        public string IdVendedor { get; set; }
+
+        //[DataMember]
+        //public string MunExpedicion { get; set; }
+
+        [DataMember]
+        public int DiasEntrega { get; set; }
+
+        //[DataMember]
+        //public string CentroCosto { get; set; }
+
+        //[DataMember]
+        //public string SubCCosto { get; set; }
+
+
+
     }
 
     [DataContract]
-    public class DtPedido
+    public class DatosPedido
     {
-        Usuario _usuario;
-        Pedido _pedido;
+        [DataMember]
+        public string pmFechaPedido { get; set; }
 
         [DataMember]
-        public Usuario Usuarios
-        {
-            get { return _usuario; }
-            set { _usuario = value; }
-        }
-
+        public string pmFormaPago { get; set; }
         [DataMember]
-        public Pedido Pedido
-        {
-            get { return _pedido; }
-            set { _pedido = value; }
-        }
+        public string pmIdVendedor { get; set; }
+        [DataMember]
+        public string pmIdCompania { get; set; }
+        [DataMember]
+        public string pmIdBodega { get; set; }
+        [DataMember]
+        public string pmTarifaComision { get; set; }
+        [DataMember]
+        public string pmEstadoPedido { get; set; }
     }
+
+    [DataContract]
+    public class infContactoCliente
+    {
+        [DataMember]
+        public string NitContacto { get; set; }
+        [DataMember]
+        public string NombreContacto { get; set; }
+        [DataMember]
+        public string TelefonoContacto { get; set; }
+        [DataMember]
+        public string EmailContacto { get; set; }
+        [DataMember]
+        public string CargoContacto { get; set; }
+    }
+
+    [DataContract]
+    public class ProductosPed
+    {
+        [DataMember]
+        public string pmIdProducto { get; set; }
+        [DataMember]
+        public string pmIdTanque { get; set; }
+        [DataMember]
+        public int pmCantidad { get; set; }
+        [DataMember]
+        public decimal pmVrPrecio { get; set; }
+        [DataMember]
+        public int pmCantObsequio { get; set; }
+        [DataMember]
+        public string pmIdTarDcto { get; set; }
+        [DataMember]
+        public int pmIdListaDePrecio { get; set; }
+
+    }
+
 
     [DataContract]
     public class ResGenerarPedido
     {
-        List<DatosPedido> _DatosPedido;
-        Errores _error;
+        Log log;
 
         [DataMember]
-        public List<DatosPedido> DatosPedido
-        {
-            get { return _DatosPedido; }
-            set { _DatosPedido = value; }
-        }
+        public string TipoDoc { get; set; }
 
         [DataMember]
-        public Errores Error
+        public string IdCia { get; set; }
+
+        [DataMember]
+        public string CdAgencia { get; set; }
+
+        [DataMember]
+        public string Fecha { get; set; }
+
+        [DataMember]
+        public Log Registro
         {
-            get { return _error; }
-            set { _error = value; }
+            get { return log; }
+            set { log = value; }
         }
     }
 
     [DataContract]
-    public class ResObtenerCartera
+    public class InfoMaestra
     {
-        List<DatosCartera> _DatosCartera;
-        Errores _error;
+       Usuario usuario;
 
         [DataMember]
-        public List<DatosCartera> Datoscartera
+        public Usuario _usuario
         {
-            get { return _DatosCartera; }
-            set { _DatosCartera = value; }
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+        [DataMember]
+        public int TipoRegistro { get; set; }
+
+    }
+
+    [DataContract]
+    public class ResInfoMaestra
+    {
+        Log log;
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return log; }
+            set { log = value; }
         }
 
         [DataMember]
-        public Errores Error
+        public List<Dictionary<string, object>> tableList
+        { get; set; }
+
+
+    }
+
+    [DataContract]
+    public class ObtCarTotal
+    {
+        Usuario usuario;
+
+        [DataMember]
+        public Usuario _usuario
         {
-            get { return _error; }
-            set { _error = value; }
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+
+        [DataMember]
+        public string IdCliente { get; set; }
+    }
+
+
+    [DataContract]
+    public class ResObtenerCarteraTotal
+    {
+        Log log;
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return log; }
+            set { log = value; }
+        }
+
+        [DataMember]
+        public List<ResCarteraTotal> DatosCartera { get; set; }
+
+    }
+
+    public class ResCarteraTotal
+    {
+        public int SaldoCartera { get; set; }
+        public string Cliente { get; set; }
+    }
+
+
+    [DataContract]
+    public class ObtCarTotalDef
+    {
+        
+        PaginaAcceder paginaAcceder;
+
+        Usuario usuario;
+
+        [DataMember]
+        public Usuario _usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+
+        [DataMember]
+        public string IdCliente { get; set; }
+
+        [DataMember]
+        public string FechaInicial { get; set; }
+
+        [DataMember]
+        public string FechaFinal { get; set; }
+
+        [DataMember]
+        public PaginaAcceder pagina
+        {
+            get { return paginaAcceder; }
+            set { paginaAcceder = value; }
         }
     }
 
 
-    // Utilice un contrato de datos, como se ilustra en el ejemplo siguiente, para agregar tipos compuestos a las operaciones de servicio.
-    [DataContract]
-    public class CompositeType
+    public class itemCartera
     {
-        bool boolValue = true;
-        string stringValue = "Hello ";
+        public string TipoDocumento { get; set; }
+        public int Documento { get; set; }
+        public string Compañia { get; set; }
+        public int Vencimiento { get; set; }
+        public DateTime FechaEmision { get; set; }
+        public DateTime FechaVencimiento { get; set; }
+        public int ValorTotal { get; set; }
+        public int Abono { get; set; }
+        public int Saldo { get; set; }
+    }
+
+
+    [DataContract]
+    public class ResObtenerCarteraTotalDef
+    {
+        Log log;
+        OrganizadorPagina _organizadorPagina;
 
         [DataMember]
-        public bool BoolValue
+        public Log Registro
         {
-            get { return boolValue; }
-            set { boolValue = value; }
+            get { return log; }
+            set { log = value; }
         }
 
         [DataMember]
-        public string StringValue
+        public List<itemCartera> DatosCartera { get; set; }
+
+        [DataMember]
+        public OrganizadorPagina paginas
         {
-            get { return stringValue; }
-            set { stringValue = value; }
+            get { return _organizadorPagina; }
+            set { _organizadorPagina = value; }
+        }
+
+    }
+
+    [DataContract]
+    public class AnulPedido
+    {
+        Usuario usuario;
+
+        [DataMember]
+        public Usuario _usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+
+
+        
+
+        [DataMember]
+        public string IdPedido { get; set; }
+
+        [DataMember]
+        public string IdCia { get; set; }
+    }
+
+    [DataContract]
+    public class RestAnulPedido
+    {
+        Log log;
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return log; }
+            set { log = value; }
+        }
+    }
+
+    [DataContract]
+    public class RespClientes
+    {
+        Log _registro;
+        List<Models.ClienteResponse> _clientes;
+        OrganizadorPagina organizadorPagina;
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
+        }
+
+        [DataMember]
+        public List<Models.ClienteResponse> Clientes
+        {
+            get { return _clientes; }
+            set { _clientes = value; }
+        }
+
+        [DataMember]
+        public OrganizadorPagina paginas
+        {
+            get { return organizadorPagina; }
+            set { organizadorPagina = value; }
+        }
+    }
+
+    [DataContract]
+    public class ObtInfoClientes
+    {
+        Usuario usuario;
+
+        [DataMember]
+        public Usuario _usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+        
+
+        [DataMember]
+        public string NitCliente { get; set; }
+
+        [DataMember]
+        public PaginaAcceder Pagina
+        {
+            get { return Pagina; }
+            set { Pagina = value; }
         }
     }
 }

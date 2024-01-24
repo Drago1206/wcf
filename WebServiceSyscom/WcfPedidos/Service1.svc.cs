@@ -59,6 +59,7 @@ namespace WcfPedidos
             {
 
                 GenerarToken token = new GenerarToken();
+
                 respuesta.Token = token.nuevoToken(NomProyecto, usuario.Usuario, usuario.Contraseña, out string[] mensajeNuevo);
                 respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
             }

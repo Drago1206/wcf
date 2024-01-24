@@ -8,9 +8,13 @@ namespace WcfSyscom30.Models
 {
     public class Usuario
     {
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        /// <summary>
+        /// Nombre del usuario
+        /// </summary>
         public string UserName { get; set; }
-        [DataMember(IsRequired = true, EmitDefaultValue = false)]
+        /// <summary>
+        /// Contraseña del usuario
+        /// </summary>
         public string Password { get; set; }
     }
 }

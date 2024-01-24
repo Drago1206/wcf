@@ -17,7 +17,7 @@ namespace WcfSyscom30.Models
         public string TelefonoCLiente { get; set; }
         public string NitVendedor { get; set; }
         public string NomVendedor { get; set; }
-        List<ItemAgencia> Agencia { get; set; }
+        List<Agencia> ItemAgencia { get; set; }
 
         [DataMember]
         public string _NitCliente { get { return NitCliente; } set { NitCliente = value; } }
@@ -44,7 +44,7 @@ namespace WcfSyscom30.Models
         public string TelefonoCLiente { get; set; }
         public string NitVendedor { get; set; }
         public string NomVendedor { get; set; }
-        List<ItemAgencia> Agencia { get; set; }
+        List<Agencia> Agencia { get; set; }
 
         [DataMember]
         public string _NitCliente { get { return NitCliente; } set { NitCliente = value; } }
