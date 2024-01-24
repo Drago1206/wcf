@@ -45,13 +45,12 @@ namespace WcfPedidos30.Model
         public Dictionary<string, object> qryValues = new Dictionary<string, object>();
         public List<string> Errores = new List<string>();
         private SqlDataAdapter adapter;
-        private ConexionSQLite conSqlite = new ConexionSQLite("");
 
 
 
         public ConexionBD()
         {
-            this.conBuilder = conSqlite.obtenerConexionSyscom();
+            //this.conBuilder = conSqlite.obtenerConexionSyscom();
         }
 
         public ConexionBD(SqlConnectionStringBuilder stringConn)

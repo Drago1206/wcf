@@ -12,22 +12,15 @@ namespace WcfPedidos30
     // NOTE: para iniciar el Cliente de prueba WCF para probar este servicio, seleccione Service1.svc o Service1.svc.cs en el Explorador de soluciones e inicie la depuración.
     public class Service1 : IPedido30
     {
-        public string GetData(int value)
-        {
-            return string.Format("You entered: {0}", value);
-        }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        #region ObtenerProducto 
+        public RespProducto ConProducto(ObtProducto obtProducto)
         {
-            if (composite == null)
-            {
-                throw new ArgumentNullException("composite");
-            }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
+            RespProducto respuesta = new RespProducto();
+
+            return respuesta;
+
         }
+        #endregion
     }
 }

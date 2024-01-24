@@ -7,10 +7,10 @@ using System.Web;
 namespace WcfPedidos30.Model
 {
     [DataContract]
-    public class Productos
+    public class ProductosResponse
     {
         public string CodProducto { get; set; }
-        public string CodGrupo { get; set; }
+        public string CodGru { get; set; }
         public string CodSub { get; set; }
         public string Descripcion { get; set; }
         public int Descuento { get; set; }
@@ -32,7 +32,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public string pmCodProducto { get { return CodProducto; } set { CodProducto = value; } }
         [DataMember]
-        public string pmCodGrupo { get { return CodGrupo; } set { CodGrupo = value; } }
+        public string pmCodGru { get { return CodGru; } set { CodGru = value; } }
         [DataMember]
         public string pmCodSub { get { return CodSub; } set { CodSub = value; } }
         [DataMember]
@@ -68,5 +68,32 @@ namespace WcfPedidos30.Model
         [DataMember]
         public int pmTotalRegistros { get { return SaldoTotal; } set { SaldoTotal = value; } }
 
+
+
+
+    }
+
+    [DataContract]
+    public class ProductoRequest
+    {
+        public string CodOrDesprod { get; set; }
+        public string Grupo { get; set; }
+        public int PaginaActual { get; set; }
+        public int RegistrosPorPagina { get; set; }
+        public bool SaldosCiaBod { get; set; }
+        public string SubGrupo { get; set; }
+
+        [DataMember]
+        public string pmCodOrDesprod { get { return CodOrDesprod; } set { CodOrDesprod = value; } }
+        [DataMember]
+        public string pmGrupo { get { return Grupo; } set { Grupo = value; } }
+        [DataMember]
+        public int pmPaginaActual { get { return PaginaActual; } set { PaginaActual = value; } }
+        [DataMember]
+        public int pmRegistrosPorPagina { get { return RegistrosPorPagina; } set { RegistrosPorPagina = value; } }
+        [DataMember]
+        public bool pmSaldosCidaBod { get { return SaldosCiaBod; } set { SaldosCiaBod = value; } } 
+        [DataMember]
+        public string pmSubGrupo { get { return SubGrupo; } set { SubGrupo = value; } }
     }
 }

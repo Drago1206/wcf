@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using WcfPedidos30.Model;
 
 namespace WcfPedidos30
 {
@@ -14,12 +15,19 @@ namespace WcfPedidos30
     {
 
         [OperationContract]
-        string GetData(int value);
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Producto")]
+        RespProducto ConProducto(ObtProducto obtProducto);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ConsolidadoClientes", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Producto")]
+        RespCliente ObjCliente(ObtCliente obtCliente);
 
-        // TODO: agregue aquí sus operaciones de servicio
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerUsuarios", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Producto")]
+        RespUsuarios ObjUsuario(ObtUsuario obtUsuario);
     }
 
 
@@ -44,4 +52,61 @@ namespace WcfPedidos30
             set { stringValue = value; }
         }
     }
+
+    [DataContract]
+    public class RespProducto
+    {
+        List<ProductosResponse> _producto;
+        public List<ProductosResponse> Productos
+        {
+            get { return _producto; }
+            set { _producto = value; }
+        }
+
+        
+    }
+    [DataContract]
+    public class PaginaAcceder
+    {
+        [DataMember]
+        public int Pagina { get; set; }
+
+        [DataMember]
+        public int RegistroPorPagina { get; set; }
+    }
+
+    public class ObtProducto
+    {
+
+        PaginaAcceder paginaAcceder;
+        [DataMember]
+        public string CodOrDesProd { get; set; }
+        
+        [DataMember]
+        public string Grupo { get; set; }
+
+        [DataMember]
+        public bool SaldosCiaBod { get; set; }
+        
+        [DataMember]
+        public string SubGrupo { get; set; }
+
+        [DataMember]
+        public PaginaAcceder pagina
+        {
+            get { return paginaAcceder; }
+            set { paginaAcceder = value; }
+
+        }
+    }
+
+   public class RespCliente
+    {
+
+    }
+    public class RespUsuario
+    {
+
+    }
+    
 }

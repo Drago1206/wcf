@@ -48,6 +48,14 @@ namespace WcfPedidos30.Model
     public class ClienteRequest
     {
         public string NitCliente { get; set; }
-        public int PaginaActual { get; set; }
+        public int Password { get; set; }
+        public string UserName { get; set; }
+
+        [DataMember]
+        public string pmNitCliente { get { return NitCliente; } set { NitCliente = value; } }
+        [DataMember]
+        public string pmUserName { get { return UserName; } set { UserName = value; } }
+        [DataMember]
+        public int pmPassword { get { return Password; } set { Password = value; } }
     }
 }
