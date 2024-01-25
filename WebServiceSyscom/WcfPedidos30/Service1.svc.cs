@@ -35,9 +35,9 @@ namespace WcfPedidos30
             {
 
                 /*
-                    ExisteUsuario token = new ExisteUsuario();
-                    respuesta.Token = token.nuevoToken(obtProducto.Usuario.UserName, obtProducto.Usuario.Contrasena, out string[] mensajeNuevo);
                   */
+                    ExisteUsuario usuario = new ExisteUsuario();
+                respuesta. = usuario.Existe(obtProducto.Usuario.UserName, obtProducto.Usuario.Password);
                 respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
     }
             return respuesta;
