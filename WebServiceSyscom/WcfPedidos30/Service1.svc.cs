@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using WcfPedidos30.Model;
 
 namespace WcfPedidos30
 {
@@ -14,13 +15,46 @@ namespace WcfPedidos30
     {
 
         #region ObtenerProducto 
+
+        [return: MessageParameter(Name = "Producto")]
         public RespProducto ConProducto(ObtProducto obtProducto)
         {
             RespProducto respuesta = new RespProducto();
+            respuesta.Registro = new Log();
+            
+            if (obtProducto.Usuario == null)
+            {
+                respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
+            }
+            
+            else if (string.IsNullOrWhiteSpace(obtProducto.Usuario.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuario.Password))
+            {
+                respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
+            }
+            else
+            {
 
+                /*
+                    ExisteUsuario token = new ExisteUsuario();
+                    respuesta.Token = token.nuevoToken(obtProducto.Usuario.UserName, obtProducto.Usuario.Contrasena, out string[] mensajeNuevo);
+                  */
+                respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+    }
             return respuesta;
-
         }
         #endregion
+
+        [return: MessageParameter(Name = "Cliente")]
+        public RespCliente ObjCliente(ObtCliente obtCliente)
+        {
+            throw new NotImplementedException();
+        }
+
+        [return: MessageParameter(Name = "Usuario")]
+        public RespUsuario ObjUsuario(ObtUsuario obtUsuario)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

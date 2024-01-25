@@ -4,22 +4,21 @@ using System.Configuration;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Data.SqlTypes;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.ServiceModel;
 using System.Web;
-using System.Data.SqlClient;
 
 namespace WcfPedidos30.Model
 {
+
+    /// <summary>
+    /// Clase Conexion
+    /// </summary>
     public class ConexionBD
     {
-        private List<string> msjError = new List<string>();
-        private SqlConnectionStringBuilder conBuilder = null;
-        private SqlConnection sqlConn = null;
+
+        private string strName = "Conexion";
+        private SqlConnection sqlConn = new SqlConnection();
         private DataSet ds = new DataSet();
         private List<string> qryWhereAND = new List<string>();
         private List<string> qryWhereOR = new List<string>();
@@ -32,132 +31,32 @@ namespace WcfPedidos30.Model
         public string Server = "";
         public string User = "";
         public string Pass = "";
-        public enum Comprobantes { Comprobante, Niff, Fiscal };
-        public enum operacion { insert, update, delete, anular, cancelar, import, open, close, cumplir, descumplir };
-        public Dictionary<string, object> condicionupdate = new Dictionary<string, object>();
 
-        public List<SqlParameter> sqlp = new List<SqlParameter>();
 
         public List<string> qryTables = new List<string>();
         public List<string> qryFields = new List<string>();
         public List<string> qryGroupBy = new List<string>();
         public List<string> qryOrderBy = new List<string>();
         public Dictionary<string, object> qryValues = new Dictionary<string, object>();
-        public List<string> Errores = new List<string>();
+
         private SqlDataAdapter adapter;
 
+        /// <summary>
+        /// Inicializa el nombre del connectionstring <see cref="Conexion"/>.
+        /// </summary>
+        public ConexionBD(){
+            this.strName = "Conexion";
 
-
-        public ConexionBD()
-        {
-            //this.conBuilder = conSqlite.obtenerConexionSyscom();
-        }
-
-        public ConexionBD(SqlConnectionStringBuilder stringConn)
-        {
-            stringConn.ConnectTimeout = 0;
-            sqlConn = new SqlConnection(stringConn.ConnectionString);
-        }
-
-
-        public ConnectionState abrirConexion(bool isTransact = false)
-        {
-            try
-            {
-                if (sqlConn != null)
-                {
-                    sqlConn.Open();
-                    if (isTransact)
-                        transaccion = sqlConn.BeginTransaction();
-                }
-                else
-                    sqlConn = new SqlConnection();
-            }
-            catch (Exception ex)
-            {
-                var str = ex.Message;
-            }
-            return sqlConn.State;
-        }
-
-
-        public bool ejecutarQuerys(string SqlQuery, List<SqlParameter> _parametros, out DataTable _Datos, CommandType tipo = CommandType.Text)
-        {
-            //MessageBox.Show(SqlQuery);
-            bool resultado = false;
-            _Datos = new DataTable();
-            try
-            {
-                if (sqlConn != null)
-                {
-                    try
-                    {
-                        if (this.sqlConn.State != ConnectionState.Open)
-                            abrirConexion();
-                        SqlCommand command = new SqlCommand(SqlQuery, sqlConn);
-                        if (this.transaccion != null)
-                            command.Transaction = this.transaccion;
-                        command.CommandTimeout = 0;
-                        command.CommandType = tipo;
-                        command.Parameters.AddRange(_parametros.ToArray());
-                        _Datos.Load(command.ExecuteReader());
-                        _parametros = new List<SqlParameter>();
-                        resultado = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Errores.Add(ex.Message);
-                        //Log.tareas.Add("Error al ejecutar la consulta a la base de datos" + SqlQuery + " [mensaje: " + ex.Message + "]");
-                        //Log.write();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //   LogErrores.escribirError(ex);
-                //  LogErrores.write();
-            }
-            return resultado;
-        }
-
-        public bool ejecutarQuerys(string SqlQuery, List<SqlParameter> _parametros, out DataSet _Datos, CommandType tipo = CommandType.Text)
-        {
-            bool resultado = false;
-            _Datos = new DataSet();
-            try
-            {
-                if (sqlConn != null)
-                {
-                    try
-                    {
-                        if (this.sqlConn.State != ConnectionState.Open)
-                            abrirConexion();
-
-                        SqlDataAdapter adapter = new SqlDataAdapter(SqlQuery, this.sqlConn);
-                        adapter.SelectCommand.CommandType = tipo;
-                        adapter.SelectCommand.Parameters.Clear();
-                        adapter.SelectCommand.CommandTimeout = 9999999;
-                        _Datos.Clear();
-                        adapter.SelectCommand.Parameters.AddRange(_parametros.ToArray());
-                        adapter.Fill(_Datos);
-
-                        resultado = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        Errores.Add(ex.Message);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Errores.Add(ex.Message);
-            }
-            return resultado;
         }
 
         #region Tabla
-        public void ejecutarQuery(string _resultado = "select", string _aliasConsulta = null, bool _parametros = false)
+        /// <summary>
+        /// Ejecuta la consulta.
+        /// </summary>
+        /// <param name="_resultado">Tipo de consulta (select, insert, update).</param>
+        /// <param name="_aliasConsulta">Nombre del datatable o alias.</param>
+        /// <exception cref="System.ExecutionEngineException"></exception>
+        public void ejecutarQuery(string _resultado = "select", string _aliasConsulta = null)
         {
             try
             {
@@ -167,7 +66,6 @@ namespace WcfPedidos30.Model
                     this.sqlConn.Open();
                 }
                 this.adapter = new SqlDataAdapter(sqlQuery, this.sqlConn);
-                //this.Log(sqlQuery);
                 this.adapter.SelectCommand.CommandTimeout = 0;
                 if (this.transaccion != null)
                     this.adapter.SelectCommand.Transaction = this.transaccion;
@@ -180,11 +78,8 @@ namespace WcfPedidos30.Model
                         this.adapter.SelectCommand.ExecuteNonQuery();
                         break;
                     case "update":
-                        this.adapter.UpdateCommand = new SqlCommand(sqlQuery, this.sqlConn);
                         this.adapter.UpdateCommand.CommandType = CommandType.Text;
                         this.adapter.UpdateCommand.Parameters.Clear();
-                        if (_parametros)
-                            this.adapter.UpdateCommand.Parameters.AddRange(this.sqlp.ToArray());
                         this.adapter.UpdateCommand.ExecuteNonQuery();
                         break;
                     case "delete":
@@ -192,11 +87,10 @@ namespace WcfPedidos30.Model
                         this.adapter.DeleteCommand.Parameters.Clear();
                         this.adapter.DeleteCommand.ExecuteNonQuery();
                         break;
-
                     default:
                         this.adapter.SelectCommand.CommandType = CommandType.Text;
                         this.adapter.SelectCommand.Parameters.Clear();
-                        //this.adapter.SelectCommand.ExecuteNonQuery();
+//                        this.adapter.SelectCommand.ExecuteNonQuery();
                         if (_aliasConsulta != null)
                             this.adapter.Fill(this.ds, _aliasConsulta);
                         else
@@ -209,15 +103,11 @@ namespace WcfPedidos30.Model
                     this.sqlConn.Close();
                 }
             }
-            catch (SqlException ex)
+            catch (Exception e)
             {
-                if (this.transaccion != null)
-                    this.transaccion.Rollback();
-
-                Log(ex.Message);
-                throw new FaultException(ex.Message);
-
-                //Errores.Add(ex.Message.Split(',')[1]);
+                LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message);
+                LogErrores.write();
+                throw new ExecutionEngineException();
             }
             finally
             {
@@ -226,34 +116,10 @@ namespace WcfPedidos30.Model
             }
         }
 
-        public void Log(string logMessage)
-        {
-            StreamWriter sw = new StreamWriter(String.Concat(System.AppDomain.CurrentDomain.BaseDirectory, "\\LogErroresConex", ".txt"), true);
-            //string path = System.AppDomain.CurrentDomain.BaseDirectory + "\\LogPuebasI.txt";
-            //if (!File.Exists(path))
-            //{
-            //    // Create a file to write to.
-            //    using (sw = File.CreateText(path))
-            //    {
-            sw.WriteLine(String.Concat("Fecha ", DateTime.Now.ToString("yyyyMMddHHmmss"), ": ", logMessage));
-            sw.WriteLine(Environment.NewLine);
-            sw.Flush();
-            sw.Close();
-            //    }
-
-            //}
-            //else
-            //{
-            //    sw.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(logMessage));
-            //    sw.WriteLine(Environment.NewLine);
-            //    sw.Flush();
-            //    sw.Close();
-            //}
-
-        }
-
-
         #region FuncionesTabla
+        /// <summary>
+        /// Arma la sentencia de insercion de acuerdo a los campos, tablas y condiciones.
+        /// </summary>
         public void insert()
         {
             this.sqlQuery = "insert into " + String.Join("", qryTables.FirstOrDefault().ToString());
@@ -262,31 +128,9 @@ namespace WcfPedidos30.Model
 
         }
 
-        public void update()
-        {
-
-            List<string> datos = new List<string>();
-            List<string> condicion = new List<string>();
-
-            foreach (var val in qryValues)
-            {
-                datos.Add(Convert.ToString(val.Key + " = @" + val.Key + ""));
-                sqlp.Add(new SqlParameter("@" + val.Key, val.Value));
-            }
-
-            foreach (var cp in this.condicionupdate)
-            {
-                condicion.Add(Convert.ToString(cp.Key + " = @" + cp.Key + ""));
-                sqlp.Add(new SqlParameter("@" + cp.Key, cp.Value));
-            }
-
-            this.sqlQuery = "update " + String.Join("", qryTables.FirstOrDefault().ToString());
-            this.sqlQuery += " set " + String.Join(",", datos);
-            if (condicion.Count() > 0)
-                this.sqlQuery += " where ";
-            this.sqlQuery += (condicion.Count() > 0 ? String.Join(" AND ", condicion) : "");
-        }
-
+        /// <summary>
+        /// Arma la sentencia de consulta de acuerdo a los campos, tablas y condiciones.
+        /// </summary>
         public void select()
         {
             this.sqlQuery = "select " + (this.qryFields.Count > 0 ? String.Join(",", this.qryFields) : " * ");
@@ -299,6 +143,10 @@ namespace WcfPedidos30.Model
             this.sqlQuery += (this.qryOrderBy.Count() > 0 ? " order by " + String.Join(",", this.qryOrderBy) : "");
         }
 
+        /// <summary>
+        /// Ejecuta una consulta sql directamente desde la funcion.
+        /// </summary>
+        /// <param name="_sqlQuery">Sentencia SQL.</param>
         public void setCustomQuery(string _sqlQuery)
         {
             this.sqlQuery = _sqlQuery;
@@ -309,26 +157,46 @@ namespace WcfPedidos30.Model
         //    this.qryInsValores.Add(_field, _value);
         //}
 
+        /// <summary>
+        /// Inserta una condicion a la sentencia bajo el operador logico AND.
+        /// </summary>
+        /// <param name="_Where">Condicion AND.</param>
         public void addWhereAND(string _Where)
         {
             this.qryWhereAND.Add(_Where);
         }
 
+        /// <summary>
+        /// Inserta una condicion a la sentencia bajo el operador logico OR.
+        /// </summary>
+        /// <param name="_Where">Condicion OR.</param>
         public void addWhereOR(string _Where)
         {
             this.qryWhereOR.Add(_Where);
         }
         #endregion
-
-        #endregion
+        #endregion Tabla
 
         #region Procedimiento
 
+        /// <summary>
+        /// Añade los parametros a los procedimientos.
+        /// </summary>
+        /// <param name="_sqlParametros">Lista de parametros.</param>
         public void addParametersProc(List<SqlParameter> _sqlParametros)
         {
             this.sqlParameters.AddRange(_sqlParametros);
         }
 
+        /// <summary>
+        /// Ejeucuta el procedimiento.
+        /// </summary>
+        /// <param name="_procedimiento">Nombre del procedimiento.</param>
+        /// <param name="_aliasProcedimiento">Alias del datatable.</param>
+        /// <param name="_sinresultados">si es <c>true</c> no obtiene resultados.</param>
+        /// <exception cref="System.ExecutionEngineException">
+        /// No ejecuta el codigo si hay un error.
+        /// </exception>
         public void ejecutarProcedimiento(string _procedimiento, string _aliasProcedimiento = null, bool _sinresultados = false)
         {
 
@@ -352,17 +220,17 @@ namespace WcfPedidos30.Model
                     this.adapter.SelectCommand.Parameters.Add(item);
                 }
 
-                if (_sinresultados != false)
+                if(_sinresultados!=false)
                     this.adapter.SelectCommand.ExecuteNonQuery();
                 else
                     if (_aliasProcedimiento != null)
-                {
-                    this.adapter.Fill(this.ds, _aliasProcedimiento);
-                    ds.Tables[0].TableName = _aliasProcedimiento;
-                    ds.Tables[0].Namespace = _aliasProcedimiento;
-                }
-                else
-                    this.adapter.Fill(this.ds);
+                    {
+                        this.adapter.Fill(this.ds, _aliasProcedimiento);
+                        ds.Tables[0].TableName = _aliasProcedimiento;
+                        ds.Tables[0].Namespace = _aliasProcedimiento;
+                    }
+                    else
+                        this.adapter.Fill(this.ds);
                 this.adapter.SelectCommand.Parameters.Clear();
                 if (this.transaccion == null)
                 {
@@ -370,16 +238,12 @@ namespace WcfPedidos30.Model
                     this.sqlConn.Close();
                 }
             }
-            catch (SqlException ex)
+            catch (Exception e)
             {
-                if (this.transaccion != null)
-                    this.transaccion.Rollback();
+                LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message);
+                LogErrores.write();
 
-                Log(ex.Message);
-
-                //Errores.Add(ex.Message.Split(',')[1]);
-                throw new FaultException(ex.Message);
-                // new Exception("Error al ejecutar el procedimiento: " + _procedimiento + );
+                throw e;
             }
             finally
             {
@@ -388,328 +252,69 @@ namespace WcfPedidos30.Model
             }
         }
 
-        public void ejecutarProcedimiento(string _procedimiento, operacion operac, string _aliasProcedimiento = null, bool _sinresultados = false)
-        {
-
-            try
-            {
-                List<SqlParameter> parametros = new List<SqlParameter>();
-
-                string opcion = "";
-                switch (operac)
-                {
-                    case operacion.insert:
-                        opcion = "i";//insertar
-                        break;
-                    case operacion.update:
-                        opcion = "u";//actualizar
-                        break;
-                    case operacion.delete:
-                        opcion = "d";//eliminar
-                        break;
-                    case operacion.anular:
-                        opcion = "a";//anular
-                        break;
-                    case operacion.cancelar:
-                        opcion = "s";//saldar
-                        break;
-                    case operacion.import:
-                        opcion = "p";//importar
-                        break;
-                    case operacion.open:
-                        opcion = "o";//abrir
-                        break;
-                    case operacion.close:
-                        opcion = "c";//cerrar
-                        break;
-                    case operacion.cumplir:
-                        opcion = "f";//fulfill(cumplir-satisfy)
-                        break;
-                    case operacion.descumplir:
-                        opcion = "n";//notfulfill(descumplir-not satisfy)
-                        break;
-                }
-
-                parametros.Add(new SqlParameter("@operacion", opcion));
-                addParametersProc(parametros);
-
-                if (this.sqlConn.State != ConnectionState.Open)
-                {
-                    this.Connect();
-                    this.sqlConn.Open();
-                }
-
-                this.adapter = new SqlDataAdapter(_procedimiento, this.sqlConn);
-                this.adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-                this.adapter.SelectCommand.CommandTimeout = 0;
-                this.adapter.SelectCommand.Parameters.Clear();
-                this.ds.Clear();
-                SqlParameter[] _sqlParameters = sqlParameters.ToArray();
-                if (this.transaccion != null)
-                    this.adapter.SelectCommand.Transaction = this.transaccion;
-                foreach (var item in _sqlParameters)
-                {
-                    this.adapter.SelectCommand.Parameters.Add(item);
-                }
-
-                if (_sinresultados != false)
-                    this.adapter.SelectCommand.ExecuteNonQuery();
-                else
-                    if (_aliasProcedimiento != null)
-                {
-                    this.adapter.Fill(this.ds, _aliasProcedimiento);
-                    ds.Tables[0].TableName = _aliasProcedimiento;
-                    ds.Tables[0].Namespace = _aliasProcedimiento;
-                }
-                else
-                    this.adapter.Fill(this.ds);
-                this.adapter.SelectCommand.Parameters.Clear();
-                if (this.transaccion == null)
-                {
-                    this.adapter.Dispose();
-                    this.sqlConn.Close();
-                }
-            }
-            catch (SqlException ex)
-            {
-                if (this.transaccion != null)
-                    this.transaccion.Rollback();
-
-                Log(ex.Message);
-
-                //Errores.Add(ex.Message.Split(',')[1]);
-                throw new FaultException(ex.Message);
-                // new Exception("Error al ejecutar el procedimiento: " + _procedimiento + );
-            }
-            catch (Exception ex)
-            {
-                if (this.transaccion != null)
-                    this.transaccion.Rollback();
-
-                Log(ex.Message);
-
-                //Errores.Add(ex.Message.Split(',')[1]);
-                throw new FaultException(ex.Message);
-                // new Exception("Error al ejecutar el procedimiento: " + _procedimiento + );
-            }
-            finally
-            {
-                if (this.transaccion == null)
-                    sqlConn.Dispose();
-            }
-        }
-
-        public void ejecutarProcedimiento(string _procedimiento, DataTable dt, operacion operac, string _aliasProcedimiento = null, bool _sinresultados = false)
-        {
-
-            try
-            {
-                List<SqlParameter> parametros = new List<SqlParameter>();
-
-                string opcion = "";
-                switch (operac)
-                {
-                    case operacion.insert:
-                        opcion = "i";//insertar
-                        break;
-                    case operacion.update:
-                        opcion = "u";//actualizar
-                        break;
-                    case operacion.delete:
-                        opcion = "d";//eliminar
-                        break;
-                    case operacion.anular:
-                        opcion = "a";//anular
-                        break;
-                    case operacion.cancelar:
-                        opcion = "s";//saldar
-                        break;
-                    case operacion.import:
-                        opcion = "p";//importar
-                        break;
-                    case operacion.open:
-                        opcion = "o";//abrir
-                        break;
-                    case operacion.close:
-                        opcion = "c";//cerrar
-                        break;
-                    case operacion.cumplir:
-                        opcion = "f";//fulfill(cumplir-satisfy)
-                        break;
-                    case operacion.descumplir:
-                        opcion = "n";//notfulfill(descumplir-not satisfy)
-                        break;
-                }
-
-                parametros.Add(new SqlParameter("@" + dt.TableName, dt));
-                parametros.Add(new SqlParameter("@operacion", opcion));
-                addParametersProc(parametros);
-
-                if (this.sqlConn.State != ConnectionState.Open)
-                {
-                    this.Connect();
-                    this.sqlConn.Open();
-                }
-
-                this.adapter = new SqlDataAdapter(_procedimiento, this.sqlConn);
-                this.adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-                this.adapter.SelectCommand.Parameters.Clear();
-                this.ds.Clear();
-                SqlParameter[] _sqlParameters = sqlParameters.ToArray();
-                if (this.transaccion != null)
-                    this.adapter.SelectCommand.Transaction = this.transaccion;
-                foreach (var item in _sqlParameters)
-                {
-                    this.adapter.SelectCommand.Parameters.Add(item);
-                }
-
-                if (_sinresultados != false)
-                    this.adapter.SelectCommand.ExecuteNonQuery();
-                else
-                    if (_aliasProcedimiento != null)
-                {
-                    this.adapter.Fill(this.ds, _aliasProcedimiento);
-                    ds.Tables[0].TableName = _aliasProcedimiento;
-                    ds.Tables[0].Namespace = _aliasProcedimiento;
-                }
-                else
-                    this.adapter.Fill(this.ds);
-                this.adapter.SelectCommand.Parameters.Clear();
-                if (this.transaccion == null)
-                {
-                    this.adapter.Dispose();
-                    this.sqlConn.Close();
-                }
-            }
-            catch (SqlException ex)
-            {
-                if (this.transaccion != null)
-                    this.transaccion.Rollback();
-
-                Log(ex.Message);
-
-                //Errores.Add(ex.Message.Split(',')[1]);
-                throw new FaultException(ex.Message);
-                // new Exception("Error al ejecutar el procedimiento: " + _procedimiento + );
-            }
-            finally
-            {
-                if (this.transaccion == null)
-                    sqlConn.Dispose();
-            }
-        }
-
-        public void ejecutarProcedimiento(string _procedimiento, List<DataTable> _tables, operacion operac, string _aliasProcedimiento = null, bool _sinresultados = false)
-        {
-
-            try
-            {
-                List<SqlParameter> parametros = new List<SqlParameter>();
-
-                string opcion = "";
-                switch (operac)
-                {
-                    case operacion.insert:
-                        opcion = "i";//insertar
-                        break;
-                    case operacion.update:
-                        opcion = "u";//actualizar
-                        break;
-                    case operacion.delete:
-                        opcion = "d";//eliminar
-                        break;
-                    case operacion.anular:
-                        opcion = "a";//anular
-                        break;
-                    case operacion.cancelar:
-                        opcion = "s";//saldar
-                        break;
-                    case operacion.import:
-                        opcion = "p";//importar
-                        break;
-                    case operacion.open:
-                        opcion = "o";//abrir
-                        break;
-                    case operacion.close:
-                        opcion = "c";//cerrar
-                        break;
-                    case operacion.cumplir:
-                        opcion = "f";//fulfill(cumplir-satisfy)
-                        break;
-                    case operacion.descumplir:
-                        opcion = "n";//notfulfill(descumplir-not satisfy)
-                        break;
-                }
-
-                foreach (var dt in _tables)
-                    parametros.Add(new SqlParameter("@" + dt.TableName, dt));
-
-                parametros.Add(new SqlParameter("@operacion", opcion));
-                addParametersProc(parametros);
-
-                if (this.sqlConn.State != ConnectionState.Open)
-                {
-                    this.Connect();
-                    this.sqlConn.Open();
-                }
-
-                this.adapter = new SqlDataAdapter(_procedimiento, this.sqlConn);
-                this.adapter.SelectCommand.CommandType = CommandType.StoredProcedure;
-                this.adapter.SelectCommand.Parameters.Clear();
-                this.ds.Clear();
-                SqlParameter[] _sqlParameters = sqlParameters.ToArray();
-                if (this.transaccion != null)
-                    this.adapter.SelectCommand.Transaction = this.transaccion;
-                foreach (var item in _sqlParameters)
-                {
-                    this.adapter.SelectCommand.Parameters.Add(item);
-                }
-
-                if (_sinresultados != false)
-                    this.adapter.SelectCommand.ExecuteNonQuery();
-                else
-                    if (_aliasProcedimiento != null)
-                {
-                    this.adapter.Fill(this.ds, _aliasProcedimiento);
-                    ds.Tables[0].TableName = _aliasProcedimiento;
-                    ds.Tables[0].Namespace = _aliasProcedimiento;
-                }
-                else
-                    this.adapter.Fill(this.ds);
-                this.adapter.SelectCommand.Parameters.Clear();
-                if (this.transaccion == null)
-                {
-                    this.adapter.Dispose();
-                    this.sqlConn.Close();
-                }
-            }
-            catch (SqlException ex)
-            {
-                if (this.transaccion != null)
-                    this.transaccion.Rollback();
-
-                Log(ex.Message);
-
-                throw new FaultException(ex.Message);
-                // new Exception("Error al ejecutar el procedimiento: " + _procedimiento + );
-            }
-            finally
-            {
-                if (this.transaccion == null)
-                    sqlConn.Dispose();
-            }
-        }
-
-        #endregion
+        #endregion Procedimiento
 
         #region otrasFunciones
 
+        /// <summary>
+        /// Joins the data tables.
+        /// </summary>
+        /// <param name="t1">The t1.</param>
+        /// <param name="t2">The t2.</param>
+        /// <param name="joinOn">The join on.</param>
+        /// <returns></returns>
+        public DataTable JoinDataTables(DataTable t1, DataTable t2, params Func<DataRow, DataRow, bool>[] joinOn)
+        {
+            DataTable result = new DataTable();
+            foreach (DataColumn col in t1.Columns)
+            {
+                if (result.Columns[col.ColumnName] == null)
+                    result.Columns.Add(col.ColumnName, col.DataType);
+            }
+            foreach (DataColumn col in t2.Columns)
+            {
+                if (result.Columns[col.ColumnName] == null)
+                    result.Columns.Add(col.ColumnName, col.DataType);
+            }
+            foreach (DataRow row1 in t1.Rows)
+            {
+                var joinRows = t2.AsEnumerable().Where(row2 =>
+                {
+                    foreach (var parameter in joinOn)
+                    {
+                        if (!parameter(row1, row2)) return false;
+                    }
+                    return true;
+                });
+                foreach (DataRow fromRow in joinRows)
+                {
+                    DataRow insertRow = result.NewRow();
+                    foreach (DataColumn col1 in t1.Columns)
+                    {
+                        insertRow[col1.ColumnName] = row1[col1.ColumnName];
+                    }
+                    foreach (DataColumn col2 in t2.Columns)
+                    {
+                        insertRow[col2.ColumnName] = fromRow[col2.ColumnName];
+                    }
+                    result.Rows.Add(insertRow);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the number filas.
+        /// </summary>
+        /// <returns></returns>
         public int getNumFilas()
         {
             int filas = this.getDataTable().Rows.Count;
             return filas;
         }
-
+        /// <summary>
+        /// Resets the query.
+        /// </summary>
         public void resetQuery()
         {
             this.qryTables.Clear();
@@ -718,64 +323,135 @@ namespace WcfPedidos30.Model
             this.qryWhereOR.Clear();
             this.qryGroupBy.Clear();
             this.qryOrderBy.Clear();
+            this.ds.Tables.Clear();
             this.sqlParameters = new List<SqlParameter>();
             this.resNumRows = 0;
         }
-
+        /// <summary>
+        /// Gets the campos.
+        /// </summary>
+        /// <returns></returns>
         public string getCampos()
         {
-            return String.Join(",", qryFields);
+            return String.Join(",",qryFields);
         }
-
-        public string insertDataTable(string _tabla, DataTable _datos)
+        /// <summary>
+        /// Inserts the data table.
+        /// </summary>
+        /// <param name="_tabla">The _tabla.</param>
+        /// <param name="_datos">The _datos.</param>
+        public bool insertDataTable(string _tabla, DataTable _datos)
         {
+            bool insertado = true;
             try
             {
-                Connect();
-                this.sqlConn.Open();
-                SqlBulkCopy sbc = new SqlBulkCopy(sqlConn);
+
+                if (this.sqlConn.State != ConnectionState.Open)
+                {
+                    this.Connect();
+                    this.sqlConn.Open();
+                }
+                SqlBulkCopy sbc;
+                if (this.transaccion != null)
+                    sbc = new SqlBulkCopy(sqlConn, SqlBulkCopyOptions.Default, this.transaccion);
+                else
+                    sbc = new SqlBulkCopy(sqlConn);
                 sbc.DestinationTableName = _tabla;
                 sbc.WriteToServer(_datos);
-                this.sqlConn.Close();
-                return null;
+                if (this.transaccion == null)
+                {
+                    this.adapter.Dispose();
+                    this.sqlConn.Close();
+                }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                return ex.Message;
+                LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message + "\nDatos=>\n" + string.Join("///", _datos.Rows.Cast<DataRow>().FirstOrDefault().ItemArray));
+                LogErrores.write();
+                insertado = false;
+
             }
             finally
             {
-                sqlConn.Dispose();
+                if (this.transaccion == null)
+                    sqlConn.Dispose();
+            }
+            return insertado;
+        }
+        /// <summary>
+        /// Inserts the data table.
+        /// </summary>
+        /// <param name="_tabla">The _tabla.</param>
+        /// <param name="_datos">The _datos.</param>
+        public void insertRows(string _tabla, DataTable _datos)
+        {
+            try
+            {
+
+                if (this.sqlConn.State != ConnectionState.Open)
+                {
+                    this.Connect();
+                    this.sqlConn.Open();
+                }
+                SqlBulkCopy sbc;
+                if (this.transaccion != null)
+                    sbc = new SqlBulkCopy(sqlConn, SqlBulkCopyOptions.TableLock, this.transaccion);
+                else
+                    sbc = new SqlBulkCopy(sqlConn);
+                sbc.DestinationTableName = _tabla;
+                sbc.WriteToServer(_datos);
+                if (this.transaccion == null)
+                {
+                    this.adapter.Dispose();
+                    this.sqlConn.Close();
+                }
+            }
+            catch (Exception e)
+            {
+                LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message);
+                LogErrores.write();
+
+            }
+            finally
+            {
+                if (this.transaccion == null)
+                    sqlConn.Dispose();
             }
 
         }
-
-        public void dataRowtoParametersProc(DataRowView _datos)
+        /// <summary>
+        /// Datas the rowto parameters proc.
+        /// </summary>
+        /// <param name="_datos">The _datos.</param>
+        public void dataRowtoParametersProc(DataRow _datos)
         {
             try
             {
                 sqlParameters = new List<SqlParameter>();
-
+                
                 int i = 0;
-                foreach (var r in _datos.Row.ItemArray)
-                {
-                    SqlParameter p = new SqlParameter("@" + _datos.Row.Table.Columns[i].ColumnName, r);
-
+                foreach (var r in _datos.ItemArray)
+                { 
+                    SqlParameter p = new SqlParameter("@" + _datos.Table.Columns[i].ColumnName,r);
+                   
                     sqlParameters.Add(p);
-                    i = i + 1;
+                    i = i+1;
                 }
 
 
             }
             catch
-            {
-
+            { 
+            
             }
 
-
+            
         }
-
-        public void dataRowtoParametersProc(Dictionary<string, object> _datos)
+        /// <summary>
+        /// Datas the rowto parameters proc.
+        /// </summary>
+        /// <param name="_datos">The _datos.</param>
+        public void dataRowtoParametersProc(Dictionary<string,object> _datos)
         {
             try
             {
@@ -790,10 +466,11 @@ namespace WcfPedidos30.Model
                         sqlParameters.Add(p);
                     }
                     catch (Exception e)
-                    {
-                        // LogErrores.escribirError(e);
-                        //LogErrores.write();
+                    { 
+                        
                     }
+
+                    
                     i = i + 1;
                 }
 
@@ -806,21 +483,27 @@ namespace WcfPedidos30.Model
 
 
         }
-
+        /// <summary>
+        /// Gets the data set.
+        /// </summary>
+        /// <returns></returns>
         public DataSet getDataSet()
         {
             return ds;
         }
-
-        public DataTable getDataTable()
-        {
+        /// <summary>
+        /// Gets the data table.
+        /// </summary>
+        /// <returns></returns>
+        public DataTable getDataTable() {
             return ds.Tables[0];
         }
 
+
         /// <summary>
-        /// Asigna los resultados a una lista de cualquier tipo de clase.
+        /// Converts to list model.
         /// </summary>
-        /// <typeparam name="TModel">Tipo de la clase.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <returns></returns>
         public List<TModel> ConvertToListModel<TModel>()
         {
@@ -832,7 +515,7 @@ namespace WcfPedidos30.Model
             {
                 TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
 
-                foreach (var campo in atributos)
+                foreach (System.Reflection.PropertyInfo campo in atributos)
                     try
                     {
                         tipo.GetProperty(campo.Name).SetValue((TModel)objeto, filas[campo.Name]);
@@ -846,71 +529,10 @@ namespace WcfPedidos30.Model
             }
             return mo;
         }
-
         /// <summary>
-        /// Asigna los resultados a una lista de cualquier tipo de clase.
+        /// Converts to model.
         /// </summary>
-        /// <typeparam name="TModel">Tipo de la clase.</typeparam>
-        /// <returns></returns>
-        public List<TModel> ConvertToListModel<TModel>(DataTable tabla)
-        {
-            List<TModel> mo = new List<TModel>();
-            Type tipo = typeof(TModel);
-            var atributos = tipo.GetProperties();
-
-            foreach (DataRow filas in tabla.Rows)
-            {
-                TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
-
-                foreach (var campo in atributos)
-                    try
-                    {
-                        tipo.GetProperty(campo.Name).SetValue((TModel)objeto, filas[campo.Name]);
-                    }
-                    catch
-                    {
-
-                    }
-
-                mo.Add((TModel)objeto);
-            }
-            return mo;
-        }
-
-        /// <summary>
-        /// Asigna los resultados a un vector de cualquier tipo de clase.
-        /// </summary>
-        /// <typeparam name="TModel">Tipo de la clase.</typeparam>
-        /// <returns></returns>
-        public TModel[] ConvertToArrayModel<TModel>()
-        {
-            List<TModel> mo = new List<TModel>();
-            Type tipo = typeof(TModel);
-            var atributos = tipo.GetProperties();
-
-            foreach (DataRow filas in ds.Tables[0].Rows)
-            {
-                TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
-
-                foreach (var campo in atributos)
-                    try
-                    {
-                        tipo.GetProperty(campo.Name).SetValue((TModel)objeto, filas[campo.Name]);
-                    }
-                    catch
-                    {
-
-                    }
-
-                mo.Add((TModel)objeto);
-            }
-            return mo.ToArray();
-        }
-
-        /// <summary>
-        /// Asigna los resultados a una clase.
-        /// </summary>
-        /// <typeparam name="TModel">Tipo de la clase.</typeparam>
+        /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <returns></returns>
         public TModel ConvertToModel<TModel>()
         {
@@ -938,176 +560,11 @@ namespace WcfPedidos30.Model
             return mo.FirstOrDefault();
 
         }
-
         /// <summary>
-        /// Almacena un modelo en la tabla resultante de la consulta.
+        /// Converts to model.
         /// </summary>
-        /// <param name="clsModelos">The CLS modelos.</param>
-        public void ModelToTable<TModel>(List<TModel> clsModelos)
-        {
-            foreach (TModel clsModelo in clsModelos)
-            {
-                Type tipo = typeof(TModel);
-                DataRow dr = ds.Tables[0].NewRow();
-                for (Int32 i = 0; i < ds.Tables[0].Columns.Count; i++)
-                {
-                    try
-                    {
-                        string campo = ds.Tables[0].Columns[i].ColumnName;
-                        dr[i] = tipo.GetProperty(campo).GetValue(clsModelo);
-                        if (tipo.GetProperty(campo).GetValue(clsModelo).GetType().Name.ToLower() == "datetime" && (DateTime)tipo.GetProperty(campo).GetValue(clsModelo) == DateTime.MinValue)
-                            dr[i] = DBNull.Value;
-                    }
-                    catch
-                    {
-
-                    }
-                }
-                ds.Tables[0].Rows.Add(dr);
-                ds.Tables[0].AcceptChanges();
-            }
-
-            //insertDataTable(ds.Tables[0].TableName, ds.Tables[0]);
-        }
-
-        /// <summary>
-        /// Models to table.
-        /// </summary>
-        /// <param name="clsModelo">The CLS modelo.</param>
-        public void ModelToTable<TModel>(TModel clsModelo)
-        {
-            Type tipo = typeof(TModel);
-            DataRow dr = ds.Tables[0].NewRow();
-            for (Int32 i = 0; i < ds.Tables[0].Columns.Count; i++)
-            {
-                try
-                {
-                    string campo = ds.Tables[0].Columns[i].ColumnName;
-                    dr[i] = tipo.GetProperty(campo).GetValue(clsModelo);
-                    if (tipo.GetProperty(campo).GetValue(clsModelo) != null)
-
-                        if (tipo.GetProperty(campo).GetValue(clsModelo).GetType().Name.ToLower() == "datetime" && (DateTime)tipo.GetProperty(campo).GetValue(clsModelo) == DateTime.MinValue)
-                            dr[i] = DBNull.Value;
-                }
-                catch
-                {
-
-                }
-            }
-            ds.Tables[0].Rows.Add(dr);
-            ds.Tables[0].AcceptChanges();
-
-            //insertDataTable(ds.Tables[0].TableName, ds.Tables[0]);
-        }
-
-        /// <summary>
-        /// Converts a DataTable to a list with generic objects
-        /// </summary>
-        /// <typeparam name="T">Generic object</typeparam>
-        /// <param name="table">DataTable</param>
-        /// <returns>List with generic objects</returns>
-        public List<T> DataTableToList<T>() where T : class, new()
-        {
-            try
-            {
-                List<T> list = new List<T>();
-
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    T obj = new T();
-
-                    foreach (var prop in obj.GetType().GetProperties())
-                    {
-                        try
-                        {
-                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
-                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
-
-                    list.Add(obj);
-                }
-
-                return list;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public List<T> DataTableToList<T>(DataTable dtDatos) where T : class, new()
-        {
-            try
-            {
-                List<T> list = new List<T>();
-
-                foreach (DataRow row in dtDatos.Rows)
-                {
-                    T obj = new T();
-
-                    foreach (var prop in obj.GetType().GetProperties())
-                    {
-                        try
-                        {
-                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
-                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
-
-                    list.Add(obj);
-                }
-
-                return list;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        public List<T> DataTableToList<T>(string[] DatosDt = null) where T : class, new()
-        {
-            try
-            {
-                List<T> list = new List<T>();
-                DataTable dt = DatosDt == null ? ds.Tables[0] : ds.Tables[0].DefaultView.ToTable(true, DatosDt);
-                foreach (DataRow row in dt.Rows)
-                {
-                    T obj = new T();
-
-                    foreach (var prop in obj.GetType().GetProperties())
-                    {
-                        try
-                        {
-                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
-                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
-
-                    list.Add(obj);
-                }
-
-                return list;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
+        /// <typeparam name="TModel">The type of the model.</typeparam>
+        /// <param name="modelo">The modelo.</param>
         public void ConvertToModel<TModel>(out TModel modelo)
         {
             List<TModel> mo = new List<TModel>();
@@ -1134,61 +591,12 @@ namespace WcfPedidos30.Model
             modelo = mo.FirstOrDefault();
 
         }
-
-        public void ConvertToModel<TModel>(object Model, out TModel modelo)
-        {
-            List<TModel> mo = new List<TModel>();
-            Type tipo = typeof(TModel);
-            var atributos = tipo.GetProperties();
-
-            TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
-
-            foreach (System.Reflection.PropertyInfo campo in atributos)
-            {
-                try
-                {
-                    tipo.GetProperty(campo.Name).SetValue((TModel)objeto, Model.GetType().GetProperty(campo.Name).GetValue(Model));
-                }
-                catch
-                {
-
-                }
-            }
-
-            mo.Add((TModel)objeto);
-
-            modelo = mo.FirstOrDefault();
-
-        }
-
-        public void ConvertToListaModel<TModel>(List<object> Model, out List<TModel> modelo)
-        {
-            List<TModel> mo = new List<TModel>();
-
-            foreach (TModel clsModelo in Model)
-            {
-                Type tipo = typeof(TModel);
-                var atributos = tipo.GetProperties();
-                TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
-
-                foreach (System.Reflection.PropertyInfo campo in atributos)
-                {
-                    try
-                    {
-                        tipo.GetProperty(campo.Name).SetValue((TModel)objeto, clsModelo.GetType().GetProperty(campo.Name).GetValue(clsModelo));
-                    }
-                    catch
-                    {
-
-                    }
-                }
-                mo.Add((TModel)objeto);
-            }
-
-            modelo = mo;
-
-        }
-
+        /// <summary>
+        /// Models to procedure.
+        /// </summary>
+        /// <param name="Model">The model.</param>
+        /// <param name="SQLParameter">The SQL parameter.</param>
+        /// <returns></returns>
         public bool ModelToProcedure(object Model, string SQLParameter)
         {
             bool respuesta = false;
@@ -1197,8 +605,8 @@ namespace WcfPedidos30.Model
             foreach (System.Reflection.PropertyInfo campo in atributos)
                 try
                 {
-
-                    parametros.Add(new SqlParameter("@pm" + campo.Name, Model.GetType().GetProperty(campo.Name).GetValue(Model)));
+                    
+                    parametros.Add(new SqlParameter("@pm"+campo.Name,Model.GetType().GetProperty(campo.Name).GetValue(Model)));
                     addParametersProc(parametros);
                     ejecutarProcedimiento(SQLParameter);
                     respuesta = true;
@@ -1208,11 +616,15 @@ namespace WcfPedidos30.Model
 
                 }
             return respuesta;
-
+            
         }
-
+        /// <summary>
+        /// Inserts the model.
+        /// </summary>
+        /// <param name="Model">The model.</param>
+        /// <returns></returns>
         public bool insertModel(object Model)
-        {
+        { 
 
             bool respuesta = false;
             var atributos = Model.GetType().GetProperties();
@@ -1233,121 +645,70 @@ namespace WcfPedidos30.Model
             return respuesta;
         }
 
-        public void DeleteSpace<TModel>(List<TModel> clsModelos)
+        /// <summary>
+        /// Gets the fecha server.
+        /// </summary>
+        /// <returns></returns>
+        public DateTime getFechaServer()
         {
-            foreach (TModel clsModelo in clsModelos)
-            {
-                Type tipo = typeof(TModel);
-
-                foreach (var prop in clsModelo.GetType().GetProperties())
-                {
-                    try
-                    {
-                        string campo = prop.Name;
-
-                        if (tipo.GetProperty(campo).GetValue(clsModelo).GetType().Name.ToLower().Equals("string"))
-                        {
-                            if ((tipo.GetProperty(campo).GetValue(clsModelo).ToString()) != null)
-                                tipo.GetProperty(campo).SetValue(clsModelo, tipo.GetProperty(campo).GetValue(clsModelo).ToString().Trim());
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                }
-            }
-
+            this.sqlQuery = "select GETDATE() as FechaServer";
+            this.ejecutarQuery();
+            return this.ds.Tables[0].Rows[0].Field<DateTime>("FechaServer");
         }
 
-        public static byte[] DataTableToArray(DataTable dataTable)
+        /// <summary>
+        /// Get current user ip address.
+        /// </summary>
+        /// <returns>The IP Address</returns>
+        public static string GetUserIPAddress()
         {
-            byte[] binaryDataResult = null;
-            using (MemoryStream memStream = new MemoryStream())
-            {
-                BinaryFormatter brFormatter = new BinaryFormatter();
-                dataTable.RemotingFormat = SerializationFormat.Binary;
-                brFormatter.Serialize(memStream, dataTable);
-                binaryDataResult = memStream.ToArray();
-            }
-            return binaryDataResult;
+            var context = System.Web.HttpContext.Current;
+            string ip = String.Empty;
+
+            if (context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] != null)
+                ip = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"].ToString();
+            else if (!String.IsNullOrWhiteSpace(context.Request.UserHostAddress))
+                ip = context.Request.UserHostAddress;
+
+            if (ip == "::1")
+                ip = "127.0.0.1";
+
+            return ip;
         }
 
-        public static DataTable ByteArrayToDataTable(string contenido)
-        {
-            DataTable dt = null;
-            // Deserializing into datatable    
-            try
-            {
-                byte[] byteArrayData = Convert.FromBase64String(contenido);
-                using (MemoryStream stream = new MemoryStream(byteArrayData))
-                {
-                    BinaryFormatter bformatter = new BinaryFormatter();
-                    dt = (DataTable)bformatter.Deserialize(stream);
-                }
-            }
-            catch
-            {
 
-            }
-            return dt;
-        }
-
-        // function that creates an object from the given data row
-        public TModel ConvertRowToModel<TModel>() where TModel : new()
-        {
-            // create a new object
-            TModel item = new TModel();
-
-            // set the item
-            SetItemFromRow(item, this.ds.Tables[0].Rows[0]);
-
-            // return 
-            return item;
-        }
-
-        public void SetItemFromRow<TModel>(TModel item, DataRow row) where TModel : new()
-        {
-            // go through each column
-            foreach (DataColumn c in row.Table.Columns)
-            {
-                // find the property for the column
-                PropertyInfo p = item.GetType().GetProperty(c.ColumnName);
-
-                // if exists, set the value
-                if (p != null && row[c] != DBNull.Value)
-                {
-                    p.SetValue(item, row[c], null);
-                }
-            }
-        }
-
-        #endregion
+        #endregion otrasFunciones
 
         #region Configuracion
 
-        public void setConnection(SqlConnectionStringBuilder con)
+        /// <summary>
+        /// Sets the connection.
+        /// </summary>
+        /// <param name="_connectionStringName">Name of the _connection string.</param>
+        public void setConnection(string _connectionStringName)
         {
-            conBuilder = con;
+            strName = _connectionStringName;
             Connect();
         }
 
-        private void Connect()
-        {
+        /// <summary>
+        /// Connects this instance.
+        /// </summary>
+        private void Connect() {
             this.sqlConn = new SqlConnection();
-            // this.sqlConn.ConnectionString = ConfigurationManager.ConnectionStrings[this.strName].ConnectionString;
-            //System.Data.SqlClient.SqlConnectionStringBuilder builderSqlite = conSqlite.obtenerConexionSQLServer(strName);
-            this.sqlConn.ConnectionString = conBuilder.ConnectionString;
-            this.sqlConn.ConnectionTimeout.Equals(0);
+            this.sqlConn.ConnectionString = ConfigurationManager.ConnectionStrings[this.strName].ConnectionString;
             this.ds = new DataSet();
-            //System.Data.SqlClient.SqlConnectionStringBuilder builder = new System.Data.SqlClient.SqlConnectionStringBuilder();
-            //builder.ConnectionString = this.sqlConn.ConnectionString;
-            this.DataBase = conBuilder.InitialCatalog;
-            this.Server = conBuilder.DataSource;
-            this.User = conBuilder.UserID;
-            this.Pass = conBuilder.Password;
+            System.Data.SqlClient.SqlConnectionStringBuilder builder = new System.Data.SqlClient.SqlConnectionStringBuilder();
+            builder.ConnectionString = this.sqlConn.ConnectionString;
+            this.DataBase = builder.InitialCatalog;
+            this.Server = builder.DataSource;
+            this.User = builder.UserID;
+            this.Pass = builder.Password;
         }
 
+        /// <summary>
+        /// Begins the tran.
+        /// </summary>
         public void beginTran()
         {
             Connect();
@@ -1355,154 +716,47 @@ namespace WcfPedidos30.Model
             this.transaccion = this.sqlConn.BeginTransaction();
         }
 
+        /// <summary>
+        /// Commits the tran.
+        /// </summary>
         public void commitTran()
         {
-            if (this.transaccion != null)
-            {
-                if (this.transaccion.Connection.State == ConnectionState.Open)
-                    this.transaccion.Commit();
-            }
-            // this.adapter.Dispose();
+            this.transaccion.Commit();
+           // this.adapter.Dispose();
             this.sqlConn.Close();
         }
 
+        /// <summary>
+        /// Rollbacks this instance.
+        /// </summary>
         public void rollback()
         {
-            if (this.transaccion != null)
-            {
-                if (this.transaccion.Connection.State == ConnectionState.Open)
-                    this.transaccion.Rollback();
-            }
-            //            this.adapter.Dispose();
+            this.transaccion.Rollback();
+//            this.adapter.Dispose();
             this.sqlConn.Close();
         }
 
-        #endregion
+        #endregion Configuracion
 
 
-        internal void addParametersProc(SqlParameter _parametros)
+        public ConnectionState abrirConexion(bool isTransact = false)
         {
-            throw new NotImplementedException();
-        }
-
-        //internal Models.Vehiculo ModelToTable<T1>(string[] p)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        internal object ModelToTable<T1>(DataTable dataTable)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DataTable transformar(List<Dictionary<string, List<Dictionary<string, object>>>> modelo)
-        {
-            DataTable dtConf = new DataTable();
-            DbDataReader reader;
             try
             {
-                //SqlCommand comm = new SqlCommand(procedure, this.sqlConn);
-                //comm.CommandType = CommandType.StoredProcedure;
-                if (modelo != null)
+                if (sqlConn != null)
                 {
-                    foreach (var tablas in modelo)
-                    {
-                        foreach (var i in tablas)
-                        {
-                            dtConf = new DataTable(i.Key);
-
-                            DbProviderFactory dpf = DbProviderFactories.GetFactory(this.sqlConn);
-                            DbCommand cmd = dpf.CreateCommand();
-
-                            //Verifica que la conexion se encuentre cerrada.
-                            if (this.sqlConn.State != ConnectionState.Open)
-                            {
-                                this.Connect();
-                                this.sqlConn.Open();
-                            }
-
-                            //Asigna la conexion al DBCommand creado anteriormente.
-                            cmd.Connection = this.sqlConn;
-                            cmd.CommandText = "paSwQryCamposTDatos";
-                            cmd.CommandType = CommandType.StoredProcedure;
-
-                            DbParameter param = dpf.CreateParameter();
-                            param.Value = i.Key;
-                            param.ParameterName = "tipoDato";
-                            cmd.Parameters.Add(param);
-
-                            if (this.transaccion != null)
-                                cmd.Transaction = this.transaccion;
-                            //this.sqlConn.Open();
-                            reader = cmd.ExecuteReader();
-
-                            while (reader.Read())
-                            {
-                                #region
-                                switch (Convert.ToString(reader["DATA_TYPE"]))
-                                {
-                                    case "int":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlInt32)));
-                                        break;
-                                    case "bigint":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlInt32)));
-                                        break;
-                                    case "money":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlMoney)));
-                                        break;
-                                    case "decimal":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlDecimal)));
-                                        break;
-                                    case "date":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlDateTime)));
-                                        break;
-                                    case "datetime":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlDateTime)));
-                                        break;
-                                    case "smalldatetime":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlDateTime)));
-                                        break;
-                                    case "bit":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlBoolean)));
-                                        break;
-                                    case "float":
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlDecimal)));
-                                        break;
-                                    default:
-                                        dtConf.Columns.Add(new DataColumn(Convert.ToString(reader["COLUMN_NAME"]), typeof(SqlString)));
-                                        break;
-                                }
-                                #endregion
-                            }
-
-                            foreach (var j in tablas.Keys)
-                            {
-                                foreach (var valores in tablas[j])
-                                {
-
-                                    DataRow drConfRow = dtConf.NewRow();
-
-                                    foreach (var a in valores)
-                                    {
-                                        if (a.Value != null)
-                                            drConfRow[Convert.ToString(a.Key)] = a.Value;
-                                        else
-                                            drConfRow[Convert.ToString(a.Key)] = DBNull.Value;
-                                    }
-
-                                    dtConf.Rows.Add(drConfRow);
-                                }
-                            }
-                        }
-                    }
+                    sqlConn.Open();
+                    if (isTransact)
+                        transaccion = sqlConn.BeginTransaction();
                 }
-
-                return dtConf;
+                else
+                    sqlConn = new SqlConnection();
             }
-            catch
+            catch (Exception ex)
             {
-                return dtConf;
+                var str = ex.Message;
             }
+            return sqlConn.State;
         }
 
         /// <summary>
@@ -1539,8 +793,7 @@ namespace WcfPedidos30.Model
                         resultado = true;
                     }
                     catch (Exception ex)
-                    {
-                        msjError.Add(ex.Message);
+                    {                        
                         mensaje[0] = "011";
                         mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
                     }
@@ -1551,6 +804,14 @@ namespace WcfPedidos30.Model
 
             }
             return resultado;
+        }
+
+        /// <summary>
+        /// Cerrar conexion.
+        /// </summary>
+        public void Close()
+        {
+            this.sqlConn.Close();
         }
     }
 }

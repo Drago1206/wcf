@@ -9,64 +9,64 @@ namespace WcfPedidos30.Model
     [DataContract]
     public class ProductosResponse
     {
-        public string CodProducto { get; set; }
-        public string CodGru { get; set; }
-        public string CodSub { get; set; }
-        public string Descripcion { get; set; }
-        public int Descuento { get; set; }
-        public string FechaCreacion { get; set; }
-        public int Impuesto { get; set; }
-        public int Lista1 { get; set; }
-        public int Lista2 { get; set; }
-        public int Lista3 { get; set; }
-        public string NombreGru { get; set; }
-        public string NombreSub { get; set; }
-        public int SaldoTotal { get; set; }
-        public string CodBodega { get; set; }
-        public string CodCia { get; set; }
-        public int SaldoBodega { get; set; }
-        public int SaldoCia { get; set; }
-        public int TotalPaginas { get; set; }
-        public int TotalRegistros { get; set; }
+        public string mCodProducto { get; set; }
+        public string mCodGru { get; set; }
+        public string mCodSub { get; set; }
+        public string mDescripcion { get; set; }
+        public int mDescuento { get; set; }
+        public string mFechaCreacion { get; set; }
+        public int mImpuesto { get; set; }
+        public int mLista1 { get; set; }
+        public int mLista2 { get; set; }
+        public int mLista3 { get; set; }
+        public string mNombreGru { get; set; }
+        public string mNombreSub { get; set; }
+        public int mSaldoTotal { get; set; }
+        public string mCodBodega { get; set; }
+        public string mCodCia { get; set; }
+        public int mSaldoBodega { get; set; }
+        public int mSaldoCia { get; set; }
+        public int mTotalPaginas { get; set; }
+        public int mTotalRegistros { get; set; }
 
         [DataMember]
-        public string pmCodProducto { get { return CodProducto; } set { CodProducto = value; } }
+        public string CodProducto { get { return mCodProducto; } set { mCodProducto = value; } }
         [DataMember]
-        public string pmCodGru { get { return CodGru; } set { CodGru = value; } }
+        public string CodGru { get { return mCodGru; } set { mCodGru = value; } }
         [DataMember]
-        public string pmCodSub { get { return CodSub; } set { CodSub = value; } }
+        public string CodSub { get { return mCodSub; } set { mCodSub = value; } }
         [DataMember]
-        public string pmDescripcion { get { return Descripcion; } set { Descripcion = value; } }
+        public string Descripcion { get { return mDescripcion; } set { mDescripcion = value; } }
         [DataMember]
-        public int pmDescuento { get { return Descuento; } set { Descuento = value; } }
+        public int Descuento { get { return mDescuento; } set { mDescuento = value; } }
         [DataMember]
-        public string pmFechaCreacion { get { return FechaCreacion; } set { FechaCreacion = value; } } 
+        public string FechaCreacion { get { return mFechaCreacion; } set { mFechaCreacion = value; } } 
         [DataMember]
-        public int pmImpuesto { get { return Impuesto; } set { Impuesto = value; } }
+        public int Impuesto { get { return mImpuesto; } set { mImpuesto = value; } }
         [DataMember]
-        public int pmLista1 { get { return Lista1; } set { Lista1 = value; } }
+        public int Lista1 { get { return mLista1; } set { mLista1 = value; } }
         [DataMember]
-        public int pmLista2 { get { return Lista2; } set { Lista2 = value; } }
+        public int Lista2 { get { return mLista2; } set { mLista2 = value; } }
         [DataMember]
-        public int pmLista3 { get { return Lista3; } set { Lista3 = value; } }
+        public int Lista3 { get { return mLista3; } set { mLista3 = value; } }
         [DataMember]
-        public string pmNombreGru { get { return NombreGru; } set { NombreGru = value; } }
+        public string NombreGru { get { return mNombreGru; } set { mNombreGru = value; } }
         [DataMember]
-        public string pmNombreSub { get { return NombreSub; } set { NombreSub = value; } }
+        public string NombreSub { get { return mNombreSub; } set { mNombreSub = value; } }
         [DataMember]
-        public int pmSaldoTota { get { return SaldoTotal; } set { SaldoTotal = value; } }
+        public int SaldoTotal { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
-        public string pmCodBodega { get { return CodBodega; } set { CodBodega = value; } }
+        public string CodBodega { get { return mCodBodega; } set { mCodBodega = value; } }
         [DataMember]
-        public string pmCodCia { get { return CodCia; } set { CodCia = value; } }
+        public string CodCia { get { return mCodCia; } set { mCodCia = value; } }
         [DataMember]
-        public int pmSaldoBodega { get { return SaldoTotal; } set { SaldoTotal = value; } }
+        public int SaldoBodega { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
-        public int pmSaldoCia { get { return SaldoTotal; } set { SaldoTotal = value; } }
+        public int SaldoCia { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
-        public int pmTotalPaginas { get { return SaldoTotal; } set { SaldoTotal = value; } }
+        public int TotalPaginas { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
-        public int pmTotalRegistros { get { return SaldoTotal; } set { SaldoTotal = value; } }
+        public int TotalRegistros { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
 
 
 

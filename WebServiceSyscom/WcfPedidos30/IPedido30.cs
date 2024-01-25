@@ -21,49 +21,32 @@ namespace WcfPedidos30
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ConsolidadoClientes", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Producto")]
+        [return: MessageParameter(Name = "Cliente")]
         RespCliente ObjCliente(ObtCliente obtCliente);
 
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerUsuarios", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Producto")]
-        RespUsuarios ObjUsuario(ObtUsuario obtUsuario);
+        [return: MessageParameter(Name = "Usuario")]
+        RespUsuario ObjUsuario(ObtUsuario obtUsuario);
     }
 
 
     // Utilice un contrato de datos, como se ilustra en el ejemplo siguiente, para agregar tipos compuestos a las operaciones de servicio.
-    [DataContract]
-    public class CompositeType
-    {
-        bool boolValue = true;
-        string stringValue = "Hello ";
 
-        [DataMember]
-        public bool BoolValue
-        {
-            get { return boolValue; }
-            set { boolValue = value; }
-        }
-
-        [DataMember]
-        public string StringValue
-        {
-            get { return stringValue; }
-            set { stringValue = value; }
-        }
-    }
 
     [DataContract]
     public class RespProducto
     {
-        List<ProductosResponse> _producto;
-        public List<ProductosResponse> Productos
-        {
-            get { return _producto; }
-            set { _producto = value; }
-        }
+        Log _registro;
+        [DataMember]
+        public List<ProductosResponse> Productos { get; set; }
 
-        
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
+        }
     }
     [DataContract]
     public class PaginaAcceder
@@ -75,10 +58,48 @@ namespace WcfPedidos30
         public int RegistroPorPagina { get; set; }
     }
 
+    [DataContract]
+    public class Log
+    {
+        string _fecha;
+        Int32 _registros;
+        string _codigo;
+        string _mensaje;
+
+        [DataMember]
+        public string Fecha
+        {
+            get { return _fecha; }
+            set { _fecha = value; }
+        }
+
+        [DataMember]
+        public string Codigo
+        {
+            get { return _codigo; }
+            set { _codigo = value; }
+        }
+
+        [DataMember]
+        public string Descripcion
+        {
+            get { return _mensaje; }
+            set { _mensaje = value; }
+        }
+    }
+
+    [DataContract]
     public class ObtProducto
     {
-
         PaginaAcceder paginaAcceder;
+        ObtUsuario obtUsuario;
+        [DataMember]
+        public ObtUsuario Usuario
+        {
+            get { return obtUsuario; }
+            set { obtUsuario = value; }
+        }
+
         [DataMember]
         public string CodOrDesProd { get; set; }
         
@@ -96,17 +117,62 @@ namespace WcfPedidos30
         {
             get { return paginaAcceder; }
             set { paginaAcceder = value; }
+        }
 
+
+    }
+
+
+    public class ObtCliente
+    {
+        ObtUsuario obtUsuario;
+        [DataMember]
+        public string NitCliente { get; set; }
+        [DataMember]
+        public ObtUsuario Usuario
+        {
+            get { return obtUsuario; }
+            set { obtUsuario = value; }
+        }
+
+    }
+    [DataContract]
+    public class ObtUsuario
+    {
+        [DataMember]
+        public string UserName { get; set; }
+        [DataMember]
+        public string Password { get; set; }
+
+    }
+    [DataContract]
+   public class RespCliente
+    {
+        Log _registro;
+        [DataMember]
+        public List<ClienteResponse> Clientes { get; set; }
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
         }
     }
 
-   public class RespCliente
-    {
-
-    }
+    [DataContract]
     public class RespUsuario
     {
+        Log _registro;
+        [DataMember]
+        public List<UsuariosResponse> Usuarios { get; set; }
 
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
+        }
     }
-    
+
 }
