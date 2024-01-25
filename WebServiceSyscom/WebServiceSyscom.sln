@@ -8,11 +8,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfCortesEDS", "WcfCortesEDS\WcfCortesEDS.csproj", "{5443E2A2-55A2-406C-A603-A35B0D0F7002}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfSyscom", "wcfSyscom\wcfSyscom.csproj", "{A9484245-5A38-4698-A5B2-B4885D5ED432}"
-<<<<<<< HEAD
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfSyscom30", "WcfSyscom30\WcfSyscom30.csproj", "{838C1548-FCBF-4698-8617-83998E656A73}"
-=======
->>>>>>> 53419f15afb3bd1c9141da5be95be24d5acd3bcd
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos30", "WcfPruebas30\WcfPedidos30.csproj", "{C19449E8-B9FE-4792-B9E7-AEDB93BFFC88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +29,10 @@ Global
 		{A9484245-5A38-4698-A5B2-B4885D5ED432}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9484245-5A38-4698-A5B2-B4885D5ED432}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9484245-5A38-4698-A5B2-B4885D5ED432}.Release|Any CPU.Build.0 = Release|Any CPU
-		{838C1548-FCBF-4698-8617-83998E656A73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{838C1548-FCBF-4698-8617-83998E656A73}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{838C1548-FCBF-4698-8617-83998E656A73}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{838C1548-FCBF-4698-8617-83998E656A73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C19449E8-B9FE-4792-B9E7-AEDB93BFFC88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C19449E8-B9FE-4792-B9E7-AEDB93BFFC88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C19449E8-B9FE-4792-B9E7-AEDB93BFFC88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C19449E8-B9FE-4792-B9E7-AEDB93BFFC88}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
