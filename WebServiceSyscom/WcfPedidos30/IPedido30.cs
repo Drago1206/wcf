@@ -20,7 +20,7 @@ namespace WcfPedidos30
         RespProducto ConProducto(ObtProducto obtProducto);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ConsolidadoClientes", BodyStyle = WebMessageBodyStyle.Bare)]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerClientes", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Cliente")]
         RespCliente ObjCliente(ObtCliente obtCliente);
 

@@ -36,9 +36,12 @@ namespace WcfPedidos30
 
                 /*
                   */
-                    ExisteUsuario usuario = new ExisteUsuario();
-                respuesta. = usuario.Existe(obtProducto.Usuario.UserName, obtProducto.Usuario.Password);
-                respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+                ExisteUsuario usuario = new ExisteUsuario();
+                if(usuario.Existe(obtProducto.Usuario.UserName, obtProducto.Usuario.Password, out string[] mensajeNuevo))
+                {
+                    respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+
+                }
     }
             return respuesta;
         }
@@ -47,14 +50,61 @@ namespace WcfPedidos30
         [return: MessageParameter(Name = "Cliente")]
         public RespCliente ObjCliente(ObtCliente obtCliente)
         {
-            throw new NotImplementedException();
+            RespCliente respuesta = new RespCliente();
+            respuesta.Registro = new Log();
+
+            if (obtCliente.Usuario == null)
+            {
+                respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
+            }
+
+            else if (string.IsNullOrWhiteSpace(obtCliente.Usuario.UserName) || string.IsNullOrWhiteSpace(obtCliente.Usuario.Password))
+            {
+                respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
+            }
+            else
+            {
+
+                /*
+                  */
+                ExisteUsuario usuario = new ExisteUsuario();
+                if (usuario.Existe(obtCliente.Usuario.UserName, obtCliente.Usuario.Password, out string[] mensajeNuevo))
+                {
+                    respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+
+                }
+            }
+            return respuesta;
         }
 
         [return: MessageParameter(Name = "Usuario")]
         public RespUsuario ObjUsuario(ObtUsuario obtUsuario)
         {
-            throw new NotImplementedException();
-        }
+            RespUsuario respuesta = new RespUsuario();
+            respuesta.Registro = new Log();
 
+            if (obtUsuario == null)
+            {
+                respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
+            }
+
+            else if (string.IsNullOrWhiteSpace(obtUsuario.UserName) || string.IsNullOrWhiteSpace(obtUsuario.Password))
+            {
+                respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
+            }
+            else
+            {
+
+                /*
+                  */
+                ExisteUsuario usuario = new ExisteUsuario();
+                if (usuario.Existe(obtUsuario.UserName, obtUsuario.Password, out string[] mensajeNuevo))
+                {
+                    respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+
+                }
+            }
+            return respuesta;
+        }
     }
 }
