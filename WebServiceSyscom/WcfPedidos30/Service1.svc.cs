@@ -27,7 +27,7 @@ namespace WcfPedidos30
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
             
-            else if (string.IsNullOrWhiteSpace(obtProducto.Usuario.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuario.Password))
+            else if (string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuario.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuario.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
@@ -37,7 +37,7 @@ namespace WcfPedidos30
                 /*
                   */
                 ExisteUsuario usuario = new ExisteUsuario();
-                if(usuario.Existe(obtProducto.Usuario.UserName, obtProducto.Usuario.Password, out string[] mensajeNuevo))
+                if(usuario.Existe(obtProducto.Usuario.Usuario.Password, obtProducto.Usuario.Usuario.Password, out string[] mensajeNuevo))
                 {
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 
@@ -58,7 +58,7 @@ namespace WcfPedidos30
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
 
-            else if (string.IsNullOrWhiteSpace(obtCliente.Usuario.UserName) || string.IsNullOrWhiteSpace(obtCliente.Usuario.Password))
+            else if (string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuario.Password) || string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuario.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
@@ -68,7 +68,7 @@ namespace WcfPedidos30
                 /*
                   */
                 ExisteUsuario usuario = new ExisteUsuario();
-                if (usuario.Existe(obtCliente.Usuario.UserName, obtCliente.Usuario.Password, out string[] mensajeNuevo))
+                if (usuario.Existe(obtCliente.Usuario.Usuario.UserName, obtCliente.Usuario.Usuario.UserName, out string[] mensajeNuevo))
                 {
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 
@@ -88,7 +88,7 @@ namespace WcfPedidos30
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
 
-            else if (string.IsNullOrWhiteSpace(obtUsuario.UserName) || string.IsNullOrWhiteSpace(obtUsuario.Password))
+            else if (string.IsNullOrWhiteSpace(obtUsuario.Usuario.UserName) || string.IsNullOrWhiteSpace(obtUsuario.Usuario.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
@@ -98,10 +98,16 @@ namespace WcfPedidos30
                 /*
                   */
                 ExisteUsuario usuario = new ExisteUsuario();
-                if (usuario.Existe(obtUsuario.UserName, obtUsuario.Password, out string[] mensajeNuevo))
+                if (usuario.Existe(obtUsuario.Usuario.UserName, obtUsuario.Usuario.Password, out string[] mensajeNuevo))
                 {
+                List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
+                datosUsuario.Add(new UsuariosResponse
+                {
+                    Bodega = "1", Compania = "1", EsCliente = true, EsVendedor = true, IdUsuario = "123", NombreTercero = "123" 
+                
+                });
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
-
+                    respuesta.Usuario = datosUsuario;
                 }
             }
             return respuesta;

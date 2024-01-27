@@ -139,10 +139,14 @@ namespace WcfPedidos30
     [DataContract]
     public class ObtUsuario
     {
+        UsuariosRequest _usuarioRequest;
+
         [DataMember]
-        public string UserName { get; set; }
-        [DataMember]
-        public string Password { get; set; }
+        public UsuariosRequest Usuario
+        {
+            get { return _usuarioRequest; }
+            set { _usuarioRequest = value; }
+        }
 
     }
     [DataContract]
@@ -163,9 +167,13 @@ namespace WcfPedidos30
     [DataContract]
     public class RespUsuario
     {
+        List<UsuariosResponse> _usuarioResponse;
         Log _registro;
         [DataMember]
-        public List<UsuariosResponse> Usuarios { get; set; }
+        public List<UsuariosResponse> Usuario {
+            get { return _usuarioResponse; }
+            set { _usuarioResponse = value ; }
+        }
 
         [DataMember]
         public Log Registro

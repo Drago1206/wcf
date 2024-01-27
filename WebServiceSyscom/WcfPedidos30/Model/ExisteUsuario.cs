@@ -34,7 +34,7 @@ namespace WcfPedidos30.Model
                 DataSet TablaIncio = new DataSet();
                 List<SqlParameter> parametros = new List<SqlParameter>();
                 parametros.Add(new SqlParameter("@Usuario", usuario));
-                if (con.ejecutarQuery("WSPedidosInicioSeccion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                if (con.ejecutarQuery("WSPedidosInicioSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                 {
                     if (TablaIncio.Tables[0].Rows.Count > 0)
                     {
@@ -47,14 +47,15 @@ namespace WcfPedidos30.Model
                         Log _err = null;
                         UsuariosResponse usuariosResponse = new UsuariosResponse();
 
-                            DataTable ds = con.getDataTable();
-                            DataRow row = ds.Rows[0];
-                            if (row["NombreTercero"].ToString() == null || String.IsNullOrWhiteSpace(row["NombreTercero"].ToString()))
-                                _err = new Log { Codigo = "USER_004", Descripcion = "¡El usuario no está creado como cliente!" };
-                            else
-                                usuariosResponse = con.ConvertRowToModel<UsuariosResponse>();
-                        
-                       
+                        //DataTable ds = con.getDataTable();
+                        //DataRow row = ds.Rows[0];
+                        if (TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("NombreTercero").ToString() == null || String.IsNullOrWhiteSpace(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("NombreTercero").ToString()))
+                            _err = new Log { Codigo = "USER_004", Descripcion = "¡El usuario no está creado como cliente!" };
+                        else
+                        {
+                            Console.WriteLine("OK");
+                            existe = true;
+                        }
                     }
                     else
                     {
