@@ -95,18 +95,19 @@ namespace WcfPedidos30
             else
             {
 
-                /*
-                  */
                 ExisteUsuario usuario = new ExisteUsuario();
                 if (usuario.Existe(obtUsuario.Usuario.UserName, obtUsuario.Usuario.Password, out string[] mensajeNuevo))
                 {
-                List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
-                datosUsuario.Add(new UsuariosResponse
-                {
-                    Bodega = "1", Compania = "1", EsCliente = true, EsVendedor = true, IdUsuario = "123", NombreTercero = "123" 
-                
-                });
-                    respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+                    
+                    List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
+                    datosUsuario.Add(new UsuariosResponse
+                    {
+                        Bodega = "1", Compania = "1", EsCliente = true, EsVendedor = true, IdUsuario = "123", NombreTercero = "123" 
+
+                    });
+
+
+                            respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
                     respuesta.Usuario = datosUsuario;
                 }
             }
