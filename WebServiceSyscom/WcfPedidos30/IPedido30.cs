@@ -31,9 +31,6 @@ namespace WcfPedidos30
     }
 
 
-    // Utilice un contrato de datos, como se ilustra en el ejemplo siguiente, para agregar tipos compuestos a las operaciones de servicio.
-
-
     [DataContract]
     public class RespProducto
     {
@@ -142,7 +139,7 @@ namespace WcfPedidos30
         UsuariosRequest _usuarioRequest;
 
         [DataMember]
-        public UsuariosRequest Usuario
+        public UsuariosRequest Usuarios
         {
             get { return _usuarioRequest; }
             set { _usuarioRequest = value; }
@@ -167,12 +164,15 @@ namespace WcfPedidos30
     [DataContract]
     public class RespUsuario
     {
-        List<UsuariosResponse> _usuarioResponse;
         Log _registro;
+
+        UsuariosResponse _usuarioResponse;
+
         [DataMember]
-        public List<UsuariosResponse> Usuario {
+        public UsuariosResponse DatosUsuarios
+        {
             get { return _usuarioResponse; }
-            set { _usuarioResponse = value ; }
+            set { _usuarioResponse = value; }
         }
 
         [DataMember]

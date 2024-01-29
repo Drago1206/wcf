@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Data.SqlClient;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
@@ -27,7 +29,7 @@ namespace WcfPedidos30
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
             
-            else if (string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuario.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuario.Password))
+            else if (string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuarios.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuarios.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
@@ -37,7 +39,7 @@ namespace WcfPedidos30
                 /*
                   */
                 ExisteUsuario usuario = new ExisteUsuario();
-                if(usuario.Existe(obtProducto.Usuario.Usuario.Password, obtProducto.Usuario.Usuario.Password, out string[] mensajeNuevo))
+                if(usuario.Existe(obtProducto.Usuario.Usuarios.Password, obtProducto.Usuario.Usuarios.Password, out string[] mensajeNuevo))
                 {
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 
@@ -58,7 +60,7 @@ namespace WcfPedidos30
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
 
-            else if (string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuario.Password) || string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuario.Password))
+            else if (string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuarios.Password) || string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuarios.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
@@ -68,7 +70,7 @@ namespace WcfPedidos30
                 /*
                   */
                 ExisteUsuario usuario = new ExisteUsuario();
-                if (usuario.Existe(obtCliente.Usuario.Usuario.UserName, obtCliente.Usuario.Usuario.UserName, out string[] mensajeNuevo))
+                if (usuario.Existe(obtCliente.Usuario.Usuarios.UserName, obtCliente.Usuario.Usuarios.UserName, out string[] mensajeNuevo))
                 {
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 
@@ -80,6 +82,8 @@ namespace WcfPedidos30
         [return: MessageParameter(Name = "Usuario")]
         public RespUsuario ObjUsuario(ObtUsuario obtUsuario)
         {
+            ConexionBD con = new ConexionBD();
+            DataSet TablaUsuarios = new DataSet();
             RespUsuario respuesta = new RespUsuario();
             respuesta.Registro = new Log();
 
@@ -88,27 +92,51 @@ namespace WcfPedidos30
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
 
-            else if (string.IsNullOrWhiteSpace(obtUsuario.Usuario.UserName) || string.IsNullOrWhiteSpace(obtUsuario.Usuario.Password))
+            else if (string.IsNullOrWhiteSpace(obtUsuario.Usuarios.UserName) || string.IsNullOrWhiteSpace(obtUsuario.Usuarios.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
             else
             {
-
-                ExisteUsuario usuario = new ExisteUsuario();
-                if (usuario.Existe(obtUsuario.Usuario.UserName, obtUsuario.Usuario.Password, out string[] mensajeNuevo))
+                ExisteUsuario existe = new ExisteUsuario();
+                con.setConnection("Syscom");
+                string usuario = obtUsuario.Usuarios.UserName;
+                DataSet TablaUsuario = new DataSet();
+                List<SqlParameter> parametros = new List<SqlParameter>();
+                parametros.Add(new SqlParameter("@Usuario", usuario));
+                if (existe.Existe(usuario, obtUsuario.Usuarios.Password, out string[] mensajeNuevo))
                 {
-                    
-                    List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
-                    datosUsuario.Add(new UsuariosResponse
+                    if (con.ejecutarQuery("WSObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
-                        Bodega = "1", Compania = "1", EsCliente = true, EsVendedor = true, IdUsuario = "123", NombreTercero = "123" 
 
-                    });
+                        List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
 
-
+                        IEnumerable<DataRow> data = TablaUsuario.Tables[0].AsEnumerable();
+                        IEnumerable<DataRow> dataFil = data.GroupBy(g => g.Field<string>("IdUsuario")).Select(g => g.First());
+                        bool datas = dataFil.Any(row => row["EsCliente"] == null || row["EsCliente"] == DBNull.Value) == true;
+                        if (dataFil.Any(row => row["EsCliente"] == null || row["EsCliente"] == DBNull.Value) == true)
+                        {
+                            dataFil.ToList().ForEach(i => datosUsuario.Add(new UsuariosResponse
+                            {
+                                Bodega = i.Field<string>("Bodega"),
+                                Compañía = i.Field<string>("Compañía"),
+                                EsCliente = i.Field<bool>("EsCliente"),
+                                EsVendedor = i.Field<bool>("Esvendedor"),
+                                IdUsuario = i.Field<string>("IdUsuario"),
+                                NombreTercero = i.Field<string>("NombreTercero")
+                            }));
                             respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
-                    respuesta.Usuario = datosUsuario;
+                            respuesta.DatosUsuarios = datosUsuario.FirstOrDefault();
+                        }
+                        else
+                        {
+                            respuesta.Registro = new Log { Codigo = "USER_004", Descripcion = "¡El usuario no está creado como cliente!" };
+                        }
+                    }
+                }
+                else
+                {
+                    respuesta.Registro = new Log { Codigo = "USER_001", Descripcion = "¡Usuario no encontrado!" };
                 }
             }
             return respuesta;

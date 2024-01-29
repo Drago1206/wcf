@@ -28,34 +28,46 @@ namespace WcfPedidos30.Model
             bool existe = false;
             if (usuario != null)
             {
+                con.setConnection("Syscom");
                 int ResTotal = 0;
                 string[] pwdDe = null;
-                con.setConnection("Syscom");
                 DataSet TablaIncio = new DataSet();
                 List<SqlParameter> parametros = new List<SqlParameter>();
                 parametros.Add(new SqlParameter("@Usuario", usuario));
-                if (con.ejecutarQuery("WSPedidosInicioSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+    
+                if (con.ejecutarQuery("WSPedidosIniciaSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                 {
-                    if (TablaIncio.Tables[0].Rows.Count > 0)
+                    if (TablaIncio.Tables[0].Rows.Count > 0 )
                     {
-
-                        /*pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
+                        pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
                         pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
                         if (con != null)
+                        {
                             pwdDe = pwd.contrasenna.Split('=');
-                            */
-                        Log _err = null;
-                        UsuariosResponse usuariosResponse = new UsuariosResponse();
+                        }
+                        if (password.ToLower() == pwd.contrasenna.ToLower())
+                        {
+                            Log _err = null;
+                            UsuariosResponse usuariosResponse = new UsuariosResponse();
+                            if (TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("IdUsuario").ToString() == null
+                                || String.IsNullOrWhiteSpace(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("IdUsuario").ToString()))
+                                _err = new Log { Codigo = "USER_004", Descripcion = "¡El usuario no está creado como cliente!" };
+                            else
+                            {
+                                mensaje = new string[2];
+                                mensaje[0] = "USER_001";
+                                mensaje[1] = "¡Usuario no encontrado!";
+                                existe = true;
+                            }
 
-                        //DataTable ds = con.getDataTable();
-                        //DataRow row = ds.Rows[0];
-                        if (TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("NombreTercero").ToString() == null || String.IsNullOrWhiteSpace(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("NombreTercero").ToString()))
-                            _err = new Log { Codigo = "USER_004", Descripcion = "¡El usuario no está creado como cliente!" };
+                        }
                         else
                         {
-                            Console.WriteLine("OK");
-                            existe = true;
+                            mensaje = new string[2];
+                            mensaje[0] = "003";
+                            mensaje[1] = "Contraseña inválida";
                         }
+ 
                     }
                     else
                     {

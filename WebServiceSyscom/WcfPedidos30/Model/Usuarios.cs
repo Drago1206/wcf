@@ -27,7 +27,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public string Bodega { get; set; }
        [DataMember]
-        public string Compania { get; set; }
+        public string Compañía { get; set; }
         [DataMember]
         public bool EsCliente { get; set; }
         [DataMember]
