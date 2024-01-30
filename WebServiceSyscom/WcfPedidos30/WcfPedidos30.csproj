@@ -125,9 +125,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Agencia.cs" />
+    <Compile Include="Model\ConsultarProducto.cs" />
     <Compile Include="Model\Cliente.cs" />
     <Compile Include="Model\ConexionBD.cs" />
     <Compile Include="Model\ExisteUsuario.cs" />
+    <Compile Include="Model\itemCia.cs" />
     <Compile Include="Model\LogErrores.cs" />
     <Compile Include="Model\Productos.cs" />
     <Compile Include="Model\pwdSyscom.cs" />

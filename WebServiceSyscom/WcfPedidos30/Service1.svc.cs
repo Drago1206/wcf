@@ -15,7 +15,7 @@ namespace WcfPedidos30
     // NOTE: para iniciar el Cliente de prueba WCF para probar este servicio, seleccione Service1.svc o Service1.svc.cs en el Explorador de soluciones e inicie la depuración.
     public class Service1 : IPedido30
     {
-
+        ConsultarProducto consProd = new ConsultarProducto();
         #region ObtenerProducto 
 
         [return: MessageParameter(Name = "Producto")]
@@ -24,27 +24,25 @@ namespace WcfPedidos30
             RespProducto respuesta = new RespProducto();
             respuesta.Registro = new Log();
             
-            if (obtProducto.Usuario == null)
+            if (obtProducto == null)
             {
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
             
-            else if (string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuarios.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuario.Usuarios.Password))
+            else if (string.IsNullOrWhiteSpace(obtProducto.Usuarios.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuarios.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
             else
             {
-
-                /*
-                  */
                 ExisteUsuario usuario = new ExisteUsuario();
-                if(usuario.Existe(obtProducto.Usuario.Usuarios.Password, obtProducto.Usuario.Usuarios.Password, out string[] mensajeNuevo))
+                if(usuario.Existe(obtProducto.Usuarios.UserName, obtProducto.Usuarios.Password, out string[] mensajeNuevo))
                 {
+                    respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios /*,out DatProducto*/);
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 
                 }
-    }
+            }
             return respuesta;
         }
         #endregion
@@ -72,6 +70,8 @@ namespace WcfPedidos30
                 ExisteUsuario usuario = new ExisteUsuario();
                 if (usuario.Existe(obtCliente.Usuario.Usuarios.UserName, obtCliente.Usuario.Usuarios.UserName, out string[] mensajeNuevo))
                 {
+
+
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 
                 }
@@ -100,18 +100,17 @@ namespace WcfPedidos30
             {
                 ExisteUsuario existe = new ExisteUsuario();
                 con.setConnection("Syscom");
-                string usuario = obtUsuario.Usuarios.UserName;
                 DataSet TablaUsuario = new DataSet();
                 List<SqlParameter> parametros = new List<SqlParameter>();
-                parametros.Add(new SqlParameter("@Usuario", usuario));
-                if (existe.Existe(usuario, obtUsuario.Usuarios.Password, out string[] mensajeNuevo))
+                parametros.Add(new SqlParameter("@Usuario", obtUsuario.Usuarios.UserName));
+                if (existe.Existe(obtUsuario.Usuarios.UserName, obtUsuario.Usuarios.Password, out string[] mensajeNuevo))
                 {
                     if (con.ejecutarQuery("WSObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
                         List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
                         IEnumerable<DataRow> data = TablaUsuario.Tables[0].AsEnumerable();
                         IEnumerable<DataRow> dataFil = data.GroupBy(g => g.Field<string>("IdUsuario")).Select(g => g.First());
-                        // e && Convert.ToBoolean(row["EsCliente"]) != false
+                        //Convert.ToBoolean(row["EsCliente"]) != false [Validaciòn para saber si el usuario es registrado como cliente]
                         if (dataFil.Any(row => row["EsCliente"] != null && row["EsCliente"] != DBNull.Value) == true)
                         {
                             dataFil.ToList().ForEach(i => datosUsuario.Add(new UsuariosResponse
@@ -125,10 +124,6 @@ namespace WcfPedidos30
                             }));
                             respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
                             respuesta.DatosUsuarios = datosUsuario.FirstOrDefault();
-                        }
-                        else
-                        {
-                            respuesta.Registro = new Log { Codigo = "USER_004", Descripcion = "¡El usuario no está creado como cliente!" };
                         }
                     }
                 }

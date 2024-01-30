@@ -36,7 +36,7 @@ namespace WcfPedidos30
     {
         Log _registro;
         [DataMember]
-        public List<ProductosResponse> Productos { get; set; }
+        public List<ProductosResponse> ListaProductos { get; set; }
 
         [DataMember]
         public Log Registro
@@ -88,32 +88,20 @@ namespace WcfPedidos30
     [DataContract]
     public class ObtProducto
     {
-        PaginaAcceder paginaAcceder;
-        ObtUsuario obtUsuario;
+        ProductoRequest _productoRequest;
+        UsuariosRequest _usuarioRequest;
+
         [DataMember]
-        public ObtUsuario Usuario
+        public UsuariosRequest Usuarios
         {
-            get { return obtUsuario; }
-            set { obtUsuario = value; }
+            get { return _usuarioRequest; }
+            set { _usuarioRequest = value; }
         }
-
         [DataMember]
-        public string CodOrDesProd { get; set; }
-        
-        [DataMember]
-        public string Grupo { get; set; }
-
-        [DataMember]
-        public bool SaldosCiaBod { get; set; }
-        
-        [DataMember]
-        public string SubGrupo { get; set; }
-
-        [DataMember]
-        public PaginaAcceder pagina
+        public ProductoRequest DatosProducto
         {
-            get { return paginaAcceder; }
-            set { paginaAcceder = value; }
+            get { return _productoRequest; }
+            set { _productoRequest = value; }
         }
 
 

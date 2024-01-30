@@ -28,6 +28,7 @@ namespace WcfPedidos30.Model
         public int mSaldoCia { get; set; }
         public int mTotalPaginas { get; set; }
         public int mTotalRegistros { get; set; }
+        public List<itemCia> itemCia { get; set; }
 
         [DataMember]
         public string CodProducto { get { return mCodProducto; } set { mCodProducto = value; } }
@@ -76,24 +77,24 @@ namespace WcfPedidos30.Model
     [DataContract]
     public class ProductoRequest
     {
-        public string CodOrDesprod { get; set; }
-        public string Grupo { get; set; }
-        public int PaginaActual { get; set; }
-        public int RegistrosPorPagina { get; set; }
-        public bool SaldosCiaBod { get; set; }
-        public string SubGrupo { get; set; }
+        public string mCodOrDesprod { get; set; }
+        public string mGrupo { get; set; }
+        public int mPaginaActual { get; set; }
+        public int mRegistrosPorPagina { get; set; }
+        public bool mSaldosCiaBod { get; set; }
+        public string mSubGrupo { get; set; }
 
         [DataMember]
-        public string pmCodOrDesprod { get { return CodOrDesprod; } set { CodOrDesprod = value; } }
+        public string CodOrDesProd { get { return mCodOrDesprod; } set { mCodOrDesprod = value; } }
         [DataMember]
-        public string pmGrupo { get { return Grupo; } set { Grupo = value; } }
+        public string Grupo { get { return mGrupo; } set { mGrupo = value; } }
         [DataMember]
-        public int pmPaginaActual { get { return PaginaActual; } set { PaginaActual = value; } }
+        public int PaginaActual { get { return mPaginaActual; } set { mPaginaActual = value; } }
         [DataMember]
-        public int pmRegistrosPorPagina { get { return RegistrosPorPagina; } set { RegistrosPorPagina = value; } }
+        public int RegistrosPorPagina { get { return mRegistrosPorPagina; } set { mRegistrosPorPagina = value; } }
         [DataMember]
-        public bool pmSaldosCidaBod { get { return SaldosCiaBod; } set { SaldosCiaBod = value; } } 
+        public bool SaldosCiaBod { get { return mSaldosCiaBod; } set { mSaldosCiaBod = value; } } 
         [DataMember]
-        public string pmSubGrupo { get { return SubGrupo; } set { SubGrupo = value; } }
+        public string Subgrupo { get { return mSubGrupo; } set { mSubGrupo = value; } }
     }
 }

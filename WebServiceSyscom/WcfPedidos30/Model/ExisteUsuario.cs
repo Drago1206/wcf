@@ -29,8 +29,6 @@ namespace WcfPedidos30.Model
             if (usuario != null)
             {
                 con.setConnection("Syscom");
-                int ResTotal = 0;
-                string[] pwdDe = null;
                 DataSet TablaIncio = new DataSet();
                 List<SqlParameter> parametros = new List<SqlParameter>();
                 parametros.Add(new SqlParameter("@Usuario", usuario));
@@ -52,7 +50,6 @@ namespace WcfPedidos30.Model
                             mensaje[0] = "USER_003";
                             mensaje[1] = "Contraseña inválida";
                         }
- 
                     }
                     else
                     {
