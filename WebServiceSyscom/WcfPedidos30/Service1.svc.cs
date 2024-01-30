@@ -108,20 +108,18 @@ namespace WcfPedidos30
                 {
                     if (con.ejecutarQuery("WSObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
-
                         List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
-
                         IEnumerable<DataRow> data = TablaUsuario.Tables[0].AsEnumerable();
                         IEnumerable<DataRow> dataFil = data.GroupBy(g => g.Field<string>("IdUsuario")).Select(g => g.First());
-                        bool datas = dataFil.Any(row => row["EsCliente"] == null || row["EsCliente"] == DBNull.Value) == true;
-                        if (dataFil.Any(row => row["EsCliente"] == null || row["EsCliente"] == DBNull.Value) == true)
+                        // e && Convert.ToBoolean(row["EsCliente"]) != false
+                        if (dataFil.Any(row => row["EsCliente"] != null && row["EsCliente"] != DBNull.Value) == true)
                         {
                             dataFil.ToList().ForEach(i => datosUsuario.Add(new UsuariosResponse
                             {
                                 Bodega = i.Field<string>("Bodega"),
                                 Compañía = i.Field<string>("Compañía"),
                                 EsCliente = i.Field<bool>("EsCliente"),
-                                EsVendedor = i.Field<bool>("Esvendedor"),
+                                Esvendedor = i.Field<bool>("Esvendedor"),
                                 IdUsuario = i.Field<string>("IdUsuario"),
                                 NombreTercero = i.Field<string>("NombreTercero")
                             }));

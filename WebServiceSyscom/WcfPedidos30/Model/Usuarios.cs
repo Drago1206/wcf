@@ -31,7 +31,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public bool EsCliente { get; set; }
         [DataMember]
-        public bool EsVendedor { get; set; }
+        public bool Esvendedor { get; set; }
         [DataMember]
         public string IdUsuario { get; set; }
         [DataMember]

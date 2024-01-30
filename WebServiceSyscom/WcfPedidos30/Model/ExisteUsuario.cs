@@ -41,30 +41,15 @@ namespace WcfPedidos30.Model
                     {
                         pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
                         pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-                        if (con != null)
-                        {
-                            pwdDe = pwd.contrasenna.Split('=');
-                        }
+                        
                         if (password.ToLower() == pwd.contrasenna.ToLower())
                         {
-                            Log _err = null;
-                            UsuariosResponse usuariosResponse = new UsuariosResponse();
-                            if (TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("IdUsuario").ToString() == null
-                                || String.IsNullOrWhiteSpace(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("IdUsuario").ToString()))
-                                _err = new Log { Codigo = "USER_004", Descripcion = "¡El usuario no está creado como cliente!" };
-                            else
-                            {
-                                mensaje = new string[2];
-                                mensaje[0] = "USER_001";
-                                mensaje[1] = "¡Usuario no encontrado!";
-                                existe = true;
-                            }
-
+                            existe = true;
                         }
                         else
                         {
                             mensaje = new string[2];
-                            mensaje[0] = "003";
+                            mensaje[0] = "USER_003";
                             mensaje[1] = "Contraseña inválida";
                         }
  
