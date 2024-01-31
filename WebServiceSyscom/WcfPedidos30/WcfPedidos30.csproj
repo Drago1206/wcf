@@ -131,6 +131,7 @@
     <Compile Include="Model\ExisteUsuario.cs" />
     <Compile Include="Model\itemCia.cs" />
     <Compile Include="Model\LogErrores.cs" />
+    <Compile Include="Model\PaginadorProducto.cs" />
     <Compile Include="Model\Productos.cs" />
     <Compile Include="Model\pwdSyscom.cs" />
     <Compile Include="Model\Usuarios.cs" />

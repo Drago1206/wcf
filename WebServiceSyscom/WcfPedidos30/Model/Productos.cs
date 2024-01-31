@@ -22,13 +22,9 @@ namespace WcfPedidos30.Model
         public string mNombreGru { get; set; }
         public string mNombreSub { get; set; }
         public int mSaldoTotal { get; set; }
-        public string mCodBodega { get; set; }
-        public string mCodCia { get; set; }
-        public int mSaldoBodega { get; set; }
-        public int mSaldoCia { get; set; }
         public int mTotalPaginas { get; set; }
         public int mTotalRegistros { get; set; }
-        public List<itemCia> itemCia { get; set; }
+        public List<itemCia> mItemCia { get; set; }
 
         [DataMember]
         public string CodProducto { get { return mCodProducto; } set { mCodProducto = value; } }
@@ -57,17 +53,11 @@ namespace WcfPedidos30.Model
         [DataMember]
         public int SaldoTotal { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
-        public string CodBodega { get { return mCodBodega; } set { mCodBodega = value; } }
-        [DataMember]
-        public string CodCia { get { return mCodCia; } set { mCodCia = value; } }
-        [DataMember]
-        public int SaldoBodega { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
-        [DataMember]
-        public int SaldoCia { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
-        [DataMember]
         public int TotalPaginas { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
         public int TotalRegistros { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
+        [DataMember]
+        public List<itemCia> itemCia { get { return mItemCia; } set { mItemCia= value; } }
 
 
 
