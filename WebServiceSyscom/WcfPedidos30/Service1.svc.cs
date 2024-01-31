@@ -42,10 +42,17 @@ namespace WcfPedidos30
 
                     respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios,out DatProducto);
                     respuesta.ListaProductos = DatProducto;
-                    respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+                    respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
+                    //respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 
                 }
+                else
+                {
+                    respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
+                    
+                }
             }
+            
             return respuesta;
         }
         #endregion
@@ -53,15 +60,16 @@ namespace WcfPedidos30
         [return: MessageParameter(Name = "Cliente")]
         public RespCliente ObjCliente(ObtCliente obtCliente)
         {
+            ConsultarCliente consClie = new ConsultarCliente();
             RespCliente respuesta = new RespCliente();
             respuesta.Registro = new Log();
 
-            if (obtCliente.Usuario == null)
+            if (obtCliente.Usuarios.UserName == null)
             {
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
 
-            else if (string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuarios.Password) || string.IsNullOrWhiteSpace(obtCliente.Usuario.Usuarios.Password))
+            else if (string.IsNullOrWhiteSpace(obtCliente.Usuarios.Password) || string.IsNullOrWhiteSpace(obtCliente.Usuarios.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
@@ -71,9 +79,10 @@ namespace WcfPedidos30
                 /*
                   */
                 ExisteUsuario usuario = new ExisteUsuario();
-                if (usuario.Existe(obtCliente.Usuario.Usuarios.UserName, obtCliente.Usuario.Usuarios.UserName, out string[] mensajeNuevo))
+                if (usuario.Existe(obtCliente.Usuarios.UserName, obtCliente.Usuarios.Password, out string[] mensajeNuevo))
                 {
-
+                    List<ClienteResponse> cliente = new List<ClienteResponse>();
+                    respuesta = consClie.ConsultarClientes(obtCliente, obtCliente.Usuarios, out cliente);
 
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
 

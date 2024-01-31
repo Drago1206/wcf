@@ -45,8 +45,8 @@ namespace WcfPedidos30
             set { _DatosProducto = value; }
         }
         /*
-        [DataMember]
-        public List<ProductosResponse> ListaProductos { get; set; }
+            [DataMember]
+            public List<ProductosResponse> ListaProductos { get; set; }
         */
         [DataMember]
         public Log Registro
@@ -54,13 +54,14 @@ namespace WcfPedidos30
             get { return _registro; }
             set { _registro = value; }
         }
-
-        [DataMember]
-        public OrganizadorPagina paginas
-        {
-            get { return _organizadorPagina; }
-            set { _organizadorPagina = value; }
-        }
+        /*
+            [DataMember]
+            public OrganizadorPagina paginas
+            {
+                get { return _organizadorPagina; }
+                set { _organizadorPagina = value; }
+            }
+        */
     }
     [DataContract]
     public class PaginaAcceder
@@ -144,13 +145,21 @@ namespace WcfPedidos30
     public class ObtCliente
     {
         ObtUsuario obtUsuario;
+        UsuariosRequest _usuario;
+        ClienteRequest _cliente;
+
         [DataMember]
-        public string NitCliente { get; set; }
-        [DataMember]
-        public ObtUsuario Usuario
+        public UsuariosRequest Usuarios
         {
-            get { return obtUsuario; }
-            set { obtUsuario = value; }
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+
+        [DataMember]
+        public ClienteRequest Cliente
+        {
+            get { return _cliente; }
+            set { _cliente = value; }
         }
 
     }
@@ -171,9 +180,18 @@ namespace WcfPedidos30
    public class RespCliente
     {
         Log _registro;
+        List<ClienteResponse> _DatosCliente;
+
+        [DataMember]
+        public List<ClienteResponse> Clientes
+        {
+            get { return _DatosCliente; }
+            set { _DatosCliente = value; }
+        }
+        /*
         [DataMember]
         public List<ClienteResponse> Clientes { get; set; }
-
+        */
         [DataMember]
         public Log Registro
         {

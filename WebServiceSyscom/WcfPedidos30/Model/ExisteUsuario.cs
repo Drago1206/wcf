@@ -32,7 +32,6 @@ namespace WcfPedidos30.Model
                 DataSet TablaIncio = new DataSet();
                 List<SqlParameter> parametros = new List<SqlParameter>();
                 parametros.Add(new SqlParameter("@Usuario", usuario));
-    
                 if (con.ejecutarQuery("WSPedidosIniciaSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                 {
                     if (TablaIncio.Tables[0].Rows.Count > 0 )
@@ -42,6 +41,9 @@ namespace WcfPedidos30.Model
                         
                         if (password.ToLower() == pwd.contrasenna.ToLower())
                         {
+                            mensaje = new string[2];
+                            mensaje[0] = "USER_064";
+                            mensaje[1] = "Respuesta exitosa";
                             existe = true;
                         }
                         else

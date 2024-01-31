@@ -6,6 +6,13 @@ using System.Web;
 
 namespace WcfPedidos30.Model
 {
+    public class itemCia
+    {
+        public string CodCia { get; set; }
+        public int Saldocia { get; set; }
+        public string CodBodega { get; set; }
+        public int Saldobodega { get; set; }
+    }
     [DataContract]
     public class ProductosResponse
     {
@@ -22,8 +29,6 @@ namespace WcfPedidos30.Model
         public string mNombreGru { get; set; }
         public string mNombreSub { get; set; }
         public int mSaldoTotal { get; set; }
-        public int mTotalPaginas { get; set; }
-        public int mTotalRegistros { get; set; }
         public List<itemCia> mItemCia { get; set; }
 
         [DataMember]
@@ -52,10 +57,6 @@ namespace WcfPedidos30.Model
         public string NombreSub { get { return mNombreSub; } set { mNombreSub = value; } }
         [DataMember]
         public int SaldoTotal { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
-        [DataMember]
-        public int TotalPaginas { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
-        [DataMember]
-        public int TotalRegistros { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
         public List<itemCia> itemCia { get { return mItemCia; } set { mItemCia= value; } }
 

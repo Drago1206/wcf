@@ -253,7 +253,18 @@ namespace WcfPedidos30.Model
         }
 
         #endregion Procedimiento
-
+        public DataSet getDataSet()
+        {
+            return ds;
+        }
+        /// <summary>
+        /// Gets the data table.
+        /// </summary>
+        /// <returns></returns>
+        public DataTable getDataTable()
+        {
+            return ds.Tables[0];
+        }
         #region otrasFunciones
 
         /// <summary>
@@ -487,17 +498,7 @@ namespace WcfPedidos30.Model
         /// Gets the data set.
         /// </summary>
         /// <returns></returns>
-        public DataSet getDataSet()
-        {
-            return ds;
-        }
-        /// <summary>
-        /// Gets the data table.
-        /// </summary>
-        /// <returns></returns>
-        public DataTable getDataTable() {
-            return ds.Tables[0];
-        }
+
 
 
         /// <summary>
@@ -813,7 +814,74 @@ namespace WcfPedidos30.Model
         {
             this.sqlConn.Close();
         }
-        
+
+        public List<T> DataTableToList<T>(DataTable dtDatos) where T : class, new()
+        {
+            try
+            {
+                List<T> list = new List<T>();
+
+                foreach (DataRow row in dtDatos.Rows)
+                {
+                    T obj = new T();
+
+                    foreach (var prop in obj.GetType().GetProperties())
+                    {
+                        try
+                        {
+                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+
+                    list.Add(obj);
+                }
+
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public List<T> DataTableToList<T>(string[] DatosDt = null) where T : class, new()
+        {
+            try
+            {
+                List<T> list = new List<T>();
+                DataTable dt = DatosDt == null ? ds.Tables[0] : ds.Tables[0].DefaultView.ToTable(true, DatosDt);
+                foreach (DataRow row in dt.Rows)
+                {
+                    T obj = new T();
+
+                    foreach (var prop in obj.GetType().GetProperties())
+                    {
+                        try
+                        {
+                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+
+                    list.Add(obj);
+                }
+
+                return list;
+            }
+            catch(Exception ex)
+            {
+                return null;
+            }
+        }
     }
 
 }

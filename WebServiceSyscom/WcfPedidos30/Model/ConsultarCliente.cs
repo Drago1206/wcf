@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Web;
+
+namespace WcfPedidos30.Model
+{
+    public class ConsultarCliente
+    {
+        public RespCliente ConsultarClientes(ObtCliente cliente, UsuariosRequest datosUsuario, out List<ClienteResponse> dtCliente)
+        {
+            ConexionBD con = new ConexionBD();
+            con.setConnection("Prod");
+
+            dtCliente = new List<ClienteResponse>();
+            RespCliente respuesta = new RespCliente();
+            List<SqlParameter> parametros = new List<SqlParameter>();
+            parametros.Add(new SqlParameter("@NitCliente", cliente.Cliente.NitCliente));
+            DataSet TablaClientes = new DataSet();
+
+            if (con.ejecutarQuery("WSPedidosObtenerClientes", parametros, out TablaClientes, out string[] mensaje, CommandType.StoredProcedure))
+            {
+                int TotalRegistros = TablaClientes.Tables[0].Rows.Count;
+                if (TotalRegistros > 0)
+                {
+
+                    dtCliente = con.DataTableToList<ClienteResponse>("NitCliente,NombreCliente,Direccion,Ciudad,Telefono,NumLista,NitVendedor,NomVendedor".Split(','));
+                    dtCliente.ForEach(m =>
+                    {
+                        m.ListaAgencias = new List<Agencia>();
+                        m.ListaAgencias = m.ListaAgencias = con.DataTableToList<Agencia>(TablaClientes.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("NitCliente").Equals(m.NitCliente)).CopyToDataTable().AsDataView().ToTable(true, "CodAge,NomAge".Split(',')));
+                    });
+
+                    mensaje = new string[2];
+                    mensaje[0] = "012";
+                    mensaje[1] = "Se ejecutó correctamente la consulta.";
+
+                       
+                    /*dtCliente = paginadorProducto;
+                    
+                    else
+                    {
+                        mensaje = new string[2];
+                        mensaje[0] = "013";
+                        mensaje[1] = "La Página que deseas acceder no está disponible porque solo cuentan con " + (int)Math.Ceiling((double)TotalRegistros / registros_por_pagina);
+                        //respuesta.paginas = new OrganizadorPagina { NumeroDePaginas = (int)Math.Ceiling((double)total / resPagina), RegistroTotal = total, RegistroPorPagina = resPagina, PaginaActual = pagina };
+                    }*/
+                }
+            }
+            else
+            {
+                mensaje = new string[2];
+                mensaje[0] = "014";
+                mensaje[1] = "No se encuentran productos disponibles";
+            }
+
+            return respuesta;
+        }
+    }
+}
