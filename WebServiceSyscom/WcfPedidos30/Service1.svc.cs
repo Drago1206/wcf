@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Data.SqlClient;
-using System.Runtime.Serialization;
+using System.Linq;
 using System.ServiceModel;
-using System.ServiceModel.Web;
-using System.Text;
 using WcfPedidos30.Model;
 
 namespace WcfPedidos30
@@ -23,12 +20,12 @@ namespace WcfPedidos30
         {
             RespProducto respuesta = new RespProducto();
             respuesta.Registro = new Log();
-            
+
             if (obtProducto == null)
             {
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
-            
+
             else if (string.IsNullOrWhiteSpace(obtProducto.Usuarios.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuarios.Password))
             {
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
@@ -36,23 +33,19 @@ namespace WcfPedidos30
             else
             {
                 ExisteUsuario usuario = new ExisteUsuario();
-                if(usuario.Existe(obtProducto.Usuarios.UserName, obtProducto.Usuarios.Password, out string[] mensajeNuevo))
+                if (usuario.Existe(obtProducto.Usuarios.UserName, obtProducto.Usuarios.Password, out string[] mensajeNuevo))
                 {
-                    //PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
                     PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
-                    respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios,out DatProducto);
+                    respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios, out DatProducto);
                     respuesta.ListaProductos = DatProducto;
                     respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
-                    //respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
-
                 }
                 else
                 {
                     respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
-                    
                 }
             }
-            
+
             return respuesta;
         }
         #endregion
@@ -75,9 +68,6 @@ namespace WcfPedidos30
             }
             else
             {
-
-                /*
-                  */
                 ExisteUsuario usuario = new ExisteUsuario();
                 if (usuario.Existe(obtCliente.Usuarios.UserName, obtCliente.Usuarios.Password, out string[] mensajeNuevo))
                 {
@@ -85,12 +75,10 @@ namespace WcfPedidos30
                     respuesta = consClie.ConsultarClientes(obtCliente, obtCliente.Usuarios, out cliente);
                     respuesta.DatosClientes = cliente;
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
-
                 }
                 else
                 {
                     respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
-
                 }
             }
             return respuesta;

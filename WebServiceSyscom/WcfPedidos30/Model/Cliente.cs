@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Web;
 
 namespace WcfPedidos30.Model
 {
 
     [DataContract]
-    public class ClienteResponse 
+    public class ClienteResponse
     {
         public string mNitCliente { get; set; }
         public string mNomCliente { get; set; }
@@ -31,7 +28,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public string NitVendedor { get { return mNitVendedor; } set { mNitVendedor = value; } }
         [DataMember]
-        public string NomVendedor { get { return mNomVendedor; } set { mNomVendedor = value;} }
+        public string NomVendedor { get { return mNomVendedor; } set { mNomVendedor = value; } }
         [DataMember]
         public string NombreCliente { get { return mNomCliente; } set { mNomCliente = value; } }
         [DataMember]

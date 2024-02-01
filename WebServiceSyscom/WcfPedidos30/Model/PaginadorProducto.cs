@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace WcfPedidos30.Model
 {
@@ -27,7 +24,7 @@ namespace WcfPedidos30.Model
         /// Texto de búsqueda de la consuta actual.
         /// </summary>
         //public IEnumerable<T> Resultado { get; set; }
-        
+
         public List<ProductosResponse> Resultado { get; set; }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Web;
 
 namespace WcfPedidos30.Model
 {
@@ -42,7 +40,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public int Descuento { get { return mDescuento; } set { mDescuento = value; } }
         [DataMember]
-        public DateTime FechaCreacion { get { return mFechaCreacion; } set { mFechaCreacion = value; } } 
+        public DateTime FechaCreacion { get { return mFechaCreacion; } set { mFechaCreacion = value; } }
         [DataMember]
         public int Impuesto { get { return mImpuesto; } set { mImpuesto = value; } }
         [DataMember]
@@ -58,7 +56,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public int SaldoTotal { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
         [DataMember]
-        public List<itemCia> itemCia { get { return mItemCia; } set { mItemCia= value; } }
+        public List<itemCia> itemCia { get { return mItemCia; } set { mItemCia = value; } }
 
 
 
@@ -84,7 +82,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public int RegistrosPorPagina { get { return mRegistrosPorPagina; } set { mRegistrosPorPagina = value; } }
         [DataMember]
-        public bool SaldosCiaBod { get { return mSaldosCiaBod; } set { mSaldosCiaBod = value; } } 
+        public bool SaldosCiaBod { get { return mSaldosCiaBod; } set { mSaldosCiaBod = value; } }
         [DataMember]
         public string Subgrupo { get { return mSubGrupo; } set { mSubGrupo = value; } }
     }

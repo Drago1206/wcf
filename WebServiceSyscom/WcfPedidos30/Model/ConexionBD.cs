@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 
 namespace WcfPedidos30.Model
 {
@@ -31,20 +29,18 @@ namespace WcfPedidos30.Model
         public string Server = "";
         public string User = "";
         public string Pass = "";
-
-
         public List<string> qryTables = new List<string>();
         public List<string> qryFields = new List<string>();
         public List<string> qryGroupBy = new List<string>();
         public List<string> qryOrderBy = new List<string>();
         public Dictionary<string, object> qryValues = new Dictionary<string, object>();
-
         private SqlDataAdapter adapter;
 
         /// <summary>
         /// Inicializa el nombre del connectionstring <see cref="Conexion"/>.
         /// </summary>
-        public ConexionBD(){
+        public ConexionBD()
+        {
             this.strName = "Conexion";
 
         }
@@ -90,7 +86,7 @@ namespace WcfPedidos30.Model
                     default:
                         this.adapter.SelectCommand.CommandType = CommandType.Text;
                         this.adapter.SelectCommand.Parameters.Clear();
-//                        this.adapter.SelectCommand.ExecuteNonQuery();
+                        //                        this.adapter.SelectCommand.ExecuteNonQuery();
                         if (_aliasConsulta != null)
                             this.adapter.Fill(this.ds, _aliasConsulta);
                         else
@@ -220,17 +216,17 @@ namespace WcfPedidos30.Model
                     this.adapter.SelectCommand.Parameters.Add(item);
                 }
 
-                if(_sinresultados!=false)
+                if (_sinresultados != false)
                     this.adapter.SelectCommand.ExecuteNonQuery();
                 else
                     if (_aliasProcedimiento != null)
-                    {
-                        this.adapter.Fill(this.ds, _aliasProcedimiento);
-                        ds.Tables[0].TableName = _aliasProcedimiento;
-                        ds.Tables[0].Namespace = _aliasProcedimiento;
-                    }
-                    else
-                        this.adapter.Fill(this.ds);
+                {
+                    this.adapter.Fill(this.ds, _aliasProcedimiento);
+                    ds.Tables[0].TableName = _aliasProcedimiento;
+                    ds.Tables[0].Namespace = _aliasProcedimiento;
+                }
+                else
+                    this.adapter.Fill(this.ds);
                 this.adapter.SelectCommand.Parameters.Clear();
                 if (this.transaccion == null)
                 {
@@ -253,6 +249,8 @@ namespace WcfPedidos30.Model
         }
 
         #endregion Procedimiento
+
+        
         public DataSet getDataSet()
         {
             return ds;
@@ -344,7 +342,7 @@ namespace WcfPedidos30.Model
         /// <returns></returns>
         public string getCampos()
         {
-            return String.Join(",",qryFields);
+            return String.Join(",", qryFields);
         }
         /// <summary>
         /// Inserts the data table.
@@ -439,30 +437,30 @@ namespace WcfPedidos30.Model
             try
             {
                 sqlParameters = new List<SqlParameter>();
-                
+
                 int i = 0;
                 foreach (var r in _datos.ItemArray)
-                { 
-                    SqlParameter p = new SqlParameter("@" + _datos.Table.Columns[i].ColumnName,r);
-                   
+                {
+                    SqlParameter p = new SqlParameter("@" + _datos.Table.Columns[i].ColumnName, r);
+
                     sqlParameters.Add(p);
-                    i = i+1;
+                    i = i + 1;
                 }
 
 
             }
             catch
-            { 
-            
+            {
+
             }
 
-            
+
         }
         /// <summary>
         /// Datas the rowto parameters proc.
         /// </summary>
         /// <param name="_datos">The _datos.</param>
-        public void dataRowtoParametersProc(Dictionary<string,object> _datos)
+        public void dataRowtoParametersProc(Dictionary<string, object> _datos)
         {
             try
             {
@@ -477,11 +475,11 @@ namespace WcfPedidos30.Model
                         sqlParameters.Add(p);
                     }
                     catch (Exception e)
-                    { 
-                        
+                    {
+
                     }
 
-                    
+
                     i = i + 1;
                 }
 
@@ -606,8 +604,8 @@ namespace WcfPedidos30.Model
             foreach (System.Reflection.PropertyInfo campo in atributos)
                 try
                 {
-                    
-                    parametros.Add(new SqlParameter("@pm"+campo.Name,Model.GetType().GetProperty(campo.Name).GetValue(Model)));
+
+                    parametros.Add(new SqlParameter("@pm" + campo.Name, Model.GetType().GetProperty(campo.Name).GetValue(Model)));
                     addParametersProc(parametros);
                     ejecutarProcedimiento(SQLParameter);
                     respuesta = true;
@@ -617,7 +615,7 @@ namespace WcfPedidos30.Model
 
                 }
             return respuesta;
-            
+
         }
         /// <summary>
         /// Inserts the model.
@@ -625,7 +623,7 @@ namespace WcfPedidos30.Model
         /// <param name="Model">The model.</param>
         /// <returns></returns>
         public bool insertModel(object Model)
-        { 
+        {
 
             bool respuesta = false;
             var atributos = Model.GetType().GetProperties();
@@ -695,7 +693,8 @@ namespace WcfPedidos30.Model
         /// <summary>
         /// Connects this instance.
         /// </summary>
-        private void Connect() {
+        private void Connect()
+        {
             this.sqlConn = new SqlConnection();
             this.sqlConn.ConnectionString = ConfigurationManager.ConnectionStrings[this.strName].ConnectionString;
             this.ds = new DataSet();
@@ -723,7 +722,7 @@ namespace WcfPedidos30.Model
         public void commitTran()
         {
             this.transaccion.Commit();
-           // this.adapter.Dispose();
+            // this.adapter.Dispose();
             this.sqlConn.Close();
         }
 
@@ -733,13 +732,17 @@ namespace WcfPedidos30.Model
         public void rollback()
         {
             this.transaccion.Rollback();
-//            this.adapter.Dispose();
+            //            this.adapter.Dispose();
             this.sqlConn.Close();
         }
 
         #endregion Configuracion
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isTransact"></param>
+        /// <returns></returns>
         public ConnectionState abrirConexion(bool isTransact = false)
         {
             try
@@ -794,7 +797,7 @@ namespace WcfPedidos30.Model
                         resultado = true;
                     }
                     catch (Exception ex)
-                    {                        
+                    {
                         mensaje[0] = "011";
                         mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
                     }
@@ -832,7 +835,7 @@ namespace WcfPedidos30.Model
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
                             propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             continue;
                         }
@@ -866,7 +869,7 @@ namespace WcfPedidos30.Model
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
                             propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             continue;
                         }
@@ -877,7 +880,7 @@ namespace WcfPedidos30.Model
 
                 return list;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }

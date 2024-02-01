@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Web;
+﻿using System.Runtime.Serialization;
 
 namespace WcfPedidos30.Model
 {
@@ -26,7 +22,7 @@ namespace WcfPedidos30.Model
     {
         [DataMember]
         public string Bodega { get; set; }
-       [DataMember]
+        [DataMember]
         public string Compañía { get; set; }
         [DataMember]
         public bool EsCliente { get; set; }

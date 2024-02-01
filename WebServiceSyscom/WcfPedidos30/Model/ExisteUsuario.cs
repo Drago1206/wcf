@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 
 namespace WcfPedidos30.Model
 {
     public class ExisteUsuario
     {
         ConexionBD con = new ConexionBD();
-        
+
         /// <summary>
         /// Verifica si el usuario existe.
         /// </summary>
@@ -24,10 +22,7 @@ namespace WcfPedidos30.Model
             //compania = "";
             //se realiza la verificacion comprobar si existe 
             //conectar con la base de datos segun la  base que es 
-
-
-
-
+            //conectar con la base de datos segun la  base que es 
 
             bool existe = false;
             if (usuario != null)
@@ -38,11 +33,11 @@ namespace WcfPedidos30.Model
                 parametros.Add(new SqlParameter("@Usuario", usuario));
                 if (con.ejecutarQuery("WSPedidosIniciaSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                 {
-                    if (TablaIncio.Tables[0].Rows.Count > 0 )
+                    if (TablaIncio.Tables[0].Rows.Count > 0)
                     {
                         pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
                         pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-                        
+
                         if (password.ToLower() == pwd.contrasenna.ToLower())
                         {
                             mensaje = new string[2];
@@ -74,6 +69,6 @@ namespace WcfPedidos30.Model
             }
             return existe;
         }
-        
+
     }
 }

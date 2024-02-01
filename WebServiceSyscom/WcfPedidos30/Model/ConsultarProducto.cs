@@ -3,15 +3,23 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 
 namespace WcfPedidos30.Model
 {
     public class ConsultarProducto
     {
         ConexionBD con = new ConexionBD();
-        public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out PaginadorProducto<ProductosResponse> dtProducto /*PaginadorProducto<ProductosResponse> dtProducto*/ ) 
+
+        /// <summary>
+        /// Método para obtener listado de productos.
+        /// </summary>
+        /// <param name="producto">El producto solicitado.</param>
+        /// <param name="datosUsuario">Los datos del usuario que realiza la consulta.</param>
+        /// <param name="dtProducto">El paginador de los productos consultados.</param>
+        /// <returns>La respuesta de la consulta de productos.</returns>
+        public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out PaginadorProducto<ProductosResponse> dtProducto)
         {
+            #region variables
             con.setConnection("Prod");
             int _TotalRegistros = 0;
             int _TotalPaginas = 0;
@@ -27,14 +35,14 @@ namespace WcfPedidos30.Model
             parametros.Add(new SqlParameter("@CodOrDesProd", producto.CodOrDesProd));
             parametros.Add(new SqlParameter("@Subgrupo", producto.Subgrupo));
             parametros.Add(new SqlParameter("@Grupo", producto.Grupo));
-
+            #endregion
             if (con.ejecutarQuery("WSPedidosObtenerProductos", parametros, out TablaProducto, out string[] mensaje, CommandType.StoredProcedure))
             {
                 DataTable dtProductos = TablaProducto.Tables[0];
                 int TotalRegistros = TablaProducto.Tables[0].Rows.Count;
                 if (TotalRegistros > 0)
                 {
-                    if(TotalRegistros > pagina)
+                    if (TotalRegistros > pagina)
                     {
                         List<ProductosResponse> listaProductos = new List<ProductosResponse>();
 
@@ -44,36 +52,7 @@ namespace WcfPedidos30.Model
                             m.itemCia = new List<itemCia>();
                             m.itemCia = con.DataTableToList<itemCia>(dtProductos.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("CodProducto").Equals(m.CodProducto)).CopyToDataTable().AsDataView().ToTable(true, "CodCia,Saldocia,CodBodega,Saldobodega".Split(',')));
                         });
-                        /*
-                        foreach (DataRow row in TablaProducto.Tables[0].Rows)
-                        {
-                            ProductosResponse productos = new ProductosResponse
-                            {
-                                CodProducto = row["CodProducto"].ToString(),
-                                CodGru = row["CodigoGru"].ToString(),
-                                CodSub = row["CodigoSub"].ToString(),
-                                Descripcion = row["Descripción"].ToString(),
-                                Descuento = Convert.ToInt16(row["Descuento"]),
-                                FechaCreacion = row["FechaCreacion"].ToString(),
-                                Impuesto = Convert.ToInt16(row["Impuesto"]),
-                                Lista1 = Convert.ToInt16(row["Lista1"]),
-                                Lista2 = Convert.ToInt16(row["Lista2"]),
-                                Lista3 = Convert.ToInt16(row["Lista3"]),
-                                NombreGru = row["NombreGru"].ToString(),
-                                NombreSub = row["NombreSub"].ToString(),
-                                SaldoTotal = Convert.ToInt16(row["SaldoTotal"])
-                            };
-
-                            productos.itemCia = TablaProducto.Tables[0].Rows.Cast<DataRow>().Where(r => r.Field<string>("CodProducto").Equals(productos.CodProducto)).Select(r => new itemCia
-                            {
-                                CodCia = r["CodCia"] != DBNull.Value ? r["CodCia"].ToString() : "",
-                                Saldocia = r["Saldocia"] != DBNull.Value ? Convert.ToInt16(r["Saldocia"]) : 0,
-                                CodBodega = r["CodBodega"] != DBNull.Value ? r["CodBodega"].ToString() : "",
-                                Saldobodega = r["SaldoBodega"] != DBNull.Value ? Convert.ToInt16(r["SaldoBodega"]) : 0
-                            }).ToList();
-                            listaProductos.Add(productos);
-                        }
-                        */
+                        #region paginacion
                         if (producto.RegistrosPorPagina == 0)
                         {
                             registros_por_pagina = 10;
@@ -91,46 +70,46 @@ namespace WcfPedidos30.Model
                         {
                             pagina = producto.PaginaActual;
                         }
-                        listaProductos = listaProductos.Skip((pagina - 1) * registros_por_pagina)
+                        listaProductos = dtProducto.Resultado.Skip((pagina - 1) * registros_por_pagina)
                                                          .Take(registros_por_pagina)
                                                          .ToList();
                         _TotalRegistros = listaProductos.Count();
-                        _TotalPaginas = (int)Math.Ceiling((double)_TotalRegistros / registros_por_pagina);
-
+                        _TotalPaginas = (int)Math.Ceiling((double)TotalRegistros / registros_por_pagina);
+                        #endregion
                         mensaje = new string[2];
                         mensaje[0] = "012";
                         mensaje[1] = "Se ejecutó correctamente la consulta.";
-                        
+
                         PaginadorProducto<ProductosResponse> paginadorProducto = new PaginadorProducto<ProductosResponse>
                         {
                             PaginaActual = pagina,
-                            Resultado = dtProducto.Resultado,
+                            Resultado = listaProductos,
                             RegistrosPorPagina = registros_por_pagina,
-                            TotalRegistros = _TotalRegistros,
-                           TotalPaginas = _TotalPaginas
-                      
+                            TotalRegistros = TotalRegistros,
+                            TotalPaginas = _TotalPaginas
+
                         };
                         dtProducto = paginadorProducto;
-                        
+
                     }
                     else
                     {
-                            mensaje = new string[2];
-                            mensaje[0] = "013";
-                            mensaje[1] = "La Página que deseas acceder no está disponible porque solo cuentan con " + (int)Math.Ceiling((double)TotalRegistros / registros_por_pagina);
-                            //respuesta.paginas = new OrganizadorPagina { NumeroDePaginas = (int)Math.Ceiling((double)total / resPagina), RegistroTotal = total, RegistroPorPagina = resPagina, PaginaActual = pagina };
+                        mensaje = new string[2];
+                        mensaje[0] = "013";
+                        mensaje[1] = "La Página que deseas acceder no está disponible porque solo cuentan con " + (int)Math.Ceiling((double)TotalRegistros / registros_por_pagina);
+                        respuesta.ListaProductos = dtProducto;
+
                     }
                 }
             }
             else
             {
-                    mensaje = new string[2];
-                    mensaje[0] = "014";
-                    mensaje[1] = "No se encuentran productos disponibles";
+                mensaje = new string[2];
+                mensaje[0] = "014";
+                mensaje[1] = "No se encuentran productos disponibles";
             }
-            
+
             return respuesta;
         }
-
     }
 }

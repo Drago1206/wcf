@@ -36,18 +36,7 @@ namespace WcfPedidos30.Model
 
                     mensaje = new string[2];
                     mensaje[0] = "012";
-                    mensaje[1] = "Se ejecutó correctamente la consulta.";
-
-                       
-                    /*dtCliente = paginadorProducto;
-                    
-                    else
-                    {
-                        mensaje = new string[2];
-                        mensaje[0] = "013";
-                        mensaje[1] = "La Página que deseas acceder no está disponible porque solo cuentan con " + (int)Math.Ceiling((double)TotalRegistros / registros_por_pagina);
-                        //respuesta.paginas = new OrganizadorPagina { NumeroDePaginas = (int)Math.Ceiling((double)total / resPagina), RegistroTotal = total, RegistroPorPagina = resPagina, PaginaActual = pagina };
-                    }*/
+                    mensaje[1] = "Se ejecutó correctamente la consulta.";  
                 }
             }
             else
