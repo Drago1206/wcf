@@ -33,7 +33,7 @@ namespace WcfPedidos30.Model
             parametros.Add(new SqlParameter("@Usuario", datosUsuario.UserName));
             parametros.Add(new SqlParameter("@SaldosCiaBod", producto.SaldosCiaBod));
             parametros.Add(new SqlParameter("@CodOrDesProd", producto.CodOrDesProd));
-            parametros.Add(new SqlParameter("@Subgrupo", producto.Subgrupo));
+            parametros.Add(new SqlParameter("@Subgrupo", producto.SubGrupo));
             parametros.Add(new SqlParameter("@Grupo", producto.Grupo));
             #endregion
             if (con.ejecutarQuery("WSPedidosObtenerProductos", parametros, out TablaProducto, out string[] mensaje, CommandType.StoredProcedure))
@@ -49,8 +49,8 @@ namespace WcfPedidos30.Model
                         dtProducto.Resultado = con.DataTableToList<ProductosResponse>("CodProducto,Descripción,Lista1,Lista2,Lista3,Impuesto,Descuento,CodigoGru,NombreGru,CodigoSub,NombreSub,SaldoTotal,FechaCreacion".Split(','), TablaProducto);
                         dtProducto.Resultado.ForEach(m =>
                         {
-                            m.itemCia = new List<itemCia>();
-                            m.itemCia = con.DataTableToList<itemCia>(dtProductos.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("CodProducto").Equals(m.CodProducto)).CopyToDataTable().AsDataView().ToTable(true, "CodCia,Saldocia,CodBodega,Saldobodega".Split(',')));
+                            m.ItemCia = new List<itemCia>();
+                            m.ItemCia = con.DataTableToList<itemCia>(dtProductos.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("CodProducto").Equals(m.CodProducto)).CopyToDataTable().AsDataView().ToTable(true, "CodCia,Saldocia,CodBodega,Saldobodega".Split(',')));
                         });
                         #region paginacion
                         if (producto.RegistrosPorPagina == 0)

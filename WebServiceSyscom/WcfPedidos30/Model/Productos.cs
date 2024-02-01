@@ -14,51 +14,34 @@ namespace WcfPedidos30.Model
     [DataContract]
     public class ProductosResponse
     {
-        public string mCodProducto { get; set; }
-        public string mCodGru { get; set; }
-        public string mCodSub { get; set; }
-        public string mDescripcion { get; set; }
-        public int mDescuento { get; set; }
-        public int mImpuesto { get; set; }
-        public int mLista1 { get; set; }
-        public int mLista2 { get; set; }
-        public int mLista3 { get; set; }
-        public string mNombreGru { get; set; }
-        public string mNombreSub { get; set; }
-        public int mSaldoTotal { get; set; }
-        public List<itemCia> mItemCia { get; set; }
-        public DateTime mFechaCreacion { get; set; }
-
         [DataMember]
-        public string CodProducto { get { return mCodProducto; } set { mCodProducto = value; } }
+        public string CodProducto { get; set; }
         [DataMember]
-        public string CodigoGru { get { return mCodGru; } set { mCodGru = value; } }
+        public string CodGru { get; set; }
         [DataMember]
-        public string CodigoSub { get { return mCodSub; } set { mCodSub = value; } }
+        public string CodSub { get; set; }
         [DataMember]
-        public string Descripción { get { return mDescripcion; } set { mDescripcion = value; } }
+        public string Descripcion { get; set; }
         [DataMember]
-        public int Descuento { get { return mDescuento; } set { mDescuento = value; } }
+        public int Descuento { get; set; }
         [DataMember]
-        public DateTime FechaCreacion { get { return mFechaCreacion; } set { mFechaCreacion = value; } }
+        public int Impuesto { get; set; }
         [DataMember]
-        public int Impuesto { get { return mImpuesto; } set { mImpuesto = value; } }
+        public int Lista1 { get; set; }
         [DataMember]
-        public int Lista1 { get { return mLista1; } set { mLista1 = value; } }
+        public int Lista2 { get; set; }
         [DataMember]
-        public int Lista2 { get { return mLista2; } set { mLista2 = value; } }
+        public int Lista3 { get; set; }
         [DataMember]
-        public int Lista3 { get { return mLista3; } set { mLista3 = value; } }
+        public string NombreGru { get; set; }
         [DataMember]
-        public string NombreGru { get { return mNombreGru; } set { mNombreGru = value; } }
+        public string NombreSub { get; set; }
         [DataMember]
-        public string NombreSub { get { return mNombreSub; } set { mNombreSub = value; } }
+        public int SaldoTotal { get; set; }
         [DataMember]
-        public int SaldoTotal { get { return mSaldoTotal; } set { mSaldoTotal = value; } }
+        public List<itemCia> ItemCia { get; set; }
         [DataMember]
-        public List<itemCia> itemCia { get { return mItemCia; } set { mItemCia = value; } }
-
-
+        public DateTime FechaCreacion { get; set; }
 
 
     }
@@ -66,24 +49,11 @@ namespace WcfPedidos30.Model
     [DataContract]
     public class ProductoRequest
     {
-        public string mCodOrDesprod { get; set; }
-        public string mGrupo { get; set; }
-        public int mPaginaActual { get; set; }
-        public int mRegistrosPorPagina { get; set; }
-        public bool mSaldosCiaBod { get; set; }
-        public string mSubGrupo { get; set; }
-
-        [DataMember]
-        public string CodOrDesProd { get { return mCodOrDesprod; } set { mCodOrDesprod = value; } }
-        [DataMember]
-        public string Grupo { get { return mGrupo; } set { mGrupo = value; } }
-        [DataMember]
-        public int PaginaActual { get { return mPaginaActual; } set { mPaginaActual = value; } }
-        [DataMember]
-        public int RegistrosPorPagina { get { return mRegistrosPorPagina; } set { mRegistrosPorPagina = value; } }
-        [DataMember]
-        public bool SaldosCiaBod { get { return mSaldosCiaBod; } set { mSaldosCiaBod = value; } }
-        [DataMember]
-        public string Subgrupo { get { return mSubGrupo; } set { mSubGrupo = value; } }
+        public string CodOrDesProd { get; set; }
+        public string Grupo { get; set; }
+        public int PaginaActual { get; set; }
+        public int RegistrosPorPagina { get; set; }
+        public bool SaldosCiaBod { get; set; }
+        public string SubGrupo { get; set; }
     }
 }

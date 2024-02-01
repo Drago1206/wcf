@@ -26,9 +26,53 @@ namespace WcfPedidos30
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerUsuarios", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Usuario")]
         RespUsuario ObjUsuario(ObtUsuario obtUsuario);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GenerarPedido",BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Pedido")]
+        ResGenerarPedido setPedido(DtPedido pedido);
     }
 
+    [DataContract]
+    public class ResGenerarPedido
+    {
+        List<PedidoResponse> _DatosPedido;
+        Log _error;
 
+        [DataMember]
+        public List<PedidoResponse> DatosPedido
+        {
+            get { return _DatosPedido; }
+            set { _DatosPedido = value; }
+        }
+
+        [DataMember]
+        public Log Error
+        {
+            get { return _error; }
+            set { _error = value; }
+        }
+    }
+    [DataContract]
+    public class DtPedido
+    {
+        UsuariosRequest _usuario;
+        PedidoRequest _pedido;
+
+        [DataMember]
+        public UsuariosRequest Usuarios
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+
+        [DataMember]
+        public PedidoRequest Pedido
+        {
+            get { return _pedido; }
+            set { _pedido = value; }
+        }
+    }
     [DataContract]
     public class RespProducto
     {
@@ -49,15 +93,7 @@ namespace WcfPedidos30
             set { _registro = value; }
         }
     }
-    [DataContract]
-    public class PaginaAcceder
-    {
-        [DataMember]
-        public int Pagina { get; set; }
 
-        [DataMember]
-        public int RegistroPorPagina { get; set; }
-    }
     [DataContract]
     public class OrganizadorPagina
     {
@@ -174,10 +210,7 @@ namespace WcfPedidos30
             get { return _DatosCliente; }
             set { _DatosCliente = value; }
         }
-        /*
-        [DataMember]
-        public List<ClienteResponse> Clientes { get; set; }
-        */
+
         [DataMember]
         public Log Registro
         {

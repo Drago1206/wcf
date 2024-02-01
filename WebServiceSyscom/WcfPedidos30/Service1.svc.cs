@@ -139,5 +139,61 @@ namespace WcfPedidos30
             }
             return respuesta;
         }
+
+        [return: MessageParameter(Name = "Pedido")]
+        public ResGenerarPedido setPedido(DtPedido pedido)
+        {
+            {
+                ResGenerarPedido respuesta = new ResGenerarPedido();
+                respuesta.Error = null;
+                List<SqlParameter> _parametros = new List<SqlParameter>();
+
+                try
+                {
+                    if (pedido.Usuarios == null)
+                        respuesta.Error = new Log { Codigo = "USER_002", Descripcion = "¡Todas las variables del usuario no pueden ser nulas!" };
+                    else
+                    {
+                        if (pedido.Usuarios.UserName == null || String.IsNullOrWhiteSpace(pedido.Usuarios.UserName))
+                            respuesta.Error = new Log { Codigo = "USER_003", Descripcion = "¡El UserName no puede ser nulo o vacío!" };
+                        else if (pedido.Usuarios.Password == null || String.IsNullOrWhiteSpace(pedido.Usuarios.Password))
+                            respuesta.Error = new Log { Codigo = "USER_003", Descripcion = "¡El Password no puede ser nulo o vacío!" };
+                        else if (pedido.Pedido.IdCliente == null || String.IsNullOrWhiteSpace(pedido.Pedido.IdCliente))
+                            respuesta.Error = new Log { Codigo = "GPED_001", Descripcion = "¡El IdCliente no puede ser nulo o vacío!" };
+                        else if (pedido.Pedido.CodConcepto == null || String.IsNullOrWhiteSpace(pedido.Pedido.CodConcepto))
+                            respuesta.Error = new Log { Codigo = "GPED_001", Descripcion = "¡El CodConcepto no puede ser nulo o vacío!" };
+                        else if (pedido.Pedido.IdVendedor == null || String.IsNullOrWhiteSpace(pedido.Pedido.IdVendedor))
+                            respuesta.Error = new Log { Codigo = "GPED_001", Descripcion = "¡El IdVendedor no puede ser nulo o vacío!" };
+                        else if (pedido.Pedido.Observación == null || String.IsNullOrWhiteSpace(pedido.Pedido.Observación))
+                            respuesta.Error = new Log { Codigo = "GPED_001", Descripcion = "¡La Observación no puede ser nula o vacía!" };
+                        else if (pedido.Pedido.ListaProductos.Count == 0)
+                            respuesta.Error = new Log { Codigo = "GPED_003", Descripcion = "¡No existen ningún producto para generar el pedido!" };
+                        else if (ExisteUsuario(pedido.Usuarios))
+                        {
+                            Pedido dpd = new Pedido();
+                            List<Pedido> DatPedido = new List<Pedido>();
+                            List<Pedido> ppedido = new List<Pedido>();
+                            respuesta.Error = dpd.GenerarPedido(pedido, out DatPedido);
+                            if (respuesta.Error == null)
+                            {
+                                if (DatPedido == null)
+                                    respuesta.Error = new Log { Codigo = "USER_001", Descripcion = "¡Usuario no encontrado!" };
+                                else
+                                    respuesta.DatosPedido = DatPedido;
+                            }
+
+                        }
+                        else
+                            respuesta.Error = new Log { Codigo = "USER_001", Descripcion = "¡Usuario no encontrado!" };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    respuesta.Error = new Log { Descripcion = ex.Message };
+                }
+
+                return respuesta;
+            }
+        }
     }
 }
