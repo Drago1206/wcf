@@ -25,6 +25,10 @@ namespace WcfPedidos30.Model
             //se realiza la verificacion comprobar si existe 
             //conectar con la base de datos segun la  base que es 
 
+
+
+
+
             bool existe = false;
             if (usuario != null)
             {
@@ -50,7 +54,7 @@ namespace WcfPedidos30.Model
                         {
                             mensaje = new string[2];
                             mensaje[0] = "USER_003";
-                            mensaje[1] = "Contraseña inválida";
+                            mensaje[1] = "Usuario o Contraseña inválido";
                         }
                     }
                     else

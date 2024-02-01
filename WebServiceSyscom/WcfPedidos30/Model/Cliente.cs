@@ -6,33 +6,38 @@ using System.Web;
 
 namespace WcfPedidos30.Model
 {
+
     [DataContract]
     public class ClienteResponse 
     {
-        public string NitCliente { get; set; }
-        public string NombreCliente { get; set; }
-        public string Direccion { get; set; }
-        public string Ciudad { get; set; }
-        public string Telefono { get; set; }
-        public int NumLista { get; set; }
-        public string NitVendedor { get; set; }
-        public string NomVendedor { get; set; }
-        public List<Agencia> ListaAgencias { get; set; }
+        public string mNitCliente { get; set; }
+        public string mNomCliente { get; set; }
+        public string mDireccion { get; set; }
+        public string mCiudad { get; set; }
+        public string mTelefono { get; set; }
+        public int mNumLista { get; set; }
+        public string mNitVendedor { get; set; }
+        public string mNomVendedor { get; set; }
+        public List<Agencia> mListaAgencias { get; set; }
 
         [DataMember]
-        public string pmNitCliente { get { return NitCliente; } set { NitCliente = value; } }
+        public string NitCliente { get { return mNitCliente; } set { mNitCliente = value; } }
         [DataMember]
-        public string pmCiudad { get { return Ciudad; } set { Ciudad = value; } }
+        public string Ciudad { get { return mCiudad; } set { mCiudad = value; } }
         [DataMember]
-        public string pmDireccion { get { return Direccion; } set { Direccion = value; } }
+        public string Direccion { get { return mDireccion; } set { mDireccion = value; } }
         [DataMember]
-        public List<Agencia> pmListaAgencia { get { return ListaAgencias; } set { ListaAgencias = value; } }
+        public List<Agencia> ListaAgencias { get { return mListaAgencias; } set { mListaAgencias = value; } }
         [DataMember]
-        public string pmNitVendedor { get { return NitVendedor; } set { NitVendedor = value; } }
+        public string NitVendedor { get { return mNitVendedor; } set { mNitVendedor = value; } }
         [DataMember]
-        public string pmNomVendedor { get { return NomVendedor; } set { NomVendedor = value;} }
+        public string NomVendedor { get { return mNomVendedor; } set { mNomVendedor = value;} }
         [DataMember]
-        public int pmNumLista { get { return NumLista; } set { NumLista = value; } }
+        public string NombreCliente { get { return mNomCliente; } set { mNomCliente = value; } }
+        [DataMember]
+        public int NumLista { get { return mNumLista; } set { mNumLista = value; } }
+        [DataMember]
+        public string Telefono { get { return mTelefono; } set { mTelefono = value; } }
 
     }
     public class ClienteRequest

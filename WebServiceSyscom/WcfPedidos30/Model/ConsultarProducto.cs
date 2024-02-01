@@ -10,14 +10,14 @@ namespace WcfPedidos30.Model
     public class ConsultarProducto
     {
         ConexionBD con = new ConexionBD();
-        public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out PaginadorProducto<ProductosResponse> dtProducto) 
+        public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out List<ProductosResponse> dtProducto /*PaginadorProducto<ProductosResponse> dtProducto*/ ) 
         {
             con.setConnection("Prod");
             int _TotalRegistros = 0;
             int _TotalPaginas = 0;
             int registros_por_pagina = producto.RegistrosPorPagina;
             int pagina = producto.PaginaActual;
-            dtProducto = null;
+            dtProducto = new List<ProductosResponse>();
 
             RespProducto respuesta = new RespProducto();
             DataSet TablaProducto = new DataSet();
@@ -30,6 +30,7 @@ namespace WcfPedidos30.Model
 
             if (con.ejecutarQuery("WSPedidosObtenerProductos", parametros, out TablaProducto, out string[] mensaje, CommandType.StoredProcedure))
             {
+                DataTable dtProductos = TablaProducto.Tables[0];
                 int TotalRegistros = TablaProducto.Tables[0].Rows.Count;
                 if (TotalRegistros > 0)
                 {
@@ -37,6 +38,13 @@ namespace WcfPedidos30.Model
                     {
                         List<ProductosResponse> listaProductos = new List<ProductosResponse>();
 
+                        dtProducto = con.DataTableToList<ProductosResponse>("CodProducto,Descripción,Lista1,Lista2,Lista3,Impuesto,Descuento,CodigoGru,NombreGru,CodigoSub,NombreSub,SaldoTotal,FechaCreacion".Split(','), TablaProducto);
+                        dtProducto.ForEach(m =>
+                        {
+                            m.itemCia = new List<itemCia>();
+                            m.itemCia = con.DataTableToList<itemCia>(dtProductos.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("CodProducto").Equals(m.CodProducto)).CopyToDataTable().AsDataView().ToTable(true, "CodCia,Saldocia,CodBodega,Saldobodega".Split(',')));
+                        });
+                        /*
                         foreach (DataRow row in TablaProducto.Tables[0].Rows)
                         {
                             ProductosResponse productos = new ProductosResponse
@@ -65,6 +73,7 @@ namespace WcfPedidos30.Model
                             }).ToList();
                             listaProductos.Add(productos);
                         }
+                        */
                         if (producto.RegistrosPorPagina == 0)
                         {
                             registros_por_pagina = 10;
@@ -91,7 +100,7 @@ namespace WcfPedidos30.Model
                         mensaje = new string[2];
                         mensaje[0] = "012";
                         mensaje[1] = "Se ejecutó correctamente la consulta.";
-
+                        /*
                         PaginadorProducto<ProductosResponse> paginadorProducto = new PaginadorProducto<ProductosResponse>
                         {
                             PaginaActual = pagina,
@@ -102,6 +111,7 @@ namespace WcfPedidos30.Model
                       
                         };
                         dtProducto = paginadorProducto;
+                        */
                     }
                     else
                     {

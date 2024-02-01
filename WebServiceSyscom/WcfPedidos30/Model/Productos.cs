@@ -21,7 +21,6 @@ namespace WcfPedidos30.Model
         public string mCodSub { get; set; }
         public string mDescripcion { get; set; }
         public int mDescuento { get; set; }
-        public string mFechaCreacion { get; set; }
         public int mImpuesto { get; set; }
         public int mLista1 { get; set; }
         public int mLista2 { get; set; }
@@ -30,19 +29,20 @@ namespace WcfPedidos30.Model
         public string mNombreSub { get; set; }
         public int mSaldoTotal { get; set; }
         public List<itemCia> mItemCia { get; set; }
+        public DateTime mFechaCreacion { get; set; }
 
         [DataMember]
         public string CodProducto { get { return mCodProducto; } set { mCodProducto = value; } }
         [DataMember]
-        public string CodGru { get { return mCodGru; } set { mCodGru = value; } }
+        public string CodigoGru { get { return mCodGru; } set { mCodGru = value; } }
         [DataMember]
-        public string CodSub { get { return mCodSub; } set { mCodSub = value; } }
+        public string CodigoSub { get { return mCodSub; } set { mCodSub = value; } }
         [DataMember]
-        public string Descripcion { get { return mDescripcion; } set { mDescripcion = value; } }
+        public string Descripción { get { return mDescripcion; } set { mDescripcion = value; } }
         [DataMember]
         public int Descuento { get { return mDescuento; } set { mDescuento = value; } }
         [DataMember]
-        public string FechaCreacion { get { return mFechaCreacion; } set { mFechaCreacion = value; } } 
+        public DateTime FechaCreacion { get { return mFechaCreacion; } set { mFechaCreacion = value; } } 
         [DataMember]
         public int Impuesto { get { return mImpuesto; } set { mImpuesto = value; } }
         [DataMember]

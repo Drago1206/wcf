@@ -832,7 +832,7 @@ namespace WcfPedidos30.Model
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
                             propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
                         }
-                        catch
+                        catch(Exception ex)
                         {
                             continue;
                         }
@@ -849,12 +849,12 @@ namespace WcfPedidos30.Model
             }
         }
 
-        public List<T> DataTableToList<T>(string[] DatosDt = null) where T : class, new()
+        public List<T> DataTableToList<T>(string[] DatosDt = null, DataSet dsTabla = null) where T : class, new()
         {
             try
             {
                 List<T> list = new List<T>();
-                DataTable dt = DatosDt == null ? ds.Tables[0] : ds.Tables[0].DefaultView.ToTable(true, DatosDt);
+                DataTable dt = DatosDt == null ? dsTabla.Tables[0] : dsTabla.Tables[0].DefaultView.ToTable(true, DatosDt);
                 foreach (DataRow row in dt.Rows)
                 {
                     T obj = new T();
@@ -866,7 +866,7 @@ namespace WcfPedidos30.Model
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
                             propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
                         }
-                        catch
+                        catch(Exception ex)
                         {
                             continue;
                         }

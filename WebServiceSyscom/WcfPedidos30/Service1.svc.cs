@@ -38,8 +38,8 @@ namespace WcfPedidos30
                 ExisteUsuario usuario = new ExisteUsuario();
                 if(usuario.Existe(obtProducto.Usuarios.UserName, obtProducto.Usuarios.Password, out string[] mensajeNuevo))
                 {
-                    PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
-
+                    //PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
+                    List<ProductosResponse> DatProducto = new List<ProductosResponse>();
                     respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios,out DatProducto);
                     respuesta.ListaProductos = DatProducto;
                     respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
@@ -83,8 +83,13 @@ namespace WcfPedidos30
                 {
                     List<ClienteResponse> cliente = new List<ClienteResponse>();
                     respuesta = consClie.ConsultarClientes(obtCliente, obtCliente.Usuarios, out cliente);
-
+                    respuesta.DatosClientes = cliente;
                     respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+
+                }
+                else
+                {
+                    respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
 
                 }
             }

@@ -22,15 +22,16 @@ namespace WcfPedidos30.Model
 
             if (con.ejecutarQuery("WSPedidosObtenerClientes", parametros, out TablaClientes, out string[] mensaje, CommandType.StoredProcedure))
             {
+                DataTable dtClientes = TablaClientes.Tables[0];
                 int TotalRegistros = TablaClientes.Tables[0].Rows.Count;
                 if (TotalRegistros > 0)
                 {
 
-                    dtCliente = con.DataTableToList<ClienteResponse>("NitCliente,NombreCliente,Direccion,Ciudad,Telefono,NumLista,NitVendedor,NomVendedor".Split(','));
+                    dtCliente = con.DataTableToList<ClienteResponse>("NitCliente,NombreCliente,Direccion,Ciudad,Telefono,NumLista,NitVendedor,NomVendedor".Split(','), TablaClientes);
                     dtCliente.ForEach(m =>
                     {
                         m.ListaAgencias = new List<Agencia>();
-                        m.ListaAgencias = m.ListaAgencias = con.DataTableToList<Agencia>(TablaClientes.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("NitCliente").Equals(m.NitCliente)).CopyToDataTable().AsDataView().ToTable(true, "CodAge,NomAge".Split(',')));
+                        m.ListaAgencias = m.ListaAgencias = con.DataTableToList<Agencia>(dtClientes.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("NitCliente").Equals(m.NitCliente)).CopyToDataTable().AsDataView().ToTable(true, "CodAge,NomAge".Split(',')));
                     });
 
                     mensaje = new string[2];

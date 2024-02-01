@@ -9,12 +9,12 @@ namespace WcfPedidos30.Model
     [DataContract]
     public class Agencia
     {
-        string CodAge { get; set; }
-        string NomAge { get; set; }
+        string mCodAge { get; set; }
+        string mNomAge { get; set; }
 
         [DataMember]
-        public string pmCodAge { get { return CodAge; } set { CodAge = value; } }
+        public string CodAge { get { return mCodAge; } set { mCodAge = value; } }
         [DataMember]
-        public string pmNomAge { get { return NomAge; } set { NomAge = value; } }
+        public string NomAge { get { return mNomAge; } set { mNomAge = value; } }
     }
 }

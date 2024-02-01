@@ -36,10 +36,10 @@ namespace WcfPedidos30
     {
         OrganizadorPagina _organizadorPagina;
         Log _registro;
-        PaginadorProducto<ProductosResponse> _DatosProducto;
+        List<ProductosResponse> _DatosProducto;
 
         [DataMember]
-        public PaginadorProducto<ProductosResponse> ListaProductos
+        public List<ProductosResponse> ListaProductos
         {
             get { return _DatosProducto; }
             set { _DatosProducto = value; }
@@ -183,7 +183,7 @@ namespace WcfPedidos30
         List<ClienteResponse> _DatosCliente;
 
         [DataMember]
-        public List<ClienteResponse> Clientes
+        public List<ClienteResponse> DatosClientes
         {
             get { return _DatosCliente; }
             set { _DatosCliente = value; }
