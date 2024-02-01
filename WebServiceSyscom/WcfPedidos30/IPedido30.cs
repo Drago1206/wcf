@@ -34,34 +34,22 @@ namespace WcfPedidos30
     [DataContract]
     public class RespProducto
     {
-        OrganizadorPagina _organizadorPagina;
         Log _registro;
-        List<ProductosResponse> _DatosProducto;
+        PaginadorProducto<ProductosResponse> _DatosProducto;
 
         [DataMember]
-        public List<ProductosResponse> ListaProductos
+        public PaginadorProducto<ProductosResponse> ListaProductos
         {
             get { return _DatosProducto; }
             set { _DatosProducto = value; }
         }
-        /*
-            [DataMember]
-            public List<ProductosResponse> ListaProductos { get; set; }
-        */
+
         [DataMember]
         public Log Registro
         {
             get { return _registro; }
             set { _registro = value; }
         }
-        /*
-            [DataMember]
-            public OrganizadorPagina paginas
-            {
-                get { return _organizadorPagina; }
-                set { _organizadorPagina = value; }
-            }
-        */
     }
     [DataContract]
     public class PaginaAcceder

@@ -10,14 +10,14 @@ namespace WcfPedidos30.Model
     public class ConsultarProducto
     {
         ConexionBD con = new ConexionBD();
-        public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out List<ProductosResponse> dtProducto /*PaginadorProducto<ProductosResponse> dtProducto*/ ) 
+        public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out PaginadorProducto<ProductosResponse> dtProducto /*PaginadorProducto<ProductosResponse> dtProducto*/ ) 
         {
             con.setConnection("Prod");
             int _TotalRegistros = 0;
             int _TotalPaginas = 0;
             int registros_por_pagina = producto.RegistrosPorPagina;
             int pagina = producto.PaginaActual;
-            dtProducto = new List<ProductosResponse>();
+            dtProducto = new PaginadorProducto<ProductosResponse>();
 
             RespProducto respuesta = new RespProducto();
             DataSet TablaProducto = new DataSet();
@@ -38,8 +38,8 @@ namespace WcfPedidos30.Model
                     {
                         List<ProductosResponse> listaProductos = new List<ProductosResponse>();
 
-                        dtProducto = con.DataTableToList<ProductosResponse>("CodProducto,Descripción,Lista1,Lista2,Lista3,Impuesto,Descuento,CodigoGru,NombreGru,CodigoSub,NombreSub,SaldoTotal,FechaCreacion".Split(','), TablaProducto);
-                        dtProducto.ForEach(m =>
+                        dtProducto.Resultado = con.DataTableToList<ProductosResponse>("CodProducto,Descripción,Lista1,Lista2,Lista3,Impuesto,Descuento,CodigoGru,NombreGru,CodigoSub,NombreSub,SaldoTotal,FechaCreacion".Split(','), TablaProducto);
+                        dtProducto.Resultado.ForEach(m =>
                         {
                             m.itemCia = new List<itemCia>();
                             m.itemCia = con.DataTableToList<itemCia>(dtProductos.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("CodProducto").Equals(m.CodProducto)).CopyToDataTable().AsDataView().ToTable(true, "CodCia,Saldocia,CodBodega,Saldobodega".Split(',')));
@@ -100,18 +100,18 @@ namespace WcfPedidos30.Model
                         mensaje = new string[2];
                         mensaje[0] = "012";
                         mensaje[1] = "Se ejecutó correctamente la consulta.";
-                        /*
+                        
                         PaginadorProducto<ProductosResponse> paginadorProducto = new PaginadorProducto<ProductosResponse>
                         {
                             PaginaActual = pagina,
-                            Resultado = listaProductos,
+                            Resultado = dtProducto.Resultado,
                             RegistrosPorPagina = registros_por_pagina,
                             TotalRegistros = _TotalRegistros,
                            TotalPaginas = _TotalPaginas
                       
                         };
                         dtProducto = paginadorProducto;
-                        */
+                        
                     }
                     else
                     {

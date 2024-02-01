@@ -39,7 +39,7 @@ namespace WcfPedidos30
                 if(usuario.Existe(obtProducto.Usuarios.UserName, obtProducto.Usuarios.Password, out string[] mensajeNuevo))
                 {
                     //PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
-                    List<ProductosResponse> DatProducto = new List<ProductosResponse>();
+                    PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
                     respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios,out DatProducto);
                     respuesta.ListaProductos = DatProducto;
                     respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
