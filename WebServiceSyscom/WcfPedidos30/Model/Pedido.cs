@@ -7,7 +7,7 @@ using System.Web;
 namespace WcfPedidos30.Model
 {
     [DataContract]
-    public class PedidoRequest
+    public class PedidoResponse
     {
         [DataMember]
         public string TipoDoc { get; set; }
@@ -26,7 +26,7 @@ namespace WcfPedidos30.Model
     }
     
     [DataContract]
-    public class PedidoResponse
+    public class PedidoRequest
     {
         [DataMember]
         public string IdCliente { get; set; }

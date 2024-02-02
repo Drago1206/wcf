@@ -36,9 +36,9 @@ namespace WcfPedidos30
                 if (usuario.Existe(obtProducto.Usuarios.UserName, obtProducto.Usuarios.Password, out string[] mensajeNuevo))
                 {
                     PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
-                    respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios, out DatProducto);
+                    respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios, out DatProducto, out string[] mensaje);
                     respuesta.ListaProductos = DatProducto;
-                    respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
+                    respuesta.Registro = new Log { Codigo = mensaje[0], Descripcion = mensaje[1] };
                 }
                 else
                 {
@@ -147,9 +147,9 @@ namespace WcfPedidos30
                 ResGenerarPedido respuesta = new ResGenerarPedido();
                 respuesta.Error = null;
                 List<SqlParameter> _parametros = new List<SqlParameter>();
-
                 try
                 {
+                    ExisteUsuario existe = new ExisteUsuario();
                     if (pedido.Usuarios == null)
                         respuesta.Error = new Log { Codigo = "USER_002", Descripcion = "¡Todas las variables del usuario no pueden ser nulas!" };
                     else
@@ -168,12 +168,12 @@ namespace WcfPedidos30
                             respuesta.Error = new Log { Codigo = "GPED_001", Descripcion = "¡La Observación no puede ser nula o vacía!" };
                         else if (pedido.Pedido.ListaProductos.Count == 0)
                             respuesta.Error = new Log { Codigo = "GPED_003", Descripcion = "¡No existen ningún producto para generar el pedido!" };
-                        else if (ExisteUsuario(pedido.Usuarios))
+                        else if (existe.Existe(pedido.Usuarios.UserName, pedido.Usuarios.Password, out string[] nuevoMensaje))
                         {
-                            Pedido dpd = new Pedido();
-                            List<Pedido> DatPedido = new List<Pedido>();
-                            List<Pedido> ppedido = new List<Pedido>();
-                            respuesta.Error = dpd.GenerarPedido(pedido, out DatPedido);
+                            GenerarPedido genPedido = new GenerarPedido();
+                            List<PedidoResponse> DatPedido = new List<PedidoResponse>();
+                            List<PedidoRequest> ppedido = new List<PedidoRequest>();
+                            respuesta.Error = genPedido.GenerarPedidos(pedido, out DatPedido);
                             if (respuesta.Error == null)
                             {
                                 if (DatPedido == null)
@@ -181,7 +181,6 @@ namespace WcfPedidos30
                                 else
                                     respuesta.DatosPedido = DatPedido;
                             }
-
                         }
                         else
                             respuesta.Error = new Log { Codigo = "USER_001", Descripcion = "¡Usuario no encontrado!" };

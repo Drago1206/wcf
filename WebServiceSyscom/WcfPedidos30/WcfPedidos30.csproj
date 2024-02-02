@@ -130,6 +130,7 @@
     <Compile Include="Model\Cliente.cs" />
     <Compile Include="Model\ConexionBD.cs" />
     <Compile Include="Model\ExisteUsuario.cs" />
+    <Compile Include="Model\GenerarPedido.cs" />
     <Compile Include="Model\LogErrores.cs" />
     <Compile Include="Model\PaginadorProducto.cs" />
     <Compile Include="Model\Pedido.cs" />

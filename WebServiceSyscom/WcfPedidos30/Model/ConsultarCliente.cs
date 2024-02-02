@@ -30,26 +30,35 @@ namespace WcfPedidos30.Model
             RespCliente respuesta = new RespCliente();
             /// Se inicializa una lista vacía para pasar los parámetros al procedimiento de almacenado
             List<SqlParameter> parametros = new List<SqlParameter>();
-            /// Se agrega el parámetro necesario para la consulta del cliente
+            /// Se agrega el parámetro necesario para ejecutar el procedimiento de almacenado, con el dato del cliente
             parametros.Add(new SqlParameter("@NitCliente", cliente.Cliente.NitCliente));
 
             /// Se inicializa el dataset para capturar la tabla del resultado del procedimiento de almacenado
             DataSet TablaClientes = new DataSet();
 
+            ///Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
             if (con.ejecutarQuery("WSPedidosObtenerClientes", parametros, out TablaClientes, out string[] mensaje, CommandType.StoredProcedure))
             {
+                /// Se inicializa la tabla de datos proveniente de la variable TablaClientes de salida del método ejecutarQuery 
                 DataTable dtClientes = TablaClientes.Tables[0];
+                /// Se inicializa la variable TotalRegistros con el valor de la cantidad de registros totales del procedimiento de almacenado
                 int TotalRegistros = TablaClientes.Tables[0].Rows.Count;
+
+                ///Condición que verifica si la cantidad de registros provenientes del procedimiento de almacenado es mayor a cero
                 if (TotalRegistros > 0)
                 {
-
+                    // Se le asigna el valor a la variable dtCliente con la lista que retorna el método DataTableToList
                     dtCliente = con.DataTableToList<ClienteResponse>("NitCliente,NombreCliente,Direccion,Ciudad,Telefono,NumLista,NitVendedor,NomVendedor".Split(','), TablaClientes);
+                    // Se recorre la lista dtCliente
                     dtCliente.ForEach(m =>
                     {
+                        /// Se inicializa una lista dentro de la lista dtCliente
                         m.ListaAgencias = new List<Agencia>();
-                        m.ListaAgencias = m.ListaAgencias = con.DataTableToList<Agencia>(dtClientes.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("NitCliente").Equals(m.NitCliente)).CopyToDataTable().AsDataView().ToTable(true, "CodAge,NomAge".Split(',')));
+                        /// Se asigna valor a la ListaAgencias con la lista que retorna el método DataTableToList
+                        m.ListaAgencias = con.DataTableToList<Agencia>(dtClientes.Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("NitCliente").Equals(m.NitCliente)).CopyToDataTable().AsDataView().ToTable(true, "CodAge,NomAge".Split(',')));
                     });
 
+                    /// Se inicializa un array de strings para pasar los mensajes de respuesta
                     mensaje = new string[2];
                     mensaje[0] = "012";
                     mensaje[1] = "Se ejecutó correctamente la consulta.";  
@@ -62,6 +71,7 @@ namespace WcfPedidos30.Model
                 mensaje[1] = "No se encuentran productos disponibles";
             }
 
+            /// Se retorna el cúmulo de datos del proceso en la variable respuesta
             return respuesta;
         }
     }

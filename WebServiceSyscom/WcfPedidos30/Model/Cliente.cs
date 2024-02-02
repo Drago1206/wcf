@@ -10,7 +10,7 @@ namespace WcfPedidos30.Model
         [DataMember]
         public string NitCliente { get; set; }
         [DataMember]
-        public string NomCliente { get; set; }
+        public string NombreCliente { get; set; }
         [DataMember]
         public string Direccion { get; set; }
         [DataMember]

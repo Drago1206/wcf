@@ -49,11 +49,17 @@ namespace WcfPedidos30.Model
     [DataContract]
     public class ProductoRequest
     {
+        [DataMember]
         public string CodOrDesProd { get; set; }
+        [DataMember]
         public string Grupo { get; set; }
+        [DataMember]
         public int PaginaActual { get; set; }
+        [DataMember]
         public int RegistrosPorPagina { get; set; }
+        [DataMember]
         public bool SaldosCiaBod { get; set; }
+        [DataMember]
         public string SubGrupo { get; set; }
     }
 }

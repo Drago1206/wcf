@@ -8,9 +8,9 @@ namespace WcfPedidos30.Model
     public class Agencia
     {
         [DataMember]
-        string CodAge { get; set; }
+        public string CodAge { get; set; }
         [DataMember]
-        string NomAge { get; set; }
+        public string NomAge { get; set; }
 
        
     }
