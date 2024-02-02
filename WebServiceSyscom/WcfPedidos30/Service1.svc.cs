@@ -14,79 +14,111 @@ namespace WcfPedidos30
     {
         ConsultarProducto consProd = new ConsultarProducto();
         #region ObtenerProducto 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obtProducto">Objeto que almacena los datos de la solicitud del cliente</param>
+        /// <returns></returns>
         [return: MessageParameter(Name = "Producto")]
         public RespProducto ConProducto(ObtProducto obtProducto)
         {
+            // Crear una nueva instancia de RespProducto y Log
             RespProducto respuesta = new RespProducto();
             respuesta.Registro = new Log();
 
+            // Verificar si obtProducto es nulo
             if (obtProducto == null)
             {
+                // Si es nulo, establecer el código y descripción del error
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
-
+            // Verificar si el nombre de usuario o la contraseña están vacíos
             else if (string.IsNullOrWhiteSpace(obtProducto.Usuarios.UserName) || string.IsNullOrWhiteSpace(obtProducto.Usuarios.Password))
             {
+                // Si es así, establecer el código y descripción del error
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
             else
             {
+                // Crear una nueva instancia de ExisteUsuario
                 ExisteUsuario usuario = new ExisteUsuario();
+                // Verificar si el usuario existe
                 if (usuario.Existe(obtProducto.Usuarios.UserName, obtProducto.Usuarios.Password, out string[] mensajeNuevo))
                 {
+                    // Si el usuario existe, consultar los productos
                     PaginadorProducto<ProductosResponse> DatProducto = new PaginadorProducto<ProductosResponse>();
                     respuesta = consProd.ConsultarProductos(obtProducto.DatosProducto, obtProducto.Usuarios, out DatProducto, out string[] mensaje);
+                    // Establecer la lista de productos y el registro de log
                     respuesta.ListaProductos = DatProducto;
                     respuesta.Registro = new Log { Codigo = mensaje[0], Descripcion = mensaje[1] };
                 }
                 else
                 {
+                    // Si el usuario no existe, establecer el código y descripción del error
                     respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
                 }
             }
 
+            // Retorna la variable que contiene la respuesta del producto
             return respuesta;
         }
+
         #endregion
 
         [return: MessageParameter(Name = "Cliente")]
         public RespCliente ObjCliente(ObtCliente obtCliente)
         {
+            // Crear una nueva instancia de ConsultarCliente y RespCliente
             ConsultarCliente consClie = new ConsultarCliente();
             RespCliente respuesta = new RespCliente();
             respuesta.Registro = new Log();
 
+            // Verificar si el nombre de usuario es nulo
             if (obtCliente.Usuarios.UserName == null)
             {
+                // Si es nulo, establecer el código y descripción del error
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
-
+            // Verificar si la contraseña está vacía
             else if (string.IsNullOrWhiteSpace(obtCliente.Usuarios.Password) || string.IsNullOrWhiteSpace(obtCliente.Usuarios.Password))
             {
+                // Si es así, establecer el código y descripción del error
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
             else
             {
+                // Crear una nueva instancia de ExisteUsuario
                 ExisteUsuario usuario = new ExisteUsuario();
+                // Verificar si el usuario existe
                 if (usuario.Existe(obtCliente.Usuarios.UserName, obtCliente.Usuarios.Password, out string[] mensajeNuevo))
                 {
+                    // Si el usuario existe, consultar los clientes
                     List<ClienteResponse> cliente = new List<ClienteResponse>();
                     respuesta = consClie.ConsultarClientes(obtCliente, obtCliente.Usuarios, out cliente);
+                    // Establecer la lista de clientes y el registro de log
                     respuesta.DatosClientes = cliente;
-                    respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
+                    respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
                 }
                 else
                 {
+                    // Si el usuario no existe, establecer el código y descripción del error
                     respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
                 }
             }
+
+            // Devolver la respuesta
             return respuesta;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obtUsuario"></param>
+        /// <returns></returns>
         [return: MessageParameter(Name = "Usuario")]
         public RespUsuario ObjUsuario(ObtUsuario obtUsuario)
         {
+            // Crea una instancia 
             ConexionBD con = new ConexionBD();
             DataSet TablaUsuarios = new DataSet();
             RespUsuario respuesta = new RespUsuario();
