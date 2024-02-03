@@ -111,64 +111,79 @@ namespace WcfPedidos30
         }
 
         /// <summary>
-        /// 
+        /// Método que obtiene la información del usuario
         /// </summary>
-        /// <param name="obtUsuario"></param>
-        /// <returns></returns>
+        /// <param name="obtUsuario">Objeto que contiene la información de solicitud del usuario</param>
+        /// <returns>Devuelve un objeto de tipo RespUsuario que contiene la información de respuesta para el usuario</returns>
         [return: MessageParameter(Name = "Usuario")]
         public RespUsuario ObjUsuario(ObtUsuario obtUsuario)
         {
-            // Crea una instancia 
-            ConexionBD con = new ConexionBD();
-            DataSet TablaUsuarios = new DataSet();
-            RespUsuario respuesta = new RespUsuario();
-            respuesta.Registro = new Log();
 
+            List<UsuariosResponse> dtUsuario = new List<UsuariosResponse>();
+            // Crea una instancia de la base de datos
+            ConexionBD con = new ConexionBD();
+            // Crea una instancia para la tabla de respuesta del usuario
+            DataSet TablaUsuarios = new DataSet();
+            // Crea una instancia del objeto de respuesta
+            RespUsuario respuesta = new RespUsuario();
+            // Se declara una instancia para el registro 
+            respuesta.Registro = new Log();
+            // Condición que verifica si el objeto de la solicitud es nulo
             if (obtUsuario == null)
             {
+                // En caso de que la condición se cumpla, se declara un mensaje de error con código y descripción
                 respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
             }
-
+            // Condición que verifica que los datos de solicitud del usuario no estén vacíos
             else if (string.IsNullOrWhiteSpace(obtUsuario.Usuarios.UserName) || string.IsNullOrWhiteSpace(obtUsuario.Usuarios.Password))
             {
+                // En caso de que la condición se cumpla, se declara un mensaje de error con código y descripción
                 respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
             }
+            // Condición en caso de que no se cumplan las anteriores condiciones
             else
             {
+                // Se declara una instancia de la clase que verifica la existencia del usuario
                 ExisteUsuario existe = new ExisteUsuario();
+                // Se define la conexión a la base de datos en base al nombre de la cadena de conexion
                 con.setConnection("Syscom");
+                // Se inicializa el dataset para capturar la tabla del resultado del procedimiento de almacenado
                 DataSet TablaUsuario = new DataSet();
+                // Se inicializa una lista vacía para pasar los parámetros al procedimiento de almacenado
                 List<SqlParameter> parametros = new List<SqlParameter>();
+                // Se agrega el parámetro necesario para ejecutar el procedimiento de almacenado, con el dato del usuario
                 parametros.Add(new SqlParameter("@Usuario", obtUsuario.Usuarios.UserName));
+                // Condición que verificar si el usuario existe
                 if (existe.Existe(obtUsuario.Usuarios.UserName, obtUsuario.Usuarios.Password, out string[] mensajeNuevo))
                 {
+                    // Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
                     if (con.ejecutarQuery("WSObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
+                        // Se declara una lista que contendrá la respuesta de la solicitud del usuario
                         List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
+
+                        // Se define un objeto numerable para los datos de la tabla que contiene la información de los usuarios 
                         IEnumerable<DataRow> data = TablaUsuario.Tables[0].AsEnumerable();
+                        // Se agrupan los elementos del objeto data 
                         IEnumerable<DataRow> dataFil = data.GroupBy(g => g.Field<string>("IdUsuario")).Select(g => g.First());
-                        //Convert.ToBoolean(row["EsCliente"]) != false [Validaciòn para saber si el usuario es registrado como cliente]
+                        // Validación para saber si el usuario es registrado como cliente
                         if (dataFil.Any(row => row["EsCliente"] != null && row["EsCliente"] != DBNull.Value) == true)
                         {
-                            dataFil.ToList().ForEach(i => datosUsuario.Add(new UsuariosResponse
-                            {
-                                Bodega = i.Field<string>("Bodega"),
-                                Compañía = i.Field<string>("Compañía"),
-                                EsCliente = i.Field<bool>("EsCliente"),
-                                Esvendedor = i.Field<bool>("Esvendedor"),
-                                IdUsuario = i.Field<string>("IdUsuario"),
-                                NombreTercero = i.Field<string>("NombreTercero")
-                            }));
-                            respuesta.Registro = new Log { Codigo = "999", Descripcion = "Ok" };
-                            respuesta.DatosUsuarios = datosUsuario.FirstOrDefault();
+                            // Se le asigna el valor a la variable dtCliente con la lista que retorna el método DataTableToList
+                            dtUsuario = con.DataTableToList<UsuariosResponse>("Bodega,Compañía,EsCliente,Esvendedor,IdUsuario,NombreTercero".Split(','), TablaUsuario);
+                            // Se le asigna el valor al objeto DatosUsuario con los datos que retorna el método DataTableToList 
+                            respuesta.DatosUsuarios = dtUsuario.FirstOrDefault();
                         }
                     }
                 }
                 else
                 {
+                    // En caso de que la condición no se cumpla, se establece un mensaje de respuesta
                     respuesta.Registro = new Log { Codigo = "USER_001", Descripcion = "¡Usuario no encontrado!" };
                 }
             }
+
+            // Retorna el objeto de respuesta para RespUsuario
             return respuesta;
         }
 
