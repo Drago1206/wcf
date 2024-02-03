@@ -1,0 +1,28 @@
+Fecha 20240202133303: Trying to pass a table-valued parameter with 85 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+
+Fecha 20240202133343: Trying to pass a table-valued parameter with 85 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+
+Fecha 20240202134032: Trying to pass a table-valued parameter with 85 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+
+Fecha 20240202150011: Cannot open database "dbmov" requested by the login. The login failed.
+Login failed for user 'syscom'.
+
+
+Fecha 20240202150257: Trying to pass a table-valued parameter with 79 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+
+Fecha 20240202152356: Trying to pass a table-valued parameter with 79 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+
+Fecha 20240202152903: Trying to pass a table-valued parameter with 79 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+
+Fecha 20240202153101: Trying to pass a table-valued parameter with 79 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+
+Fecha 20240202153354: Trying to pass a table-valued parameter with 79 column(s) where the corresponding user-defined table type requires 73 column(s).
+
+

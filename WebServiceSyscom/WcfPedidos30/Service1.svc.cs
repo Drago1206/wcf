@@ -65,6 +65,7 @@ namespace WcfPedidos30
 
         #endregion
 
+        #region ObtenerCliente
         [return: MessageParameter(Name = "Cliente")]
         public RespCliente ObjCliente(ObtCliente obtCliente)
         {
@@ -109,7 +110,9 @@ namespace WcfPedidos30
             // Devolver la respuesta
             return respuesta;
         }
+        #endregion
 
+        #region ObtenerUsuario
         /// <summary>
         /// Método que obtiene la información del usuario
         /// </summary>
@@ -173,6 +176,7 @@ namespace WcfPedidos30
                             dtUsuario = con.DataTableToList<UsuariosResponse>("Bodega,Compañía,EsCliente,Esvendedor,IdUsuario,NombreTercero".Split(','), TablaUsuario);
                             // Se le asigna el valor al objeto DatosUsuario con los datos que retorna el método DataTableToList 
                             respuesta.DatosUsuarios = dtUsuario.FirstOrDefault();
+                            respuesta.Registro = new Log { Codigo = "USER_064", Descripcion = "Respuesta exitosa" };
                         }
                     }
                 }
@@ -186,6 +190,9 @@ namespace WcfPedidos30
             // Retorna el objeto de respuesta para RespUsuario
             return respuesta;
         }
+        #endregion
+
+        #region GenerarPedido
 
         [return: MessageParameter(Name = "Pedido")]
         public ResGenerarPedido setPedido(DtPedido pedido)
@@ -241,5 +248,6 @@ namespace WcfPedidos30
                 return respuesta;
             }
         }
+        #endregion
     }
 }
