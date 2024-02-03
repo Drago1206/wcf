@@ -15,7 +15,7 @@ namespace WcfPedidos30
         ConsultarProducto consProd = new ConsultarProducto();
         #region ObtenerProducto 
         /// <summary>
-        /// 
+        /// Método que recibe la respuesta de la solicitud del producto
         /// </summary>
         /// <param name="obtProducto">Objeto que almacena los datos de la solicitud del cliente</param>
         /// <returns></returns>

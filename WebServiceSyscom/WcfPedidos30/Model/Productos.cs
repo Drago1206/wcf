@@ -35,17 +35,17 @@ namespace WcfPedidos30.Model
         /// Codigo del grupo al que pertenece el producto
         /// </summary>
         [DataMember]
-        public string CodGru { get; set; }
+        public string CodigoGru { get; set; }
         /// <summary>
         /// Codigo del subgrupo al que pertenece el producto
         /// </summary>
         [DataMember]
-        public string CodSub { get; set; }
+        public string CodigoSub { get; set; }
         /// <summary>
         /// Descripción del producto
         /// </summary>
         [DataMember]
-        public string Descripcion { get; set; }
+        public string Descripción { get; set; }
         /// <summary>
         /// Porcentaje de descuento configurado en el cliente o el grupo del producto
         /// </summary>

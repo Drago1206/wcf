@@ -773,34 +773,56 @@ namespace WcfPedidos30.Model
         /// <returns></returns>
         public bool ejecutarQuery(string SqlQuery, List<SqlParameter> _parametros, out DataSet _Datos, out string[] mensaje, CommandType tipo = CommandType.Text)
         {
-
+            // Se declara resultado como valor false por defecto
             bool resultado = false;
+            // Se declara datos como un DataSet vacío
             _Datos = new DataSet();
+            // Se declara mensje como un lista de string vacío
             mensaje = new string[2];
             try
             {
+                // Condición que verifica si la conexión con la base de datos es nula
                 if (sqlConn != null)
                 {
                     try
                     {
+                        // Si la conexión SQL no está abierta, se abre la conexión
                         if (this.sqlConn.State != ConnectionState.Open)
                             abrirConexion();
 
+                        // Se crea un nuevo adaptador de datos SQL con la consulta SQL y la conexión SQL
                         SqlDataAdapter adapter = new SqlDataAdapter(SqlQuery, this.sqlConn);
+
+                        // Se establece el tipo de comando para el comando de selección del adaptador
                         adapter.SelectCommand.CommandType = tipo;
+
+                        // Se limpian los parámetros del comando de selección
                         adapter.SelectCommand.Parameters.Clear();
+
+                        // Se establece el tiempo de espera del comando a un valor muy alto
                         adapter.SelectCommand.CommandTimeout = 9999999;
+
+                        // Se limpia el conjunto de datos
                         _Datos.Clear();
+
+                        // Se añaden los parámetros al comando de selección
                         adapter.SelectCommand.Parameters.AddRange(_parametros.ToArray());
+
+                        // Se llena el conjunto de datos con los resultados de la consulta
                         adapter.Fill(_Datos);
 
+                        // Si todo va bien, se establece el resultado a verdadero
                         resultado = true;
                     }
                     catch (Exception ex)
                     {
+                        // Si ocurre una excepción, se establece el primer elemento del mensaje a "011"
                         mensaje[0] = "011";
+
+                        // Se establece el segundo elemento del mensaje a un mensaje de error que incluye la consulta SQL y el mensaje de la excepción
                         mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
                     }
+
                 }
             }
             catch (Exception ex)
@@ -817,73 +839,116 @@ namespace WcfPedidos30.Model
         {
             this.sqlConn.Close();
         }
-
+        /// <summary>
+        /// Convierte un DataTable en una lista de objetos de tipo T.
+        /// </summary>
+        /// <typeparam name="T">El tipo de objeto que se desea obtener en la lista.</typeparam>
+        /// <param name="dtDatos">El DataTable que contiene los datos que se convertirán en objetos de tipo T.</param>
+        /// <returns>Una lista de objetos de tipo T que representan los datos del DataTable. Si ocurre un error durante la conversión, se devuelve null.</returns>
         public List<T> DataTableToList<T>(DataTable dtDatos) where T : class, new()
         {
             try
             {
+                // Se declara una lista de tipo T
                 List<T> list = new List<T>();
 
+                // Se inicia un ciclo que recorre cada fila del DataTable que recibe como parámetro 
                 foreach (DataRow row in dtDatos.Rows)
                 {
+                    // Se inicializa la variable obj como un nuevo objeto de tipo T
                     T obj = new T();
 
+                    // Se inicia un ciclo que recorre cada propiedad del objeto obj
                     foreach (var prop in obj.GetType().GetProperties())
                     {
                         try
                         {
+                            // Se obtiene la información de la propiedad actual del objeto obj
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+
+                            // Se establece el valor de la propiedad actual del objeto obj
+                            // El valor se obtiene de la fila actual del DataTable y se convierte al tipo de la propiedad
                             propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
                         }
                         catch (Exception ex)
                         {
+                            // Si ocurre un error al establecer el valor de la propiedad, se ignora y se continúa con la siguiente propiedad
                             continue;
                         }
                     }
 
+                    // Se agrega el objeto obj a la lista
                     list.Add(obj);
                 }
 
+                // Se devuelve la lista de objetos
                 return list;
             }
             catch
             {
+                // Si ocurre un error durante la conversión de los datos, se devuelve null
                 return null;
             }
+
         }
+
+        /// <summary>
+        /// Convierte un DataTable en una lista de objetos de tipo T.
+        /// </summary>
+        /// <typeparam name="T">El tipo de objeto que se desea obtener en la lista.</typeparam>
+        /// <param name="dsTabla">El DataSet que contiene los datos que se convertirán en objetos de tipo T.</param>
+        /// <param name="DatosDt">Lista de string con las columnas del DataTable</param>
+        /// <returns>Una lista de objetos de tipo T que representan los datos del DataTable. Si ocurre un error durante la conversión, se devuelve null.</returns>
 
         public List<T> DataTableToList<T>(string[] DatosDt = null, DataSet dsTabla = null) where T : class, new()
         {
             try
             {
+                // Se declara una lista de tipo T
                 List<T> list = new List<T>();
+
+                // Si DatosDt es nulo, se toma la primera tabla del conjunto de datos dsTabla
+                // Si DatosDt no es nulo, se crea una nueva tabla con las columnas especificadas en DatosDt
                 DataTable dt = DatosDt == null ? dsTabla.Tables[0] : dsTabla.Tables[0].DefaultView.ToTable(true, DatosDt);
+
+                // Se recorren todas las filas de la tabla de datos
                 foreach (DataRow row in dt.Rows)
                 {
+                    // Se crea un nuevo objeto de tipo T
                     T obj = new T();
 
+                    // Se recorren todas las propiedades del objeto
                     foreach (var prop in obj.GetType().GetProperties())
                     {
                         try
                         {
+                            // Se obtiene la propiedad del objeto que coincide con el nombre de la propiedad actual
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+
+                            // Se establece el valor de la propiedad con el valor correspondiente de la fila
+                            // El valor se convierte al tipo de la propiedad
                             propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
                         }
                         catch (Exception ex)
                         {
+                            // Si ocurre una excepción (por ejemplo, si no existe una columna con el nombre de la propiedad), se ignora y se continúa con la siguiente propiedad
                             continue;
                         }
                     }
 
+                    // Se añade el objeto a la lista
                     list.Add(obj);
                 }
 
+                // Se devuelve la lista de objetos
                 return list;
             }
             catch (Exception ex)
             {
+                // Si ocurre una excepción en algún punto del proceso, se devuelve null
                 return null;
             }
+
         }
     }
 
