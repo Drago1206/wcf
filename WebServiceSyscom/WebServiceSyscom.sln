@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfSyscom", "wcfSyscom\wcfS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos30", "WcfPedidos30\WcfPedidos30.csproj", "{5FC54426-9358-49DA-A306-F57DE71D1B82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfSyscom30", "..\..\moduloswebservice\Servicio - Pago de Facturas ZonaVirtual\wcfSyscomFacturas\wcfSyscom30\wcfSyscom30.csproj", "{A7888300-A1F2-4D5E-9042-613503BABC26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos40", "WcfPedidos40\WcfPedidos40.csproj", "{7AAF5F15-65E2-420F-BB47-10A4F71F442C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{5FC54426-9358-49DA-A306-F57DE71D1B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FC54426-9358-49DA-A306-F57DE71D1B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FC54426-9358-49DA-A306-F57DE71D1B82}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7888300-A1F2-4D5E-9042-613503BABC26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7888300-A1F2-4D5E-9042-613503BABC26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7888300-A1F2-4D5E-9042-613503BABC26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7888300-A1F2-4D5E-9042-613503BABC26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7AAF5F15-65E2-420F-BB47-10A4F71F442C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7AAF5F15-65E2-420F-BB47-10A4F71F442C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7AAF5F15-65E2-420F-BB47-10A4F71F442C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7AAF5F15-65E2-420F-BB47-10A4F71F442C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
