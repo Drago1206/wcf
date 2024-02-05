@@ -891,6 +891,39 @@ namespace WcfPedidos30.Model
             }
 
         }
+        public List<T> DataTableToList<T>() where T : class, new()
+        {
+            try
+            {
+                List<T> list = new List<T>();
+
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    T obj = new T();
+
+                    foreach (var prop in obj.GetType().GetProperties())
+                    {
+                        try
+                        {
+                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
+                        }
+                        catch
+                        {
+                            continue;
+                        }
+                    }
+
+                    list.Add(obj);
+                }
+
+                return list;
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
         /// <summary>
         /// Convierte un DataTable en una lista de objetos de tipo T.

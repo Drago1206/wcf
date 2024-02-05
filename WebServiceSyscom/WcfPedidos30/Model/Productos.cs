@@ -4,6 +4,15 @@ using System.Runtime.Serialization;
 
 namespace WcfPedidos30.Model
 {
+    public class ProductosPed
+    {
+        [DataMember]
+        public string IdProducto { get; set; }
+        [DataMember]
+        public decimal Cantidad { get; set; }
+        [DataMember]
+        public int NroLista { get; set; }
+    }
     public class itemCia
     {
         /// <summary>

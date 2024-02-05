@@ -41,6 +41,6 @@ namespace WcfPedidos30.Model
         [DataMember]
         public string Observación { get; set; }
         [DataMember]
-        public List<ProductosResponse> ListaProductos { get; set; }
+        public List<ProductosPed> ListaProductos { get ; set; }
     }
 }

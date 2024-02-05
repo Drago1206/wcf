@@ -234,6 +234,9 @@ namespace WcfPedidos30
                                     respuesta.Error = new Log { Codigo = "USER_001", Descripcion = "¡Usuario no encontrado!" };
                                 else
                                     respuesta.DatosPedido = DatPedido;
+                            }else
+                            {
+                                respuesta.DatosPedido = DatPedido;
                             }
                         }
                         else
