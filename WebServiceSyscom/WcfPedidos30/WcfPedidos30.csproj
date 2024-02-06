@@ -125,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\Agencia.cs" />
+    <Compile Include="Model\Cartera.cs" />
     <Compile Include="Model\ConsultarCliente.cs" />
     <Compile Include="Model\ConsultarProducto.cs" />
     <Compile Include="Model\Cliente.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Model\ExisteUsuario.cs" />
     <Compile Include="Model\GenerarPedido.cs" />
     <Compile Include="Model\LogErrores.cs" />
+    <Compile Include="Model\PaginadorCliente.cs" />
     <Compile Include="Model\PaginadorProducto.cs" />
     <Compile Include="Model\Pedido.cs" />
     <Compile Include="Model\Productos.cs" />
