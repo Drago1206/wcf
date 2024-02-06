@@ -42,6 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="SyscomUtilities">
       <HintPath>..\..\..\moduloswebservice\Servicio - Pago de Facturas ZonaVirtual\wcfSyscomFacturas\wcfSyscom\dlls\SyscomUtilities.dll</HintPath>
     </Reference>
@@ -73,7 +76,6 @@
     <Compile Include="Model\Errores.cs" />
     <Compile Include="Model\LogErrores.cs" />
     <Compile Include="Model\Productos.cs" />
-    <Compile Include="Model\pwdSyscom.cs" />
     <Compile Include="Pedidos40.svc.cs">
       <DependentUpon>Pedidos40.svc</DependentUpon>
     </Compile>

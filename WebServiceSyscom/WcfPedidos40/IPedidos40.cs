@@ -22,6 +22,11 @@ namespace WcfPedidos40
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductoTP", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
         RespProducto GetProductoTP(ProductoTPReq reqProductoTP);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductos", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Productos")]
+        RespProductos GetProductos(Usuario usuario);
     }
 
 
@@ -79,7 +84,81 @@ namespace WcfPedidos40
         }
     }
 
+    [DataContract]
+    public class RespProductos
+    {
+        Log _registro;
+        string _productos;
 
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
+        }
+
+        [DataMember]
+        public List<ProductosResponse> Productos { get; set; }
+    }
+    [DataContract]
+    public class Usuario
+    {
+        string _id;
+        string _fechaact;
+
+        [DataMember]
+        public string IdUsuario
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        [DataMember]
+        public string Contrasena { get; set; }
+
+        [DataMember]
+        public string Fecha_Act
+        {
+            get { return _fechaact; }
+            set { _fechaact = value; }
+        }
+    }
+    [DataContract]
+    public class Log
+    {
+        string _fecha;
+        Int32 _registros;
+        string _codigo;
+        string _mensaje;
+
+        [DataMember]
+        public string Fecha
+        {
+            get { return _fecha; }
+            set { _fecha = value; }
+        }
+
+        [DataMember]
+        public Int32 Registros
+        {
+            get { return _registros; }
+            set { _registros = value; }
+        }
+
+        [DataMember]
+        public string Codigo
+        {
+            get { return _codigo; }
+            set { _codigo = value; }
+        }
+
+        [DataMember]
+        public string Msg
+        {
+            get { return _mensaje; }
+            set { _mensaje = value; }
+        }
+    }
     public class RespProducto
     {
         List<Errores> _errores;

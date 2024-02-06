@@ -12,33 +12,33 @@ namespace WcfPedidos40.Model
     public class ProductosResponse
     {
         [DataMember]
-        private string IdProducto { get; set; }
+        public string IdProducto { get; set; }
         [DataMember]
-        private string DescripProd { get; set; }
+        public string DescripProd { get; set; }
         [DataMember]
-        private string IvaInc { get; set; }
+        public string IvaInc { get; set; }
         [DataMember]
-        private string LtPreDef { get; set; }
+        public string LtPreDef { get; set; }
         [DataMember]
-        private decimal VrPrecio1 { get; set; }
+        public decimal VrPrecio1 { get; set; }
         [DataMember]
-        private decimal VrPrecio2 { get; set; }
+        public decimal VrPrecio2 { get; set; }
         [DataMember]
-        private decimal VrPrecio3 { get; set; }
+        public decimal VrPrecio3 { get; set; }
         [DataMember]
-        private decimal VrPrecio4 { get; set; }
+        public decimal VrPrecio4 { get; set; }
         [DataMember]
-        private decimal VrPrecio5 { get; set; }
+        public decimal VrPrecio5 { get; set; }
         [DataMember]
-        private decimal TarifaIva { get; set; }
+        public decimal TarifaIva { get; set; }
         [DataMember]
-        private bool ExcluidoImp { get; set; }
+        public bool ExcluidoImp { get; set; }
         [DataMember]
-        private Int32 Cantidad { get; set; }
+        public Int32 Cantidad { get; set; }
         [DataMember]
-        private bool EsObsequio { get; set; }
+        public bool EsObsequio { get; set; }
         [DataMember]
-        private List<string> DisponibleEnCia { get; set; }
+        public List<string> DisponibleEnCia { get; set; }
 
         public RespProducto GetProducto(ProductoReq pa)
         {
