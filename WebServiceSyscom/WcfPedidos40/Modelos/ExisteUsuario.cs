@@ -4,15 +4,16 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using WcfPedidos30.Model;
-using WcfSyscom30.Conexion;
 
-namespace WcfPruebas30.Models
+using WcfPedidos40.Conexion;
+using WcfPedidos40.Models;
+
+namespace WcfPruebas40.Models
 {
     public class ExisteUsuario
     {
 
-        ConexionBD con = new ConexionBD();
+        Conexion con = new Conexion();
 
         /// <summary>
         /// Verifica si el usuario existe.
@@ -23,56 +24,19 @@ namespace WcfPruebas30.Models
         /// <returns></returns>
         public bool Existe(string usuario, string password, out string[] mensaje)
         {
-            mensaje = null;
-            //compania = "";
-            //se realiza la verificacion comprobar si existe 
-            //conectar con la base de datos segun la  base que es 
+            Conexion con = new Conexion();
+            
+                con.setConnection("Syscom");
+            
+                con.resetQuery();
+                con.qryFields.Add("IdUsuario, Inactivo, PwdLog");
+                con.qryTables.Add("adm_Usuarios");
+                con.addWhereAND("lower(IdUsuario) = lower('" + password + "')");
+                con.select();
+                con.ejecutarQuery();
+                return con.getDataTable();
+            
 
-            bool existe = false;
-            if (usuario != null)
-            {
-                con.setConnection("SyscomLog");
-                int ResTotal = 0;
-                string[] pwdDe = null;
-                DataSet TablaIncio = new DataSet();
-                List<SqlParameter> parametros = new List<SqlParameter>();
-                parametros.Add(new SqlParameter("@Usuario", usuario));
-
-                if (con.ejecutarQuery("WSPedidosIniciaSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
-                {
-                    if (TablaIncio.Tables[0].Rows.Count > 0)
-                    {
-                        pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-                        pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-
-                        if (password.ToLower() == pwd.contrasenna.ToLower())
-                        {
-                            existe = true;
-                        }
-                        else
-                        {
-                            mensaje = new string[2];
-                            mensaje[0] = "USER_003";
-                            mensaje[1] = "Contraseña inválida";
-                        }
-
-                    }
-                    else
-                    {
-                        mensaje = new string[2];
-                        mensaje[0] = "USER_001";
-                        mensaje[1] = "¡Usuario no encontrado!";
-
-                    }
-                }
-                else
-                {
-                    mensaje = new string[2];
-                    mensaje[0] = nuevoMennsaje[0];
-                    mensaje[1] = nuevoMennsaje[1];
-                }
-            }
-            return existe;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using WcfPedidos40.Models;
 
 namespace WcfPedidos40
 {
@@ -27,23 +28,55 @@ namespace WcfPedidos40
 
     // Utilice un contrato de datos, como se ilustra en el ejemplo siguiente, para agregar tipos compuestos a las operaciones de servicio.
     [DataContract]
-    public class CompositeType
+    public class CarteraReq
     {
-        bool boolValue = true;
-        string stringValue = "Hello ";
+        Usuario _usuario;
+        /// <summary>
+        /// Propiedad del nit cliente para que el usuario,
+        /// logre accerder a la funcionalidad de los metodos
+        /// </summary>
 
         [DataMember]
-        public bool BoolValue
-        {
-            get { return boolValue; }
-            set { boolValue = value; }
-        }
+        public string NitCliente { get; set; }
+
+        /// <summary>
+        /// Propiedad del usuario para poder obtener el nombre de usuario y contraseña
+        /// </summary>
 
         [DataMember]
-        public string StringValue
+        public Usuario usuario
         {
-            get { return stringValue; }
-            set { stringValue = value; }
+            get { return _usuario; }
+            set { _usuario = value; }
         }
+    }
+    [DataContract]
+    public class CarteraResp
+    {
+        Errores _error;
+        List<ItemCartera> _DatosCartera;
+
+        /// <summary>
+        /// Propiedad para poder listar los datos de la clase cartera que a su vez
+        /// tiene la lista de la clase cartera para almacenar los resultados.
+        /// </summary>
+
+        [DataMember]
+        public List<ItemCartera> DatosCartera
+        {
+            get { return _DatosCartera; }
+            set { _DatosCartera = value; }
+        }
+        /// <summary>
+        /// Manejo de errores o estados de las solicitudes de los metodos
+        /// </summary>
+
+        [DataMember]
+        public Errores Error
+        {
+            get { return _error; }
+            set { _error = value; }
+        }
+
     }
 }

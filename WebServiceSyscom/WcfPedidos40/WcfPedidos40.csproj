@@ -130,12 +130,14 @@
     <Compile Include="Conexion\Conexion.cs" />
     <Compile Include="Modelos\Cartera.cs" />
     <Compile Include="Modelos\Cliente.cs" />
+    <Compile Include="Modelos\ExisteUsuario.cs" />
     <Compile Include="Modelos\LogErrores.cs" />
     <Compile Include="Modelos\pwdSyscom.cs" />
+    <Compile Include="Modelos\Usuario.cs" />
     <Compile Include="Service1.svc.cs">
       <DependentUpon>Service1.svc</DependentUpon>
     </Compile>
-    <Compile Include="IService1.cs" />
+    <Compile Include="Pedidos40.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
