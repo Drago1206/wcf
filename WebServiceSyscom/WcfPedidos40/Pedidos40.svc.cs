@@ -3,11 +3,10 @@ using SyscomUtilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
-using System.Text;
 using WcfPedidos40.Model;
 
 namespace WcfPedidos40
@@ -116,78 +115,82 @@ namespace WcfPedidos40
             var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
             RespProductos productos = new RespProductos();
             List<ProductosResponse> prods = new List<ProductosResponse>();
+            List<SqlParameter> parametros = new List<SqlParameter>();
+            DataSet TablaProductos = new DataSet();
             if (existeUsuario(usuario))
             {
+                con.setConnection("Syscom");
                 DateTime pmFecha_Actual = DateTime.Parse(usuario.Fecha_Act);
-                con.resetQuery();
-                con.qryFields.Add(@"p.IdProducto, p.DescripProd, g.IdLinea, g.IdGrupo, p.IdSubGrupo, p.IdMarca, p.IvaInc, p.LtPreDef, pp.VrPrecio1, pp.VrPrecio2, pp.VrPrecio3, pp.VrPrecio4, pp.VrPrecio5, p.ExcluidoImp, tp.Tarifa, tp.Simbolo, uo.Valor as IdCia");
-                con.qryTables.Add(@"ProdMcias p join adm_UOpciones uo on (uo.NomOpcion = 'COMPANIA' and lower(uo.IdUsuario)=lower('" + usuario.IdUsuario + "')) left join ProdPrecios pp on (p.IdProducto = pp.IdProducto and pp.IdCia = uo.Valor) join tablapor tp on (pp.CdTarIva = tp.IdTarifa and tp.IdClase = 'IVA') join SubGrupos sg on (p.IdSubgrupo = sg.IdSubGrupo) join Grupos g on (g.IdGrupo = sg.IdGrupo)");
-                con.addWhereAND("p.Inactivo = 0 and isnull(FechaUpdate,FechaAdd) >= '" + pmFecha_Actual.ToString("yyyyMMdd") + "'");
-                con.select();
-                con.ejecutarQuery();
-                if (con.getDataTable().Rows.Count > 0)
+                parametros.Add(new SqlParameter("@IdUsuario", usuario.IdUsuario));
+                parametros.Add(new SqlParameter("@FechaActual", pmFecha_Actual));
+                if (con.ejecutarQuery("WSPedidos40Productos", parametros, out TablaProductos, out string[] mensajeProductos, CommandType.StoredProcedure))
                 {
-                    con.getDataTable().AsEnumerable().ToList().ForEach(i => {
-                        ProductosResponse prod = new ProductosResponse
+                    if (TablaProductos.Tables[0].Rows.Count > 0)
+                    {
+                        TablaProductos.Tables[0].AsEnumerable().ToList().ForEach(i =>
                         {
-                            IdProducto = i.Field<string>("IdProducto"),
-                            DescripProd = i.Field<string>("DescripProd"),
-                            IvaInc = i.Field<string>("IvaInc"),
-                            LtPreDef = i.Field<string>("LtPreDef"),
-                            VrPrecio1 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("1") ? i.Field<decimal>("VrPrecio1") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio1"),
-                            VrPrecio2 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("2") ? i.Field<decimal>("VrPrecio2") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio2"),
-                            VrPrecio3 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("3") ? i.Field<decimal>("VrPrecio3") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio3"),
-                            VrPrecio4 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("4") ? i.Field<decimal>("VrPrecio4") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio4"),
-                            VrPrecio5 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("5") ? i.Field<decimal>("VrPrecio5") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio5"),
-                            ExcluidoImp = i.Field<bool>("ExcluidoImp"),
-                            TarifaIva = i.Field<decimal>("Tarifa")
-                        };
+                            ProductosResponse prod = new ProductosResponse
+                            {
+                                IdProducto = i.Field<string>("IdProducto"),
+                                DescripProd = i.Field<string>("DescripProd"),
+                                IvaInc = i.Field<string>("IvaInc"),
+                                LtPreDef = i.Field<string>("LtPreDef"),
+                                VrPrecio1 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("1") ? i.Field<decimal>("VrPrecio1") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio1"),
+                                VrPrecio2 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("2") ? i.Field<decimal>("VrPrecio2") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio2"),
+                                VrPrecio3 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("3") ? i.Field<decimal>("VrPrecio3") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio3"),
+                                VrPrecio4 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("4") ? i.Field<decimal>("VrPrecio4") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio4"),
+                                VrPrecio5 = i.Field<string>("IvaInc") != null && i.Field<string>("IvaInc").Contains("5") ? i.Field<decimal>("VrPrecio5") / ((i.Field<decimal>("Tarifa") / 100) + 1) : i.Field<decimal>("VrPrecio5"),
+                                ExcluidoImp = i.Field<bool>("ExcluidoImp"),
+                                TarifaIva = i.Field<decimal>("Tarifa")
+                            };
 
-                        //Jefersón dice que esto no se trae para ecom 16/10/2019
-                        //PrecioEspecial TarEsp = new PrecioEspecial();
-                        //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 1, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
-                        //if (TarEsp.Numero != null)
-                        //    prod.pmVrPrecio1 = TarEsp.Tarifa.Value;
+                            //Jefersón dice que esto no se trae para ecom 16/10/2019
+                            //PrecioEspecial TarEsp = new PrecioEspecial();
+                            //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 1, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
+                            //if (TarEsp.Numero != null)
+                            //    prod.pmVrPrecio1 = TarEsp.Tarifa.Value;
 
-                        //TarEsp = new PrecioEspecial();
-                        //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 2, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
-                        //if (TarEsp.Numero != null)
-                        //{
-                        //    LogErrores.tareas.Add("Ingreso dos");
-                        //    LogErrores.tareas.Add(TarEsp.Numero.ToString());
-                        //    LogErrores.write();
-                        //    prod.pmVrPrecio2 = TarEsp.Tarifa.Value;
-                        //}
+                            //TarEsp = new PrecioEspecial();
+                            //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 2, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
+                            //if (TarEsp.Numero != null)
+                            //{
+                            //    LogErrores.tareas.Add("Ingreso dos");
+                            //    LogErrores.tareas.Add(TarEsp.Numero.ToString());
+                            //    LogErrores.write();
+                            //    prod.pmVrPrecio2 = TarEsp.Tarifa.Value;
+                            //}
 
-                        //TarEsp = new PrecioEspecial();
-                        //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 3, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
-                        //if (TarEsp.Numero != null)
-                        //    prod.pmVrPrecio3 = TarEsp.Tarifa.Value;
+                            //TarEsp = new PrecioEspecial();
+                            //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 3, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
+                            //if (TarEsp.Numero != null)
+                            //    prod.pmVrPrecio3 = TarEsp.Tarifa.Value;
 
-                        //TarEsp = new PrecioEspecial();
-                        //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 4, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
-                        //if (TarEsp.Numero != null)
-                        //    prod.pmVrPrecio4 = TarEsp.Tarifa.Value;
+                            //TarEsp = new PrecioEspecial();
+                            //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 4, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
+                            //if (TarEsp.Numero != null)
+                            //    prod.pmVrPrecio4 = TarEsp.Tarifa.Value;
 
-                        //TarEsp = new PrecioEspecial();
-                        //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 5, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
-                        //if (TarEsp.Numero != null)
-                        //    prod.pmVrPrecio5 = TarEsp.Tarifa.Value;
+                            //TarEsp = new PrecioEspecial();
+                            //TarEsp.ObtenerTarifaEspecial(pmFecha_Actual, 5, "", i.Field<string>("IdLinea"), i.Field<string>("IdGrupo"), i.Field<string>("IdSubGrupo"), i.Field<string>("IdMarca"), i.Field<string>("IdProducto"), "", "", "", usuario.IdUsuario, "", "", "", "", "");
+                            //if (TarEsp.Numero != null)
+                            //    prod.pmVrPrecio5 = TarEsp.Tarifa.Value;
 
-                        prods.Add(prod);
-                    });
+                            prods.Add(prod);
+                        });
 
-                    prods.ForEach(r => {
-                        con.resetQuery();
-                        con.qryFields.Add(@"IdCia");
-                        con.qryTables.Add(@"ProdCompanias");
-                        con.addWhereAND("IdProducto = '" + r.IdProducto + "'");
-                        con.select();
-                        con.ejecutarQuery();
-                        r.DisponibleEnCia = con.getDataTable().AsEnumerable().Select(s => s.Field<string>("IdCia")).ToList();
-                    });
-                    productos.Productos = prods;
-                    //productos.Productos = JValue.Parse(JsonConvert.SerializeObject(prods.Select(r => new { r.pmIdProducto, r.pmDescripProd, r.pmIvaInc, r.pmLtPreDef, r.pmVrPrecio1, r.pmVrPrecio2, r.pmVrPrecio3, r.pmVrPrecio4, r.pmVrPrecio5, r.pmExcluidoImp, r.pmTarifaIva, r.pmDisponibleEnConpania }), Formatting.Indented, serializerSettings)).ToString(Formatting.Indented);
+                        prods.ForEach(r =>
+                        {
+                            con.resetQuery();
+                            con.qryFields.Add(@"IdCia");
+                            con.qryTables.Add(@"ProdCompanias");
+                            con.addWhereAND("IdProducto = '" + r.IdProducto + "'");
+                            con.select();
+                            con.ejecutarQuery();
+                            r.DisponibleEnCia = con.getDataTable().AsEnumerable().Select(s => s.Field<string>("IdCia")).ToList();
+                        });
+                        productos.Productos = prods;
+                        //productos.Productos = JValue.Parse(JsonConvert.SerializeObject(prods.Select(r => new { r.pmIdProducto, r.pmDescripProd, r.pmIvaInc, r.pmLtPreDef, r.pmVrPrecio1, r.pmVrPrecio2, r.pmVrPrecio3, r.pmVrPrecio4, r.pmVrPrecio5, r.pmExcluidoImp, r.pmTarifaIva, r.pmDisponibleEnConpania }), Formatting.Indented, serializerSettings)).ToString(Formatting.Indented);
+                    }
                 }
                 productos.Registro = new Log { Codigo = "1", Fecha = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), Registros = prods.Count, Msg = "Se ejecutó correctamente la consulta." };
 
