@@ -1,0 +1,2 @@
+01/02/2024 4:37:45 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Could not find stored procedure 'ObtenerCartera'.
+01/02/2024 4:49:56 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Could not find stored procedure 'ObtenerCartera'.
