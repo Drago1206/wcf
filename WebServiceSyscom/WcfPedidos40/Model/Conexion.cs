@@ -503,8 +503,85 @@ namespace Models
         {
             return ds.Tables[0];
         }
+        public ConnectionState abrirConexion(bool isTransact = false)
+        {
+            try
+            {
+                if (sqlConn != null)
+                {
+                    sqlConn.Open();
+                    if (isTransact)
+                        transaccion = sqlConn.BeginTransaction();
+                }
+                else
+                    sqlConn = new SqlConnection();
+            }
+            catch (Exception ex)
+            {
+                var str = ex.Message;
+            }
+            return sqlConn.State;
+        }
+        public bool ejecutarQuery(string SqlQuery, List<SqlParameter> _parametros, out DataSet _Datos, out string[] mensaje, CommandType tipo = CommandType.Text)
+        {
+            // Se declara resultado como valor false por defecto
+            bool resultado = false;
+            // Se declara datos como un DataSet vacío
+            _Datos = new DataSet();
+            // Se declara mensje como un lista de string vacío
+            mensaje = new string[2];
+            try
+            {
+                // Condición que verifica si la conexión con la base de datos es nula
+                if (sqlConn != null)
+                {
+                    try
+                    {
+                        // Si la conexión SQL no está abierta, se abre la conexión
+                        if (this.sqlConn.State != ConnectionState.Open)
+                            abrirConexion();
 
+                        // Se crea un nuevo adaptador de datos SQL con la consulta SQL y la conexión SQL
+                        SqlDataAdapter adapter = new SqlDataAdapter(SqlQuery, this.sqlConn);
 
+                        // Se establece el tipo de comando para el comando de selección del adaptador
+                        adapter.SelectCommand.CommandType = tipo;
+
+                        // Se limpian los parámetros del comando de selección
+                        adapter.SelectCommand.Parameters.Clear();
+
+                        // Se establece el tiempo de espera del comando a un valor muy alto
+                        adapter.SelectCommand.CommandTimeout = 9999999;
+
+                        // Se limpia el conjunto de datos
+                        _Datos.Clear();
+
+                        // Se añaden los parámetros al comando de selección
+                        adapter.SelectCommand.Parameters.AddRange(_parametros.ToArray());
+
+                        // Se llena el conjunto de datos con los resultados de la consulta
+                        adapter.Fill(_Datos);
+
+                        // Si todo va bien, se establece el resultado a verdadero
+                        resultado = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Si ocurre una excepción, se establece el primer elemento del mensaje a "011"
+                        mensaje[0] = "011";
+
+                        // Se establece el segundo elemento del mensaje a un mensaje de error que incluye la consulta SQL y el mensaje de la excepción
+                        mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return resultado;
+        }
         /// <summary>
         /// Converts to list model.
         /// </summary>
@@ -539,7 +616,7 @@ namespace Models
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <returns></returns>
-        public TModel ConvertToModel<TModel>()
+        public TModel ConvertToModel<TModel>(DataSet ds)
         {
             List<TModel> mo = new List<TModel>();
             Type tipo = typeof(TModel);
@@ -554,7 +631,7 @@ namespace Models
                     {
                         tipo.GetProperty(campo.Name).SetValue((TModel)objeto, filas[campo.Name]);
                     }
-                    catch
+                    catch(Exception e)
                     {
 
                     }

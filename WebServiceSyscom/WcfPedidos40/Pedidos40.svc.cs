@@ -62,6 +62,52 @@ namespace WcfPedidos40
             }
             return rta;
         }
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductoTP", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Producto")]
+        public RespProducto GetProductoTP(ProductoTPReq reqProdTP)
+        {
+            //List<Errores> Errores = new List<Errores>();
+            RespProducto rta = new RespProducto();
+            rta.Errores = new List<Errores>();
+            try
+            {
+                if (string.IsNullOrWhiteSpace(reqProdTP.IdUsuario))
+                    rta.Errores.Add(new Errores { coderror = "001", descripcion = "El parámetro 'Id Usuario' no puede ser nulo!" });
+                if (string.IsNullOrWhiteSpace(reqProdTP.Contrasena))
+                    rta.Errores.Add(new Errores { coderror = "002", descripcion = "El parámetro 'Contraseña' no puede ser nulo!" });
+                if (string.IsNullOrWhiteSpace(reqProdTP.IdProducto))
+                    rta.Errores.Add(new Errores { coderror = "003", descripcion = "El parámetro 'Id Producto' no puede ser nulo!" });
+                if (rta.Errores.Count <= 0)
+                {
+                    DataTable us = existeUsuario(reqProdTP.IdUsuario, reqProdTP.Contrasena);
+                    if (us == null || us.Rows.Count <= 0)
+                        rta.Errores.Add(new Errores { coderror = "004", descripcion = "El usuario '" + reqProdTP.IdUsuario + "', NO existe!" });
+                    else
+                    {
+                        pwdSyscom pwd = new pwdSyscom();
+                        pwd.Decodificar(us.Rows[0].Field<string>("PwdLog"));
+                        if (pwd.contrasenna.Split('=')[2] != reqProdTP.Contrasena)
+                            rta.Errores.Add(new Errores { coderror = "005", descripcion = "Contraseña o Usuario incorrectos!" });
+                        else
+                        {
+                            ProductosResponse p = new ProductosResponse();
+                            rta = p.GetProductoTP(reqProdTP);
+                            if (rta == null || rta.Codigo == null)
+                            {
+                                rta = new RespProducto();
+                                rta.Errores = new List<Errores>();
+                                rta.Errores.Add(new Errores { coderror = "006", descripcion = "El producto '" + reqProdTP.IdProducto + "', NO existe!" });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                rta.Errores.Add(new Errores { coderror = "100", descripcion = ex.Message });
+            }
+            return rta;
+        }
         private DataTable existeUsuario(string agusuario, string agcontrasena)
         {
             con.setConnection("Syscom");

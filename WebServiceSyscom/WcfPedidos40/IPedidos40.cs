@@ -17,6 +17,11 @@ namespace WcfPedidos40
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
         RespProducto GetProducto(ProductoReq reqProducto);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductoTP", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Producto")]
+        RespProducto GetProductoTP(ProductoTPReq reqProductoTP);
     }
 
 
@@ -173,6 +178,41 @@ namespace WcfPedidos40
         {
             get { return preciol5; }
             set { preciol5 = value; }
+        }
+    }
+    public class ProductoTPReq
+    {
+        string _id;
+        string _contrasena;
+        string _idproducto;
+        int _numlistprecio;
+
+        [DataMember]
+        public string IdUsuario
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        [DataMember]
+        public string Contrasena
+        {
+            get { return _contrasena; }
+            set { _contrasena = value; }
+        }
+
+        [DataMember]
+        public string IdProducto
+        {
+            get { return _idproducto; }
+            set { _idproducto = value; }
+        }
+
+        [DataMember]
+        public int NumListaPrecio
+        {
+            get { return _numlistprecio; }
+            set { _numlistprecio = value; }
         }
     }
 }
