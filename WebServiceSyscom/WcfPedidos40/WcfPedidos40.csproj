@@ -68,14 +68,23 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Model\SyscomUtilities.dll" />
     <Content Include="Pedidos40.svc" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Agencia.cs" />
+    <Compile Include="Model\Cartera.cs" />
+    <Compile Include="Model\Clientes.cs" />
     <Compile Include="Model\Conexion.cs" />
     <Compile Include="Model\Errores.cs" />
+    <Compile Include="Model\ExisteUsuario.cs" />
     <Compile Include="Model\LogErrores.cs" />
+    <Compile Include="Model\LogVendedores.cs" />
     <Compile Include="Model\Productos.cs" />
+    <Compile Include="Model\Usuario.cs" />
     <Compile Include="Pedidos40.svc.cs">
       <DependentUpon>Pedidos40.svc</DependentUpon>
     </Compile>

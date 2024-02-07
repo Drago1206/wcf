@@ -6,13 +6,19 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using WcfPedidos40.Model;
-
+using static WcfPedidos40.Model.Clientes;
 namespace WcfPedidos40
 {
     // NOTA: puede usar el comando "Rename" del menú "Refactorizar" para cambiar el nombre de interfaz "IService1" en el código y en el archivo de configuración a la vez.
     [ServiceContract]
     public interface IPedidos40
     {
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerClientes", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Clientes")]
+        RespClientes GetClientes(Usuario usuario);
+
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
@@ -157,6 +163,26 @@ namespace WcfPedidos40
         {
             get { return _mensaje; }
             set { _mensaje = value; }
+        }
+    }
+    [DataContract]
+    public class RespClientes
+    {
+        Log _registro;
+        List<ClienteResponse> _clientes;
+
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
+        }
+
+        [DataMember]
+        public List<ClienteResponse> Clientes
+        {
+            get { return _clientes; }
+            set { _clientes = value; }
         }
     }
     public class RespProducto

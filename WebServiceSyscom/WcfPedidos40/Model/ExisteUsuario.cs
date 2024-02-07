@@ -1,11 +1,12 @@
-﻿using System;
+﻿using SyscomUtilities;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
-using WcfPedidos40.Conexion;
+
 using WcfPedidos40.Models;
 
 namespace WcfPruebas40.Models
@@ -13,7 +14,7 @@ namespace WcfPruebas40.Models
     public class ExisteUsuario
     {
 
-        Conexion con = new Conexion();
+        connect.Conexion con = new connect.Conexion();
 
         /// <summary>
         /// Verifica si el usuario existe.
