@@ -16,7 +16,7 @@ namespace WcfPedidos40
     public class Pedidos40 : IPedidos40
     {
 
-        private Models.Conexion con = new Models.Conexion();
+        private Model. con = new Model.Conexion();
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
         public RespProducto GetProducto(ProductoReq reqProducto)
