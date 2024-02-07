@@ -32,7 +32,7 @@ namespace WcfPedidos30.Model
                 DataSet TablaPedidos = new DataSet();
 
                 ///Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
-                if (con.ejecutarQuery("WSPedidosSelectPedidos", parametros, out TablaPedidos, out string[] mensaje, CommandType.StoredProcedure))
+                if (con.ejecutarQuery("WcfPedidos30_SelectPedidos", parametros, out TablaPedidos, out string[] mensaje, CommandType.StoredProcedure))
                 {
                     List<PedidoResponse> list = new List<PedidoResponse>();
                     if (TablaPedidos != null)
@@ -323,7 +323,7 @@ namespace WcfPedidos30.Model
                             //con.ejecutarProcedimiento("paSwInsPedido");
                             DataSet InsPedido= new DataSet();
                             con.setConnection("DBMOV");
-                            if(con.ejecutarQuery("paSwInsPedido", lsp, out InsPedido, out string[] mensajeError , CommandType.StoredProcedure))
+                            if(con.ejecutarQuery("WcfPedidos30_GenPedido", lsp, out InsPedido, out string[] mensajeError , CommandType.StoredProcedure))
                             {
                                 //DataTable dtDatos = con.getDataTable();
                                 datPedido = con.DataTableToList<PedidoResponse>("TipoDoc,IdCia,Fecha,TotalProductos,SubTotal,Descuento,Iva".Split(','),InsPedido);

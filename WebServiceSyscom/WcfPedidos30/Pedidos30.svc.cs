@@ -160,7 +160,7 @@ namespace WcfPedidos30
                 if (existe.Existe(obtUsuario.Usuarios.UserName, obtUsuario.Usuarios.Password, out string[] mensajeNuevo))
                 {
                     // Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
-                    if (con.ejecutarQuery("WSObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                    if (con.ejecutarQuery("wcfPedidos30_ObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
                         // Se declara una lista que contendrá la respuesta de la solicitud del usuario
                         List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
