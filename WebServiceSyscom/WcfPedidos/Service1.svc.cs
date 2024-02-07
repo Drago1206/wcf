@@ -21,6 +21,7 @@ namespace WcfPedidos
     // NOTE: para iniciar el Cliente de prueba WCF para probar este servicio, seleccione Service1.svc o Service1.svc.cs en el Explorador de soluciones e inicie la depuración.
     public class Service1 : IService1
     {
+        
         string NomProyecto = "Pedidos" + "-" + ConfigurationManager.AppSettings["NitEmpresa"];
         //variables para ordenar lista
         //numero de pagina a consultar
@@ -36,57 +37,6 @@ namespace WcfPedidos
 
         public static object lockObject = new object();
 
-        #region generarToken        
-        /// <summary>
-        /// Generta El token.
-        /// </summary>
-        /// <param name="usuario">Modelo de datos de usuario.</param>
-        /// <returns></returns>
-        public RespToken generarToken(Usuarios usuario)
-        {
-            RespToken respuesta = new RespToken();
-            respuesta.Registro = new Log();
-
-            if (usuario == null)
-            {
-                respuesta.Registro = new Log { Codigo = "000", Descripcion = "Dato no válido" };
-            }
-            else if (string.IsNullOrWhiteSpace(usuario.Usuario) || string.IsNullOrWhiteSpace(usuario.Contraseña))
-            {
-                respuesta.Registro = new Log { Codigo = "001", Descripcion = "Parámetro 'Usuario/Contraseña', NO pueden ser nulos" };
-            }
-            else
-            {
-
-                GenerarToken token = new GenerarToken();
-                respuesta.Token = token.nuevoToken(NomProyecto, usuario.Usuario, usuario.Contraseña, out string[] mensajeNuevo);
-                respuesta.Registro = new Log { Codigo = mensajeNuevo[0], Descripcion = mensajeNuevo[1] };
-            }
-            return respuesta;
-
-        }
-        #endregion
-
-        #region ObetenrProducto 
-        public RespProducto ConProducto(ObtProducto obtProducto)
-        {
-            RespProducto respuesta = new RespProducto();
-            respuesta.Registro = new Log();
-            GenerarToken token = new GenerarToken();
-            if (token.VerificarToken(obtProducto.token.Token, NomProyecto, out string[] nuevoMensaje, out string usuario, out string compania))
-            {
-                Producto p = new Producto();
-                respuesta = p.GetProducto(obtProducto, compania, out string[] nuevomensaje);
-                respuesta.Registro = new Log { Codigo = nuevomensaje[0], Descripcion = nuevomensaje[1] };
-            }
-            else
-            {
-                respuesta.Registro = new Log { Codigo = nuevoMensaje[0], Descripcion = nuevoMensaje[1] };
-            }
-            return respuesta;
-
-        }
-        #endregion
 
         #region Obtener Clientes
         public RespClientes GetClientes(ObtInfoClientes consulta)
@@ -676,6 +626,17 @@ namespace WcfPedidos
             }
             respuesta.Registro = new Log { Codigo = Codigo, Descripcion = Mensaje };
             return respuesta;
+        }
+
+        public RespToken generarToken(Usuarios usuario)
+        {
+            throw new NotImplementedException();
+        }
+
+        [return: MessageParameter(Name = "Producto")]
+        public RespProducto ConProducto(ObtProducto obtProducto)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 
