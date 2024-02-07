@@ -356,7 +356,7 @@ namespace WcfPedidos30
         }
         #endregion
 
-
+        #region ObtenerConsolidadoClientes 
         //El metodo cosolidado de clientes tiene la funcionalidad de mostrar la informacion de algunos clientes con sus respectivas agencias ,
         //si llega un nit que le exija al metodo un resultado en especifico este lo dara , en el caso contrario dara la informacion de todos los clientes
         public RespClientes resClients(ObtInfoClientes obtenerConSolidado)
@@ -553,6 +553,6 @@ namespace WcfPedidos30
 
             return respuesta;
         }
-
+        #endregion
     }
 }

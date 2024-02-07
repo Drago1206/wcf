@@ -123,7 +123,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Service1.svc" />
+    <Content Include="Pedidos40.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -134,8 +134,8 @@
     <Compile Include="Modelos\LogErrores.cs" />
     <Compile Include="Modelos\pwdSyscom.cs" />
     <Compile Include="Modelos\Usuario.cs" />
-    <Compile Include="Service1.svc.cs">
-      <DependentUpon>Service1.svc</DependentUpon>
+    <Compile Include="Pedidos40.svc.cs">
+      <DependentUpon>Pedidos40.svc</DependentUpon>
     </Compile>
     <Compile Include="Pedidos40.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

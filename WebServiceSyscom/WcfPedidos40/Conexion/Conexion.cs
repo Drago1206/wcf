@@ -1746,38 +1746,55 @@ public class ConexionDB
     /// <typeparam name="T">Generic object</typeparam>
     /// <param name="table">DataTable</param>
     /// <returns>List with generic objects</returns>
-    public List<T> DataTableToList<T>() where T : class, new()
+    public List<T> DataTableToList<T>(string[] DatosDt = null, DataSet dsTabla = null) where T : class, new()
     {
         try
         {
+            // Se declara una lista de tipo T
             List<T> list = new List<T>();
 
-            foreach (DataRow row in ds.Tables[0].Rows)
+            // Si DatosDt es nulo, se toma la primera tabla del conjunto de datos dsTabla
+            // Si DatosDt no es nulo, se crea una nueva tabla con las columnas especificadas en DatosDt
+            DataTable dt = DatosDt == null ? dsTabla.Tables[0] : dsTabla.Tables[0].DefaultView.ToTable(true, DatosDt);
+
+            // Se recorren todas las filas de la tabla de datos
+            foreach (DataRow row in dt.Rows)
             {
+                // Se crea un nuevo objeto de tipo T
                 T obj = new T();
 
+                // Se recorren todas las propiedades del objeto
                 foreach (var prop in obj.GetType().GetProperties())
                 {
                     try
                     {
+                        // Se obtiene la propiedad del objeto que coincide con el nombre de la propiedad actual
                         PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
+
+                        // Se establece el valor de la propiedad con el valor correspondiente de la fila
+                        // El valor se convierte al tipo de la propiedad
                         propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        // Si ocurre una excepción (por ejemplo, si no existe una columna con el nombre de la propiedad), se ignora y se continúa con la siguiente propiedad
                         continue;
                     }
                 }
 
+                // Se añade el objeto a la lista
                 list.Add(obj);
             }
 
+            // Se devuelve la lista de objetos
             return list;
         }
-        catch
+        catch (Exception ex)
         {
+            // Si ocurre una excepción en algún punto del proceso, se devuelve null
             return null;
         }
+
     }
 
     public List<T> DataTableToList<T>(DataTable dtDatos) where T : class, new()
