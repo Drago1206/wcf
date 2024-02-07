@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace WcfPruebas30.Models
+namespace WcfPedidos40.Models
 {
     public class pwdSyscom
     {

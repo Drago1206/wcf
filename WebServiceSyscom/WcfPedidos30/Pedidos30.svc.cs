@@ -149,7 +149,7 @@ namespace WcfPedidos30
                 // Se declara una instancia de la clase que verifica la existencia del usuario
                 ExisteUsuario existe = new ExisteUsuario();
                 // Se define la conexión a la base de datos en base al nombre de la cadena de conexion
-                con.setConnection("Syscom");
+                con.setConnection("DBACC");
                 // Se inicializa el dataset para capturar la tabla del resultado del procedimiento de almacenado
                 DataSet TablaUsuario = new DataSet();
                 // Se inicializa una lista vacía para pasar los parámetros al procedimiento de almacenado
@@ -160,7 +160,7 @@ namespace WcfPedidos30
                 if (existe.Existe(obtUsuario.Usuarios.UserName, obtUsuario.Usuarios.Password, out string[] mensajeNuevo))
                 {
                     // Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
-                    if (con.ejecutarQuery("WSObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                    if (con.ejecutarQuery("wcfPedidos30_ObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
                         // Se declara una lista que contendrá la respuesta de la solicitud del usuario
                         List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
@@ -302,7 +302,7 @@ namespace WcfPedidos30
                             {
                                 //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
                                 // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
-                                con.setConnection("SyscomDBSAL");
+                                con.setConnection("DBSAL");
                                 //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
                                 List<SqlParameter> parametros = new List<SqlParameter>();
                                 //Indicamos el parametro que vamos a pasar 
@@ -315,7 +315,7 @@ namespace WcfPedidos30
                                 // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                                 con.resetQuery();
                                 //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
-                                if (con.ejecutarQuery("ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                                if (con.ejecutarQuery("WcfPedidos30_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                                 {
                                     //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
 
@@ -356,7 +356,7 @@ namespace WcfPedidos30
         }
         #endregion
 
-
+        #region ObtenerConsolidadoClientes 
         //El metodo cosolidado de clientes tiene la funcionalidad de mostrar la informacion de algunos clientes con sus respectivas agencias ,
         //si llega un nit que le exija al metodo un resultado en especifico este lo dara , en el caso contrario dara la informacion de todos los clientes
         public RespClientes resClients(ObtInfoClientes obtenerConSolidado)
@@ -391,7 +391,7 @@ namespace WcfPedidos30
                         // Si NitCliente es nulo o está en blanco, asumimos un valor predeterminado 
                         //obtenerConSolidado.NitCliente = null; // Asigna un valor predeterminado 
 
-                        con.setConnection("Syscom");
+                        con.setConnection("DBACC");
                         DataSet TablaCliente = new DataSet();
                         //le pasamos el valor del nit ingresado por el usuario   
                         cliente = obtenerConSolidado.NitCliente;
@@ -412,7 +412,7 @@ namespace WcfPedidos30
 
                         // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                         con.resetQuery();
-                        if (con.ejecutarQuery("ConsolidacionClientes", parametros, out TablaCliente, out string[] NuevoMensaje, CommandType.StoredProcedure))
+                        if (con.ejecutarQuery("WcfPedido_ConsolidacionClientes", parametros, out TablaCliente, out string[] NuevoMensaje, CommandType.StoredProcedure))
                         {
                             clientes = con.DataTableToList<ClienteResponse>("NitCliente,NombreCliente,Direccion,Ciudad,Telefono,NumLista,NitVendedor,NomVendedor".Split(','), TablaCliente);
 
@@ -443,7 +443,7 @@ namespace WcfPedidos30
                         {
                             //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
                             // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
-                            con.setConnection("Prod");
+                            con.setConnection("DBPAR");
                             DataSet TablaCliente = new DataSet();
 
                             //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
@@ -553,6 +553,6 @@ namespace WcfPedidos30
 
             return respuesta;
         }
-
+        #endregion
     }
 }

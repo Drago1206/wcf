@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace WcfPedidos30.Models
+namespace WcfPedidos40.Models
 {
     [DataContract]
     public class Cartera

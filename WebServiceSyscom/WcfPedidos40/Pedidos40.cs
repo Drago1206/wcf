@@ -5,8 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
-using WcfPedidos30.Models;
-using WcfPruebas30.Models;
+using WcfPedidos40.Models;
 
 namespace WcfPedidos40
 {
@@ -14,6 +13,7 @@ namespace WcfPedidos40
     [ServiceContract]
     public interface Pedidos40
     {
+
         /// <summary>
         /// Ruta del metodo para obtener cartera
         /// </summary>
@@ -23,11 +23,10 @@ namespace WcfPedidos40
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCartera", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "CarteraResponse")]
         CarteraResp RespCartera(CarteraReq ReqCartera);
-
-        // TODO: agregue aquí sus operaciones de servicio
     }
 
 
+    // Utilice un contrato de datos, como se ilustra en el ejemplo siguiente, para agregar tipos compuestos a las operaciones de servicio.
     [DataContract]
     public class CarteraReq
     {
@@ -80,7 +79,4 @@ namespace WcfPedidos40
         }
 
     }
-
-    // Utilice un contrato de datos, como se ilustra en el ejemplo siguiente, para agregar tipos compuestos a las operaciones de servicio.
-
 }

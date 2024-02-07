@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 
-namespace WcfPruebas30.Models
+namespace WcfPedidos40.Models
 {
 	
         public static class LogErrores

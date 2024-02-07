@@ -14,7 +14,7 @@ namespace WcfPedidos30.Model
             datPedido = new List<PedidoResponse>();
             Log _error = new Log { Codigo = "error", Descripcion = "error" };
             List<SqlParameter> lsp = new List<SqlParameter>();
-            con.setConnection("Mov");
+            con.setConnection("WcfPedidos30_SelectPedidos");
             try
             {
                 List<SqlParameter> parametros = new List<SqlParameter>();
@@ -32,7 +32,7 @@ namespace WcfPedidos30.Model
                 DataSet TablaPedidos = new DataSet();
 
                 ///Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
-                if (con.ejecutarQuery("WSPedidosSelectPedidos", parametros, out TablaPedidos, out string[] mensaje, CommandType.StoredProcedure))
+                if (con.ejecutarQuery("WcfPedidos30_SelectPedidos", parametros, out TablaPedidos, out string[] mensaje, CommandType.StoredProcedure))
                 {
                     List<PedidoResponse> list = new List<PedidoResponse>();
                     if (TablaPedidos != null)
@@ -322,8 +322,8 @@ namespace WcfPedidos30.Model
                             //con.addParametersProc(lsp);
                             //con.ejecutarProcedimiento("paSwInsPedido");
                             DataSet InsPedido= new DataSet();
-                            con.setConnection("Mov");
-                            if(con.ejecutarQuery("paSwInsPedido", lsp, out InsPedido, out string[] mensajeError , CommandType.StoredProcedure))
+                            con.setConnection("DBMOV");
+                            if(con.ejecutarQuery("WcfPedidos30_GenPedido", lsp, out InsPedido, out string[] mensajeError , CommandType.StoredProcedure))
                             {
                                 //DataTable dtDatos = con.getDataTable();
                                 datPedido = con.DataTableToList<PedidoResponse>("TipoDoc,IdCia,Fecha,TotalProductos,SubTotal,Descuento,Iva".Split(','),InsPedido);
