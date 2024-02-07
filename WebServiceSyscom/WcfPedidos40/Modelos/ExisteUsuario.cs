@@ -25,16 +25,24 @@ namespace WcfPruebas40.Models
         public bool Existe(string usuario, string password, out string[] mensaje)
         {
             Conexion con = new Conexion();
-            
+
+            try
+            {
                 con.setConnection("Syscom");
-            
+
                 con.resetQuery();
                 con.qryFields.Add("IdUsuario, Inactivo, PwdLog");
                 con.qryTables.Add("adm_Usuarios");
                 con.addWhereAND("lower(IdUsuario) = lower('" + password + "')");
                 con.select();
                 con.ejecutarQuery();
-                return con.getDataTable();
+                mensaje = new string[] { "Usuario  encontrado" };
+            }
+            catch (Exception e) {
+                mensaje = new string[] { "El usuario no se ha  encontrado" };
+            }
+
+            return con.getDataTable(); 
             
 
         }
