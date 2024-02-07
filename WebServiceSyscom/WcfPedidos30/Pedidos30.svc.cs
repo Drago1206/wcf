@@ -315,7 +315,7 @@ namespace WcfPedidos30
                                 // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                                 con.resetQuery();
                                 //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
-                                if (con.ejecutarQuery("ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                                if (con.ejecutarQuery("WcfPedidos30_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                                 {
                                     //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
 
@@ -412,7 +412,7 @@ namespace WcfPedidos30
 
                         // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                         con.resetQuery();
-                        if (con.ejecutarQuery("ConsolidacionClientes", parametros, out TablaCliente, out string[] NuevoMensaje, CommandType.StoredProcedure))
+                        if (con.ejecutarQuery("WcfPedido_ConsolidacionClientes", parametros, out TablaCliente, out string[] NuevoMensaje, CommandType.StoredProcedure))
                         {
                             clientes = con.DataTableToList<ClienteResponse>("NitCliente,NombreCliente,Direccion,Ciudad,Telefono,NumLista,NitVendedor,NomVendedor".Split(','), TablaCliente);
 

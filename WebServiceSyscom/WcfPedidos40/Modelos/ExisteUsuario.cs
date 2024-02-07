@@ -22,29 +22,38 @@ namespace WcfPruebas40.Models
         /// <param name="clave">contraseña.</param>
         /// <param name="mensaje">El mensaje en posicion 0 esta el codigo y en la posicion 1 la descripcion.</param>
         /// <returns></returns>
-        public bool Existe(string usuario, string password, out string[] mensaje)
+
+
+
+
+        private bool existeUsuario(Usuario usuario)
         {
-            Conexion con = new Conexion();
-
-            try
+            bool existe = false;
+            con.setConnection("Syscom");
+            con.resetQuery();
+            con.qryFields.Add("IdUsuario, PwdLog");
+            con.qryTables.Add("adm_Usuarios");
+            con.addWhereAND("Inactivo = 0 and lower(IdUsuario) = lower('" + usuario.UserName + "')");
+            con.select();
+            con.ejecutarQuery();
+            DataTable ds = con.getDataTable();
+            DataRow row = ds.Rows[0];
+            if (ds.Rows.Count > 0)
             {
-                con.setConnection("Syscom");
+                pwdSyscom pwdSys = new pwdSyscom();
+                pwdSys.Decodificar(row["PwdLog"].ToString());
+                var contra = pwdSys.contrasenna.Split('=');
+                if (contra[2] == usuario.Password)
+                {
+                    existe = true;
 
-                con.resetQuery();
-                con.qryFields.Add("IdUsuario, Inactivo, PwdLog");
-                con.qryTables.Add("adm_Usuarios");
-                con.addWhereAND("lower(IdUsuario) = lower('" + password + "')");
-                con.select();
-                con.ejecutarQuery();
-                mensaje = new string[] { "Usuario  encontrado" };
+                }
+                else
+                {
+                    existe = false;
+                }
             }
-            catch (Exception e) {
-                mensaje = new string[] { "El usuario no se ha  encontrado" };
-            }
-
-            return con.getDataTable(); 
-            
-
+            return existe;
         }
     }
 }
