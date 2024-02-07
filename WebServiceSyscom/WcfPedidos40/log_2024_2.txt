@@ -1,0 +1,1 @@
+07/02/2024 10:21:49 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Referencia a objeto no establecida como instancia de un objeto.

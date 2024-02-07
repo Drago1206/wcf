@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 namespace WcfPedidos.Model
 {
     public static class LogErrores
+
     {
+
         private static string dir = AppDomain.CurrentDomain.BaseDirectory;
         public static List<string> tareas = new List<string>();
 
@@ -31,5 +33,13 @@ namespace WcfPedidos.Model
             tareas.Clear();
         }
 
+
+    }
+    public class Errores {
+        public string codigo;
+        public string descripcion;
+        public DateTime Fecha;
+        public string Consecutivo;
+        public string IdCia;
     }
 }
