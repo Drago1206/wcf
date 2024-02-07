@@ -7,10 +7,9 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using System.Web;
-using WcfPedidos40;
+using WcfPedidos40.Model;
 
-namespace Models
+namespace connect
 {
 
     /// <summary>

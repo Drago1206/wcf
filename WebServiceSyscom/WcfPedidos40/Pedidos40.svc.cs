@@ -9,6 +9,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using WcfPedidos40.Model;
 
+
 namespace WcfPedidos40
 {
     // NOTA: puede usar el comando "Rename" del menú "Refactorizar" para cambiar el nombre de clase "Service1" en el código, en svc y en el archivo de configuración.
@@ -16,7 +17,7 @@ namespace WcfPedidos40
     public class Pedidos40 : IPedidos40
     {
 
-        private Model. con = new Model.Conexion();
+        private connect.Conexion con = new connect.Conexion();
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
         public RespProducto GetProducto(ProductoReq reqProducto)
