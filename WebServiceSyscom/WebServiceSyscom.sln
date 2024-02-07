@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos30", "WcfPedidos3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos40", "WcfPedidos40\WcfPedidos40.csproj", "{140DC560-18B1-4EBC-978E-ABECFE149AA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedido30", "WcfPruebas30\WcfPedido30.csproj", "{C19449E8-B9FE-4792-B9E7-AEDB93BFFC88}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
