@@ -21,7 +21,7 @@ namespace WcfPedidos30.Model
         public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out PaginadorProducto<ProductosResponse> dtProducto, out string[] mensaje)
         {
             /// Configuración de la cadena de conexión para determinar a qué base de datos va dirigida la consulta
-            con.setConnection("Prod");
+            con.setConnection("DBPAR");
             mensaje = null;
             /// Se inicializa un nuevo obteto PaginadorProducto en la variable dtProducto
             dtProducto = new PaginadorProducto<ProductosResponse>();
@@ -45,7 +45,7 @@ namespace WcfPedidos30.Model
             parametros.Add(new SqlParameter("@Grupo", producto.Grupo));
             
             /// Condición para verificar si el procedimiento de almacenado se ejecuta correctamente
-            if (con.ejecutarQuery("WSPedidosObtenerProductos", parametros, out TablaProducto, out string[] mensajeConsulta, CommandType.StoredProcedure))
+            if (con.ejecutarQuery("WcfPedidos30_ObtenerProductos", parametros, out TablaProducto, out string[] mensajeConsulta, CommandType.StoredProcedure))
             {
                 /// Se inicializa la tabla contenedora de los resultados del procedimiento de almacenado 
                 DataTable dtProductos = TablaProducto.Tables[0];

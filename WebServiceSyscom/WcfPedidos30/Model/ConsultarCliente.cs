@@ -23,7 +23,7 @@ namespace WcfPedidos30.Model
             ///Se inicializa la conexión con la base de datos
             ConexionBD con = new ConexionBD();
             ///Se define la conexión a la base de datos en base al nombre de la cadena de conexion
-            con.setConnection("Prod");
+            con.setConnection("DBPAR");
             /// Se declara una lista vacía
             dtCliente = new List<ClienteResponse>();
             /// Se inicializa el objeto de respuesta a la solicitud 
@@ -37,7 +37,7 @@ namespace WcfPedidos30.Model
             DataSet TablaClientes = new DataSet();
 
             ///Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
-            if (con.ejecutarQuery("WSPedidosObtenerClientes", parametros, out TablaClientes, out string[] mensaje, CommandType.StoredProcedure))
+            if (con.ejecutarQuery("WcfPedidios30_ObtenerClientes", parametros, out TablaClientes, out string[] mensaje, CommandType.StoredProcedure))
             {
                 /// Se inicializa la tabla de datos proveniente de la variable TablaClientes de salida del método ejecutarQuery 
                 DataTable dtClientes = TablaClientes.Tables[0];

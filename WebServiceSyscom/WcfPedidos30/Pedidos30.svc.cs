@@ -149,7 +149,7 @@ namespace WcfPedidos30
                 // Se declara una instancia de la clase que verifica la existencia del usuario
                 ExisteUsuario existe = new ExisteUsuario();
                 // Se define la conexión a la base de datos en base al nombre de la cadena de conexion
-                con.setConnection("Syscom");
+                con.setConnection("DBACC");
                 // Se inicializa el dataset para capturar la tabla del resultado del procedimiento de almacenado
                 DataSet TablaUsuario = new DataSet();
                 // Se inicializa una lista vacía para pasar los parámetros al procedimiento de almacenado
@@ -160,7 +160,7 @@ namespace WcfPedidos30
                 if (existe.Existe(obtUsuario.Usuarios.UserName, obtUsuario.Usuarios.Password, out string[] mensajeNuevo))
                 {
                     // Condición que verifica si la consulta por medio del procedimiento de almacenado se efectuó correctamente
-                    if (con.ejecutarQuery("WSObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                    if (con.ejecutarQuery("wcfPedidos30_ObtenerUsuario", parametros, out TablaUsuario, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
                         // Se declara una lista que contendrá la respuesta de la solicitud del usuario
                         List<UsuariosResponse> datosUsuario = new List<UsuariosResponse>();
@@ -302,7 +302,7 @@ namespace WcfPedidos30
                             {
                                 //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
                                 // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
-                                con.setConnection("SyscomDBSAL");
+                                con.setConnection("DBSAL");
                                 //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
                                 List<SqlParameter> parametros = new List<SqlParameter>();
                                 //Indicamos el parametro que vamos a pasar 
@@ -391,7 +391,7 @@ namespace WcfPedidos30
                         // Si NitCliente es nulo o está en blanco, asumimos un valor predeterminado 
                         //obtenerConSolidado.NitCliente = null; // Asigna un valor predeterminado 
 
-                        con.setConnection("Syscom");
+                        con.setConnection("DBACC");
                         DataSet TablaCliente = new DataSet();
                         //le pasamos el valor del nit ingresado por el usuario   
                         cliente = obtenerConSolidado.NitCliente;
@@ -443,7 +443,7 @@ namespace WcfPedidos30
                         {
                             //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
                             // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
-                            con.setConnection("Prod");
+                            con.setConnection("DBPAR");
                             DataSet TablaCliente = new DataSet();
 
                             //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
