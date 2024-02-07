@@ -14,7 +14,7 @@ namespace WcfPedidos30.Model
             datPedido = new List<PedidoResponse>();
             Log _error = new Log { Codigo = "error", Descripcion = "error" };
             List<SqlParameter> lsp = new List<SqlParameter>();
-            con.setConnection("Mov");
+            con.setConnection("WcfPedidos30_SelectPedidos");
             try
             {
                 List<SqlParameter> parametros = new List<SqlParameter>();
@@ -322,7 +322,7 @@ namespace WcfPedidos30.Model
                             //con.addParametersProc(lsp);
                             //con.ejecutarProcedimiento("paSwInsPedido");
                             DataSet InsPedido= new DataSet();
-                            con.setConnection("Mov");
+                            con.setConnection("DBMOV");
                             if(con.ejecutarQuery("paSwInsPedido", lsp, out InsPedido, out string[] mensajeError , CommandType.StoredProcedure))
                             {
                                 //DataTable dtDatos = con.getDataTable();

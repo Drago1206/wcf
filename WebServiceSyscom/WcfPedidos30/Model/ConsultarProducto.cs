@@ -21,7 +21,7 @@ namespace WcfPedidos30.Model
         public RespProducto ConsultarProductos(ProductoRequest producto, UsuariosRequest datosUsuario, out PaginadorProducto<ProductosResponse> dtProducto, out string[] mensaje)
         {
             /// Configuración de la cadena de conexión para determinar a qué base de datos va dirigida la consulta
-            con.setConnection("Prod");
+            con.setConnection("DBPAR");
             mensaje = null;
             /// Se inicializa un nuevo obteto PaginadorProducto en la variable dtProducto
             dtProducto = new PaginadorProducto<ProductosResponse>();

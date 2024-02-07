@@ -127,6 +127,8 @@ namespace WcfPedidos40
                 {
                     if (TablaProductos.Tables[0].Rows.Count > 0)
                     {
+
+
                         TablaProductos.Tables[0].AsEnumerable().ToList().ForEach(i =>
                         {
                             ProductosResponse prod = new ProductosResponse
@@ -204,14 +206,12 @@ namespace WcfPedidos40
         }
         private DataTable existeUsuario(string agusuario, string agcontrasena)
         {
+            DataSet TablaUsuario = new DataSet();
+            List<SqlParameter> parametros = new List<SqlParameter>();
+            parametros.Add(new SqlParameter("@IdUsuario", agusuario));
             con.setConnection("Syscom");
-            con.resetQuery();
-            con.qryFields.Add("IdUsuario, Inactivo, PwdLog");
-            con.qryTables.Add("adm_Usuarios");
-            con.addWhereAND("lower(IdUsuario) = lower('" + agusuario + "')");
-            con.select();
-            con.ejecutarQuery();
-            return con.getDataTable();
+            bool respuesta = con.ejecutarQuery("WSPedidos40Sesion", parametros, out TablaUsuario, out string[] mensajeUsuario, CommandType.StoredProcedure);
+            return TablaUsuario.Tables[0];
         }
         private bool existeUsuario(Usuario usuario)
         {
