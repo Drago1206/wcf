@@ -38,7 +38,7 @@ namespace WcfPedidos40.Model
             [DataMember]
             public string IdPlazo { get; set; }
             [DataMember]
-            public Int32? Plazo { get; set; }
+            public string Plazo { get; set; }
             //Versión 003
             [DataMember]
             public string IdZona { get; set; }

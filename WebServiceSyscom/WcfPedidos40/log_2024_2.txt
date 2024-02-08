@@ -1,1 +1,9 @@
 07/02/2024 10:21:49 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Referencia a objeto no establecida como instancia de un objeto.
+08/02/2024 7:42:22 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Login failed for user 'syscom'.
+08/02/2024 7:42:52 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Login failed for user 'syscom'.
+08/02/2024 7:44:43 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Login failed for user 'syscom'.
+08/02/2024 7:50:33 a. m.: La cadena de entrada no tiene el formato correcto.
+08/02/2024 8:54:53 a. m.: La cadena de entrada no tiene el formato correcto.
+08/02/2024 8:55:14 a. m.: La cadena de entrada no tiene el formato correcto.
+08/02/2024 8:59:40 a. m.: La cadena de entrada no tiene el formato correcto.
+08/02/2024 9:45:23 a. m.: La cadena de entrada no tiene el formato correcto.
