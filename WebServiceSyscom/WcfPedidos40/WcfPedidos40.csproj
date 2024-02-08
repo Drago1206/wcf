@@ -83,6 +83,8 @@
     <Compile Include="Model\ExisteUsuario.cs" />
     <Compile Include="Model\LogErrores.cs" />
     <Compile Include="Model\LogVendedores.cs" />
+    <Compile Include="Model\Pedidos.cs" />
+    <Compile Include="Model\PrecioEspecial.cs" />
     <Compile Include="Model\Productos.cs" />
     <Compile Include="Model\Usuario.cs" />
     <Compile Include="Pedidos40.svc.cs">
@@ -101,6 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

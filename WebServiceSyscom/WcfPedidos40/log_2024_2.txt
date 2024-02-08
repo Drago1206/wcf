@@ -7,3 +7,5 @@
 08/02/2024 8:55:14 a. m.: La cadena de entrada no tiene el formato correcto.
 08/02/2024 8:59:40 a. m.: La cadena de entrada no tiene el formato correcto.
 08/02/2024 9:45:23 a. m.: La cadena de entrada no tiene el formato correcto.
+08/02/2024 1:29:04 p. m.: El pedido es==>
+08/02/2024 1:29:04 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]

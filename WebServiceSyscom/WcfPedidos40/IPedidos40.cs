@@ -6,7 +6,6 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using WcfPedidos40.Model;
-using static WcfPedidos40.Model.Clientes;
 namespace WcfPedidos40
 {
     // NOTA: puede usar el comando "Rename" del menú "Refactorizar" para cambiar el nombre de interfaz "IService1" en el código y en el archivo de configuración a la vez.
@@ -33,6 +32,11 @@ namespace WcfPedidos40
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductos", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Productos")]
         RespProductos GetProductos(Usuario usuario);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GenerarPedido", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Pedido")]
+        PedidoResponse SetPedido(PedidoRequest pedido);
     }
 
 
@@ -284,6 +288,60 @@ namespace WcfPedidos40
             get { return preciol5; }
             set { preciol5 = value; }
         }
+    }
+
+    [DataContract]
+    public class PedidoRequest
+    {
+        private Usuario _usuario;
+        private List<ProductosResponse> _productos;
+        private ClienteRequest _cliente;
+        private string _tipopedido;
+        private string _cdAgencia = "0";
+
+        [DataMember]
+        public Usuario Usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+        [DataMember]
+        public ClienteRequest Cliente
+        {
+            get { return _cliente; }
+            set { _cliente = value; }
+        }
+
+        [DataMember]
+        public List<ProductosResponse> Productos
+        {
+            get { return _productos; }
+            set { _productos = value; }
+        }
+
+        [DataMember]
+        public string TipoPedido
+        {
+            get { return _tipopedido; }
+            set { _tipopedido = value; }
+        }
+
+        [DataMember]
+        public string Agencia
+        {
+            get { return _cdAgencia; }
+            set { _cdAgencia = value; }
+        }
+    }
+    [DataContract]
+    public class PedidoResponse
+    {
+        [DataMember]
+        public PedidoResp Pedido { get; set; }
+
+        [DataMember]
+        public List<string> Errores { get; set; }
+
     }
     public class ProductoTPReq
     {

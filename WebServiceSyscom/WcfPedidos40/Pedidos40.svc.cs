@@ -6,7 +6,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using WcfPedidos40.Model;
-using static WcfPedidos40.Model.Clientes;
 
 namespace WcfPedidos40
 {
@@ -352,6 +351,95 @@ namespace WcfPedidos40
 
             return resultado;
         }
+
+        public PedidoResponse SetPedido(PedidoRequest pedido)
+        {
+            bool continuar = true;
+            if (String.IsNullOrEmpty(pedido.Agencia))
+                pedido.Agencia = "0";
+            PedidoResponse resp = new PedidoResponse();
+            con = new connect.Conexion();
+            con.setConnection("Syscom");
+            if (existeUsuario(pedido.Usuario))
+            {
+                //Buscar si la agencia pertence al cliente
+                if (pedido.Agencia != "0")
+                {
+                    List<SqlParameter> parametrosCliente = new List<SqlParameter>();
+                    DataSet TablaAgencia = new DataSet();
+                    parametrosCliente.Add(new SqlParameter("@IdTercero", pedido.Cliente.IdTercero));
+                    parametrosCliente.Add(new SqlParameter("@IdAgencia", pedido.Agencia));
+                    if (con.ejecutarQuery("WcfPedidos40_ConsultarAgencia", parametrosCliente, out TablaAgencia, out string[] mensajeAgencia, CommandType.StoredProcedure))
+                    {
+                        if (TablaAgencia.Tables[0].Rows.Count <= 0)
+                        {
+                            resp.Errores.Add("La agencia '" + pedido.Agencia + " del cliente '" + pedido.Cliente.IdTercero + "', NO existe!");
+                            goto fin;
+                        }
+                    }
+                }
+
+                if (continuar)
+                {
+                    DataTable Trn_OPedido = new DataTable();
+                    DataTable Trn_Kardex = new DataTable();
+
+                    //LogErrores.tareas.Add(pedido.Agencia);
+                    //LogErrores.tareas.Add(pedido.Cliente.IdTercero);
+                    //LogErrores.write();
+                    Pedido ped = new Pedido(pedido.Usuario.IdUsuario, pedido.Cliente, pedido.TipoPedido, pedido.Agencia);
+
+                    DataSet tablaAdmusuario = new DataSet();
+                    List<SqlParameter> parametrosAdmUsuario = new List<SqlParameter>();
+                    parametrosAdmUsuario.Add(new SqlParameter("@IdUsuario", pedido.Usuario.IdUsuario));
+                    con.ejecutarQuery("WcfPedidos40_admUsuario", parametrosAdmUsuario,out tablaAdmusuario, out string[] mensajeAdm, CommandType.StoredProcedure);
+
+                    DataTable adm_Usuario = tablaAdmusuario.Tables[0];
+
+                    DataTable productos = ped.obtenerProductos(pedido.Productos);
+                    List<string> inactivos = productos.Rows.Cast<DataRow>().Where(r => r.Field<bool>("Inactivo") == true).Select(r => r.Field<string>("IdProducto")).ToList();
+                    if (inactivos.Count == 0)
+                    {
+                        if (productos.Rows.Cast<DataRow>().Where(r => !new string[] { "1000", "1001", "1002" }.Contains(r.Field<string>("IdProducto"))).Count() > 0 && pedido.TipoPedido == "A")
+                        {
+                            resp.Errores.Add("Los pedidos tipo Abono, solo pueden contener productos con los codigos '1000', '1001' y '1002'");
+                            goto fin;
+                        }
+
+                        ped.setProductos(productos);
+                        ped.Procesar();
+                    }
+
+                    var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+                    if (ped.obtenerErrores().Count == 0)
+                        resp.Pedido = new PedidoResp
+                        {
+                            TipDoc = ped.OPedido.Rows[0]["TipDoc"].ToString(),
+                            Pedido = ped.OPedido.Rows[0]["Pedido"].ToString() + "-" + ped.OPedido.Rows[0]["IdCia"].ToString(),
+                            Fecha = ped.OPedido.Rows[0]["Fecha"].ToString(),
+                            Agencia = pedido.Agencia
+                        };
+
+                    resp.Errores = ped.obtenerErrores();
+                    if (inactivos.Count > 0)
+                        resp.Errores.Add(String.Join(@"\n", inactivos.Select(r => "El producto '" + r + "' está inactivo.").ToArray()));
+
+                }
+            }
+            else
+            {
+                resp.Errores = new List<string>();
+                resp.Errores.Add("¡No se encontró el usuario o la contraseña es incorrecta!");
+            }
+
+        fin:
+            { }
+            LogErrores.tareas.Add("El pedido es==>" + resp.Pedido);
+            LogErrores.tareas.Add("Los errores son: Errores ==> " + resp.Errores);
+            LogErrores.write();
+            return resp;
+        }
+
         private bool existeUsuario(Usuario usuario)
         {
             DataTable ds = new DataTable();
@@ -363,10 +451,10 @@ namespace WcfPedidos40
             if (con.ejecutarQuery("WSPedidos40Sesion", parametros, out TablaSesion, out string[] mensajeSesion, CommandType.StoredProcedure))
             {
                 ds = TablaSesion.Tables[0];
-                DataRow row = ds.Rows[0];
 
                 if (ds.Rows.Count > 0)
                 {
+                DataRow row = ds.Rows[0];
                     pwdSyscom pwdSys = new pwdSyscom();
                     pwdSys.Decodificar(row["PwdLog"].ToString());
                     var contra = pwdSys.contrasenna.Split('=');

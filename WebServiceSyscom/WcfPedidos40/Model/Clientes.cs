@@ -6,8 +6,46 @@ using System.Web;
 
 namespace WcfPedidos40.Model
 {
-    public class Clientes
+    [DataContract]
+    public class ClienteRequest
     {
+        [DataMember]
+        public string IdTercero { get; set; }
+        [DataMember]
+        public string Nombres { get; set; }
+        [DataMember]
+        public string Apellidos { get; set; }
+        [DataMember]
+        public string TipoDoc { get; set; }
+        [DataMember]
+        public string Direccion { get; set; }
+        [DataMember]
+        public string IdLocal { get; set; }
+        [DataMember]
+        public string Telefono { get; set; }
+        [DataMember]
+        public string IdSector { get; set; }
+        [DataMember]
+        public string IdRegimen { get; set; }
+        [DataMember]
+        public string TipEnte { get; set; }
+        [DataMember]
+        public string MunCCExp { get; set; }
+        [DataMember]
+        public string DiasEntrega { get; set; }
+        [DataMember]
+        public string IdZona { get; set; }
+        [DataMember]
+        public string IdGrupo { get; set; }
+        [DataMember]
+        public string IdPlazo { get; set; }
+        [DataMember]
+        public string IdRuta { get; set; }
+        [DataMember]
+        public string IdCentroCosto { get; set; }
+        [DataMember]
+        public string IdSCCosto { get; set; }
+    }
         [DataContract]
         public class ClienteResponse
         {
@@ -72,5 +110,5 @@ namespace WcfPedidos40.Model
             [DataMember]
             public List<Agencia> Agencias { get; set; }
         }
-    }
+  
 }
