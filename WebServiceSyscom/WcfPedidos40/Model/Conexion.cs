@@ -897,7 +897,7 @@ namespace connect
             }
         }
 
-        public List<T> DataTableToList<T>(string[] DatosDt = null) where T : class, new()
+        public List<T> DataTableToList<T>(string[] DatosDt = null, DataSet ds = null) where T : class, new()
         {
             try
             {

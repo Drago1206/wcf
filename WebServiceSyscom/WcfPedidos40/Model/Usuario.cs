@@ -16,7 +16,7 @@ namespace WcfPedidos40.Models
         /// <summary>
         /// Nombre del usuario
         /// </summary>
-        public string UserName { get; set; }
+        public string IdUsuario { get; set; }
     }
     [DataContract]
     public class UsuariosRequest

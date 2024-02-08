@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using WcfPedidos40.Model;
+using WcfPedidos40.Models;
 
 namespace WcfPedidos40
 {
@@ -13,6 +14,25 @@ namespace WcfPedidos40
     [ServiceContract]
     public interface IPedidos40
     {
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCartera", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "CarteraResponse")]
+        CarteraResp RespCartera(CarteraReq ReqCartera);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCarteraTotal", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "CarteraTotal")]
+        ResObtenerCarteraTotal resObtCartTotal(ObtCarTotal Info);
+
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCarteraTotalDet", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "CarteraTotalDet")]
+        ResObtenerCartera getCarteraTotalDet(authCartera Modelo);
+
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerInfMaestra", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Maestro")]
+        ResInfoMaestra GetInfMaestra(InfoMaestra Parametros);
+
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
@@ -27,6 +47,8 @@ namespace WcfPedidos40
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductos", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Productos")]
         RespProductos GetProductos(Usuario usuario);
+
+
     }
 
 
@@ -294,4 +316,212 @@ namespace WcfPedidos40
             set { _numlistprecio = value; }
         }
     }
+
+
+    [DataContract]
+    public class CarteraReq
+    {
+        UsuariosRequest _usuario;
+        /// <summary>
+        /// Propiedad del nit cliente para que el usuario,
+        /// logre accerder a la funcionalidad de los metodos
+        /// </summary>
+
+        [DataMember]
+        public string NitCliente { get; set; }
+
+        /// <summary>
+        /// Propiedad del usuario para poder obtener el nombre de usuario y contraseña
+        /// </summary>
+
+        [DataMember]
+        public UsuariosRequest usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+    }
+    [DataContract]
+    public class CarteraResp
+    {
+        Log _error;
+        List<ItemCartera> _DatosCartera;
+
+        /// <summary>
+        /// Propiedad para poder listar los datos de la clase cartera que a su vez
+        /// tiene la lista de la clase cartera para almacenar los resultados.
+        /// </summary>
+
+        [DataMember]
+        public List<ItemCartera> DatosCartera
+        {
+            get { return _DatosCartera; }
+            set { _DatosCartera = value; }
+        }
+        /// <summary>
+        /// Manejo de errores o estados de las solicitudes de los metodos
+        /// </summary>
+
+        [DataMember]
+        public Log Error
+        {
+            get { return _error; }
+            set { _error = value; }
+        }
+
+    }
+
+
+
+    [DataContract]
+    public class ObtCarTotal
+    {
+        UsuariosRequest _usuario;
+        
+        [DataMember]
+        public UsuariosRequest usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+    }
+
+
+    [DataContract]
+    public class ResObtenerCarteraTotal
+    {
+        Log log;
+
+        [DataMember]
+        public Log Error
+        {
+            get { return log; }
+            set { log = value; }
+        }
+
+        [DataMember]
+        public List<ResCarteraTotal> DatosCartera { get; set; }
+
+    }
+
+
+    public class ResCarteraTotal
+    {
+
+        public int SaldoCartera { get; set; }
+        public string Tercero { get; set; }
+    }
+
+
+    [DataContract]
+    public class ResObtenerCartera
+    {
+        List<ItemCartera> _DatosCartera;
+        Log log;
+
+        [DataMember]
+        public List<ItemCartera> Datoscartera
+        {
+            get { return _DatosCartera; }
+            set { _DatosCartera = value; }
+        }
+
+        [DataMember]
+        public Log Error
+        {
+            get { return log; }
+            set { log = value; }
+        }
+    }
+
+
+    [DataContract]
+    public class authCartera
+
+    {
+        UsuariosRequest _usuario;
+
+        [DataMember]
+        public string FechaFinal { get; set; }
+
+        [DataMember]
+        public string FechaInicial { get; set; }
+
+
+        [DataMember]
+        public UsuariosRequest usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+       
+    }
+
+
+    [DataContract]
+    public class ResInfoMaestra
+    {
+        Log log;
+
+        [DataMember]
+        public Log Error
+        {
+            get { return log; }
+            set { log = value; }
+        }
+
+        [DataMember]
+        public  List<Dictionary<string, object>> Respuesta { get; set; }
+
+    }
+
+
+    [DataContract]
+    public class InfoMaestra
+    {
+        usuario _usuario;
+        private Int32 _TipoRegistro;
+
+        [DataMember]
+        public Int32 TipoRegistro { get { return _TipoRegistro; } set { _TipoRegistro = value; } }
+
+        [DataMember]
+        public usuario Usuario {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+
+    }
+
+
+    [DataContract]
+    public class usuario {
+        string _id;
+        string __fechaAct;
+
+        [DataMember]
+        public string IdUsuario
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        [DataMember]
+        public string Contrasena { get; set; }
+
+        [DataMember]
+        public string Fecha_Act
+        {
+            get { return __fechaAct; }
+            set { __fechaAct = value; }
+        }
+
+    }
+
+    public class Regimen
+    {
+        public string IdRegimen { get; set; }
+        public string regimen { get; set; }
+    }
+    
 }

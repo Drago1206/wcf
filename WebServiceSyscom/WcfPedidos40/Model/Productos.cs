@@ -1,4 +1,4 @@
-﻿using Models;
+﻿using WcfPedidos40.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -46,7 +46,7 @@ namespace WcfPedidos40.Model
             DataSet TablaProductos = new DataSet();
             try
             {
-                Conexion con = new Conexion();
+                connect.Conexion con = new connect.Conexion();
                 con.setConnection("Syscom");
                 /*Se importan los campos necesarios para grabar el pedido partiendo de las tablas OPedido y Kardex*/
                 List<SqlParameter> parametros = new List<SqlParameter>();
@@ -167,7 +167,7 @@ namespace WcfPedidos40.Model
             RespProducto pro = new RespProducto();
             try
             {
-                Conexion con = new Conexion();
+                connect.Conexion con = new connect.Conexion();
                 con.setConnection("Syscom");
                 string IdCia = ConfigurationManager.AppSettings["ciapre"] ?? null;
                 DataSet TablaProductosTP = new DataSet(); //TablaProductosTP

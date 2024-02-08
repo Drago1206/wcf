@@ -72,10 +72,14 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\Cartera.cs" />
+    <Compile Include="Model\Cliente.cs" />
     <Compile Include="Model\Conexion.cs" />
     <Compile Include="Model\Errores.cs" />
+    <Compile Include="Model\ExisteUsuario.cs" />
     <Compile Include="Model\LogErrores.cs" />
     <Compile Include="Model\Productos.cs" />
+    <Compile Include="Model\Usuario.cs" />
     <Compile Include="Pedidos40.svc.cs">
       <DependentUpon>Pedidos40.svc</DependentUpon>
     </Compile>
@@ -87,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

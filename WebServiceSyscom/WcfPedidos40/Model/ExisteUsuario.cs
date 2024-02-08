@@ -1,11 +1,12 @@
-﻿using System;
+﻿using connect;
+using SyscomUtilities;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
-using WcfPedidos40.Conexion;
 using WcfPedidos40.Models;
 
 namespace WcfPruebas40.Models
@@ -13,7 +14,7 @@ namespace WcfPruebas40.Models
     public class ExisteUsuario
     {
 
-        Conexion con = new Conexion();
+        connect.Conexion con = new connect.Conexion();
 
         /// <summary>
         /// Verifica si el usuario existe.
@@ -39,54 +40,60 @@ namespace WcfPruebas40.Models
                 /// Se inicializa una lista de parámetros para enviárselos al procedimiento de almacenado
                 List<SqlParameter> parametros = new List<SqlParameter>();
                 /// Se ajustan los parámetros que recibirá el procedimiento de almacenado
-                parametros.Add(new SqlParameter("@Usuario", usuario));
+                parametros.Add(new SqlParameter("@IdUsuario", usuario));
 
                 /// Condición para verificar si el procedimiento de almacenado se ejecuta correctamente
-                if (con.ejecutarQuery("WSPedidosIniciaSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                try
                 {
-                    /// Condición para verificar si la cantidad de registros recibidos son mayor a cero
-                    if (TablaIncio.Tables[0].Rows.Count > 0)
+                    if (con.ejecutarQuery("WSPedidos40Sesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                     {
-
-                        /// Se define la variable que contendrá la contraseña del usuario encriptada
-                        pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-                        /// Se decodifica la contraseña y se guarda en la lista que contiene las contraseña
-                        pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
-
-                        /// Condición que verifica si la la contraseña recibida en la solicitud 
-                        /// Es igual a la contraseña decodificada de la base de datos
-                        if (password.ToLower() == pwd.contrasenna.ToLower())
+                        /// Condición para verificar si la cantidad de registros recibidos son mayor a cero
+                        if (TablaIncio.Tables[0].Rows.Count > 0)
                         {
-                            /// Si la condición se cumple, 
-                            /// Define mensajes de respuesta existoso,
-                            /// y define la variable como true
-                            mensaje = new string[2];
-                            mensaje[0] = "USER_064";
-                            mensaje[1] = "Respuesta exitosa";
-                            existe = true;
+
+                            /// Se define la variable que contendrá la contraseña del usuario encriptada
+                            pwdSyscom pwd = new pwdSyscom(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
+                            /// Se decodifica la contraseña y se guarda en la lista que contiene las contraseña
+                            pwd.Decodificar(TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("PwdLog"));
+
+                            /// Condición que verifica si la la contraseña recibida en la solicitud 
+                            /// Es igual a la contraseña decodificada de la base de datos
+                            if (password.ToLower() == pwd.contrasenna.ToLower())
+                            {
+                                /// Si la condición se cumple, 
+                                /// Define mensajes de respuesta existoso,
+                                /// y define la variable como true
+                                mensaje = new string[2];
+                                mensaje[0] = "USER_064";
+                                mensaje[1] = "Respuesta exitosa";
+                                existe = true;
+                            }
+                            else
+                            {
+                                /// En caso de que la condición no se cumpla,
+                                /// Define mensajes de respuesta negativo
+                                mensaje = new string[2];
+                                mensaje[0] = "USER_003";
+                                mensaje[1] = "Usuario o Contraseña inválido";
+                            }
                         }
                         else
                         {
-                            /// En caso de que la condición no se cumpla,
-                            /// Define mensajes de respuesta negativo
                             mensaje = new string[2];
-                            mensaje[0] = "USER_003";
-                            mensaje[1] = "Usuario o Contraseña inválido";
+                            mensaje[0] = "USER_001";
+                            mensaje[1] = "¡Usuario no encontrado!";
+
                         }
                     }
                     else
                     {
                         mensaje = new string[2];
-                        mensaje[0] = "USER_001";
-                        mensaje[1] = "¡Usuario no encontrado!";
-
+                        mensaje[0] = nuevoMennsaje[0];
+                        mensaje[1] = nuevoMennsaje[1];
                     }
                 }
-                else
-                {
-                    mensaje = new string[2];
-                    mensaje[0] = nuevoMennsaje[0];
-                    mensaje[1] = nuevoMennsaje[1];
+                catch (Exception e) {
+
                 }
             }
             return existe;
