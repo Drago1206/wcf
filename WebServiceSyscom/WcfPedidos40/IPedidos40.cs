@@ -122,6 +122,7 @@ namespace WcfPedidos40
         [DataMember]
         public List<ProductosResponse> Productos { get; set; }
     }
+
     [DataContract]
     public class Usuario
     {
@@ -145,6 +146,7 @@ namespace WcfPedidos40
             set { _fechaact = value; }
         }
     }
+
     [DataContract]
     public class Log
     {
@@ -181,6 +183,7 @@ namespace WcfPedidos40
             set { _mensaje = value; }
         }
     }
+
     public class RespProducto
     {
         List<Errores> _errores;
@@ -281,6 +284,7 @@ namespace WcfPedidos40
             set { preciol5 = value; }
         }
     }
+
     public class ProductoTPReq
     {
         string _id;
@@ -317,7 +321,11 @@ namespace WcfPedidos40
         }
     }
 
-
+    /// <summary>
+    /// Bloque de datos para obtener la cartera
+    /// </summary>
+    /// <param name="_resultado">Tipo de consulta (select, insert, update).</param>
+    /// <param name="_aliasConsulta">Nombre del datatable o alias.</param>
     [DataContract]
     public class CarteraReq
     {
@@ -372,6 +380,9 @@ namespace WcfPedidos40
     }
 
 
+    /// <summary>
+    /// Bloque de datos para obtener la cartera Total
+    /// </summary>
 
     [DataContract]
     public class ObtCarTotal
@@ -412,7 +423,9 @@ namespace WcfPedidos40
         public string Tercero { get; set; }
     }
 
-
+    /// <summary>
+    /// Bloque de datos para obtener la cartera Total Def
+    /// </summary>
     [DataContract]
     public class ResObtenerCartera
     {
@@ -457,7 +470,9 @@ namespace WcfPedidos40
        
     }
 
-
+    /// <summary>
+    /// Bloque de datos para obtener la informacion Maestra
+    /// </summary>
     [DataContract]
     public class ResInfoMaestra
     {

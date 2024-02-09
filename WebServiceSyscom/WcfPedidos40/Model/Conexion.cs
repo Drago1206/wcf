@@ -155,11 +155,7 @@ namespace connect
             this.sqlQuery = _sqlQuery;
         }
 
-        //public void AddParametros(string _field, string _value)
-        //{
-        //    this.qryInsValores.Add(_field, _value);
-        //}
-
+       
         /// <summary>
         /// Inserta una condicion a la sentencia bajo el operador logico AND.
         /// </summary>
@@ -260,7 +256,7 @@ namespace connect
         #region otrasFunciones
 
         /// <summary>
-        /// Joins the data tables.
+        /// Funciona para combinar 2 objetos DataTable en uno solo aplicando operacion de union
         /// </summary>
         /// <param name="t1">The t1.</param>
         /// <param name="t2">The t2.</param>
@@ -268,9 +264,12 @@ namespace connect
         /// <returns></returns>
         public DataTable JoinDataTables(DataTable t1, DataTable t2, params Func<DataRow, DataRow, bool>[] joinOn)
         {
+            //Se crea un nuevo objeto de DataTable que almacena los resultados de la union
             DataTable result = new DataTable();
+            // Se recorren las dos columnas que recibimos mediante parametros
             foreach (DataColumn col in t1.Columns)
             {
+                //Condicional por si una columna no existe en el result se agrega con el mismo nombre y tipo de dato
                 if (result.Columns[col.ColumnName] == null)
                     result.Columns.Add(col.ColumnName, col.DataType);
             }
@@ -279,10 +278,13 @@ namespace connect
                 if (result.Columns[col.ColumnName] == null)
                     result.Columns.Add(col.ColumnName, col.DataType);
             }
+            //Se iteran todas las filas de t1
             foreach (DataRow row1 in t1.Rows)
             {
+                //Para cada fila de t1 , se busca en t2 las filas que cumplan las condiciones de union especificadas por el join on
                 var joinRows = t2.AsEnumerable().Where(row2 =>
                 {
+                    // si se encuentra una coincidencia , se crea una nueva fila en result que combina ambas tablas
                     foreach (var parameter in joinOn)
                     {
                         if (!parameter(row1, row2)) return false;
@@ -291,6 +293,7 @@ namespace connect
                 });
                 foreach (DataRow fromRow in joinRows)
                 {
+
                     DataRow insertRow = result.NewRow();
                     foreach (DataColumn col1 in t1.Columns)
                     {
@@ -303,43 +306,67 @@ namespace connect
                     result.Rows.Add(insertRow);
                 }
             }
+            //y al final retorna el objeto result que contiene la tabla resultante después de la unión.
             return result;
         }
 
         /// <summary>
-        /// Gets the number filas.
+        /// Obtiene el numero de filas de un DataTable
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Numero de filas</returns>
         public int getNumFilas()
         {
+            //En la variable filas se accede a la propiedad Rows del DataTable y mediante Count se obtiene el numero de filas de esta
             int filas = this.getDataTable().Rows.Count;
             return filas;
         }
+
         /// <summary>
-        /// Resets the query.
+        ///  Restablece los valores relacionados con una consulta 
         /// </summary>
         public void resetQuery()
         {
+            //Limpia la coleccion de tablas obtenidas en la consulta
             this.qryTables.Clear();
+
+            //Limpia la coleccion de columnas obtenidas 
             this.qryFields.Clear();
+
+            //Limpia la coleccion de condiciones
             this.qryWhereAND.Clear();
+
+            //Limpia la coleccion de condiciones
             this.qryWhereOR.Clear();
+
+            //Limpia la coleccion de GroupBy
             this.qryGroupBy.Clear();
+
+            //Limpia la coleccion de OrderBy
             this.qryOrderBy.Clear();
+
+            //Limpia la coleccion de tablas
             this.ds.Tables.Clear();
+
+            //Limpia la coleccion de parametros
             this.sqlParameters = new List<SqlParameter>();
+
+            //Establece el numero de filas resultadas a cero 
             this.resNumRows = 0;
         }
+
         /// <summary>
-        /// Gets the campos.
+        /// Devuelve una cadena de strings de las columnas almacenadas en una colección llamada qryFields
         /// </summary>
         /// <returns></returns>
         public string getCampos()
         {
+            //Se utiliza el metodo join de la clase String para combinar los elementos de qryFields
+            //Se retorna como resultado un string que contiene los nombres de las columnas
             return String.Join(",", qryFields);
         }
+
         /// <summary>
-        /// Inserts the data table.
+        /// Inserta datos desde un datatable a una tabla en una base de datos utilizando la carga masiva
         /// </summary>
         /// <param name="_tabla">The _tabla.</param>
         /// <param name="_datos">The _datos.</param>
@@ -348,25 +375,34 @@ namespace connect
             bool insertado = true;
             try
             {
-
+                //verifica que la conexion a la base de datos esta abierta , si no la realiza
                 if (this.sqlConn.State != ConnectionState.Open)
                 {
                     this.Connect();
                     this.sqlConn.Open();
                 }
+                //Se crea un objeto SqlBulkCopy  para la carga masiva de datos.
                 SqlBulkCopy sbc;
                 if (this.transaccion != null)
                     sbc = new SqlBulkCopy(sqlConn, SqlBulkCopyOptions.Default, this.transaccion);
                 else
                     sbc = new SqlBulkCopy(sqlConn);
+
+                //Se establece el nombre de la tabla destino de la base de datos
                 sbc.DestinationTableName = _tabla;
+
+                //Se copian los datos del DataTable a la base de datos
                 sbc.WriteToServer(_datos);
+
+                //Si no hay una trasaccion activa se liberan los recursos y se cierra la conexion
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
                     this.sqlConn.Close();
                 }
             }
+
+            //En caso de excepcion se captura la excepción, se registra en un registro de errores y se establece insertado como false.
             catch (Exception e)
             {
                 LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message + "\nDatos=>\n" + string.Join("///", _datos.Rows.Cast<DataRow>().FirstOrDefault().ItemArray));
@@ -381,8 +417,9 @@ namespace connect
             }
             return insertado;
         }
+
         /// <summary>
-        /// Inserts the data table.
+        /// Inserta filas con carga masiva a una base de datos 
         /// </summary>
         /// <param name="_tabla">The _tabla.</param>
         /// <param name="_datos">The _datos.</param>
@@ -390,19 +427,26 @@ namespace connect
         {
             try
             {
-
+                //Verifica que la conexion este abierta y si no es asi este la abre
                 if (this.sqlConn.State != ConnectionState.Open)
                 {
                     this.Connect();
                     this.sqlConn.Open();
                 }
+                //Crea el objeto SqlBulkCopy para la carga masiva 
                 SqlBulkCopy sbc;
                 if (this.transaccion != null)
                     sbc = new SqlBulkCopy(sqlConn, SqlBulkCopyOptions.TableLock, this.transaccion);
                 else
                     sbc = new SqlBulkCopy(sqlConn);
+
+                //Proporciona el nombre de la tabla destino a donde los datos se van
                 sbc.DestinationTableName = _tabla;
+
+                //Copia los datos que contiene a la base de datos
                 sbc.WriteToServer(_datos);
+
+                //Verfica que no haya trasaccion alguna para cerrarla
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
@@ -422,21 +466,30 @@ namespace connect
             }
 
         }
+
+
         /// <summary>
-        /// Datas the rowto parameters proc.
+        /// Convierte los datos de un objeto datarow  en una lista de parametros 
         /// </summary>
         /// <param name="_datos">The _datos.</param>
         public void dataRowtoParametersProc(DataRow _datos)
         {
             try
             {
+                //Se crea una nueva lista de parametros
                 sqlParameters = new List<SqlParameter>();
 
+                //Inicializa la variable de iteracion
                 int i = 0;
+
+                //Itera los datos del objeto ItemArray
                 foreach (var r in _datos.ItemArray)
                 {
+                    //El nombre del parametro se crea concadenando con el nombre de la columna correspondiente de cada tabla
                     SqlParameter p = new SqlParameter("@" + _datos.Table.Columns[i].ColumnName, r);
 
+                    //El parametro recien creado se añade a la lista de parametros 
+                    //Por cada iteracion se va sumando el indice de iteracion
                     sqlParameters.Add(p);
                     i = i + 1;
                 }
@@ -450,22 +503,33 @@ namespace connect
 
 
         }
+
+
         /// <summary>
-        /// Datas the rowto parameters proc.
+        /// Convierte los datos de un diccionario en una lista de parametros
         /// </summary>
         /// <param name="_datos">The _datos.</param>
         public void dataRowtoParametersProc(Dictionary<string, object> _datos)
         {
             try
-            {
+            {   
+                //Se crea una nueva lista de parametros 
                 sqlParameters = new List<SqlParameter>();
 
+                //Se inicializa la variale i para ir guardando el numero de iteraciones dadas
                 int i = 0;
+
+                //Se itera el item datos 
                 foreach (var r in _datos)
                 {
                     try
+                        
                     {
+                        ////El nombre del parametro se crea concadenando con el nombre de la columna correspondiente de cada tabla
+                        ///El valor del dato se covierte al tipo de dato correspondiente
                         SqlParameter p = new SqlParameter("@" + r.Key, Convert.ChangeType(r.Value, r.Value.GetType()));
+
+                        //Por cada parametro creado se añade a la lista de parametros 
                         sqlParameters.Add(p);
                     }
                     catch (Exception e)
@@ -473,7 +537,7 @@ namespace connect
 
                     }
 
-
+                    //Por cada finalizacion se va incrementando la variable i
                     i = i + 1;
                 }
 
@@ -486,26 +550,37 @@ namespace connect
 
 
         }
+
+
         /// <summary>
-        /// Gets the data set.
+        /// Devuelve un objeto data set
         /// </summary>
         /// <returns></returns>
         public DataSet getDataSet()
         {
             return ds;
         }
+
+
         /// <summary>
-        /// Gets the data table.
+        ///Devuelve un objeto DataTable
         /// </summary>
         /// <returns></returns>
         public DataTable getDataTable()
         {
             return ds.Tables[0];
         }
+
+        /// <summary>
+        ///Abre la conexion  a la base de datos
+        /// </summary>
+        /// <returns></returns>
         public ConnectionState abrirConexion(bool isTransact = false)
         {
             try
-            {
+            {   
+                //Verifica si la conexion sql es diferente de nula para abrir la conexion
+                //Si se especifica el parametro isTrasnsact se inicia una trasaccion despues de la conexion.
                 if (sqlConn != null)
                 {
                     sqlConn.Open();
@@ -521,6 +596,11 @@ namespace connect
             }
             return sqlConn.State;
         }
+
+        /// <summary>
+        ///Sirve para ejecutar los procedimientos de almacenado
+        /// </summary>
+        /// <returns></returns>
         public bool ejecutarQuery(string SqlQuery, List<SqlParameter> _parametros, out DataSet _Datos, out string[] mensaje, CommandType tipo = CommandType.Text)
         {
             // Se declara resultado como valor false por defecto
@@ -581,19 +661,25 @@ namespace connect
             }
             return resultado;
         }
+
         /// <summary>
-        /// Converts to list model.
+        /// Convierte un data set en una lista de objetos de modelo
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <returns></returns>
         public List<TModel> ConvertToListModel<TModel>()
-        {
+        {   
+            //Se crea una nueva lista de tipoTModel
             List<TModel> mo = new List<TModel>();
+
+            // Se obtiene el tipo de TModel y sus propiedades mediante reflexión.
             Type tipo = typeof(TModel);
             var atributos = tipo.GetProperties();
 
+            //Se iteran las filas del data set y por cada iteracion se crea una instancia objeto Tmodel
             foreach (DataRow filas in ds.Tables[0].Rows)
             {
+                //Para cada propiedad en TModel, se intenta asignar el valor correspondiente de la fila actual.
                 TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
 
                 foreach (System.Reflection.PropertyInfo campo in atributos)
@@ -610,19 +696,25 @@ namespace connect
             }
             return mo;
         }
+
         /// <summary>
-        /// Converts to model.
+        /// Convierte un data set en una lista de objetos de modelo
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <returns></returns>
         public TModel ConvertToModel<TModel>(DataSet ds)
         {
+            // Se crea una lista de tipo TModel
             List<TModel> mo = new List<TModel>();
+
+            //Se obtiene el tipo Tmodel mediante reflexion
             Type tipo = typeof(TModel);
             var atributos = tipo.GetProperties();
 
+            //Se recorre el data set y se crea una instancia de Tmodel 
             foreach (DataRow filas in ds.Tables[0].Rows)
             {
+                //Se intenta asignar el valor correspondiente de cada fila a la propiedad correspondiente
                 TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
 
                 foreach (System.Reflection.PropertyInfo campo in atributos)
@@ -637,23 +729,28 @@ namespace connect
 
                 mo.Add((TModel)objeto);
             }
-
+            //El método devuelve el primer elemento de la lista mo (usando FirstOrDefault()).
             return mo.FirstOrDefault();
 
         }
+
         /// <summary>
-        /// Converts to model.
+        /// Convierte un conjunto de datos (dataset) en un objeto de modelo
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <param name="modelo">The modelo.</param>
         public void ConvertToModel<TModel>(out TModel modelo)
         {
+            //Se crea una lista de tipo TModel
             List<TModel> mo = new List<TModel>();
+
+            //Se obtiene el tipo de datos mediante reflexion 
             Type tipo = typeof(TModel);
             var atributos = tipo.GetProperties();
-
+            //Se recorre el data set y se instancia un objeto de Tmodel
             foreach (DataRow filas in ds.Tables[0].Rows)
             {
+                //Se intenta asignar el valor correspondiente de la fila actual a cada propiedad.
                 TModel objeto = (TModel)Activator.CreateInstance(typeof(TModel));
 
                 foreach (System.Reflection.PropertyInfo campo in atributos)
@@ -665,15 +762,17 @@ namespace connect
                     {
 
                     }
-
+                // se agrega el objeto TModel a la lista mo.
+               
                 mo.Add((TModel)objeto);
             }
-
+            //El primer elemento de la lista mo se asigna al parámetro modelo.
             modelo = mo.FirstOrDefault();
 
         }
+
         /// <summary>
-        /// Models to procedure.
+        /// Mapea propiedades de un modelo a parametros de un procedimiento de almacenado
         /// </summary>
         /// <param name="Model">The model.</param>
         /// <param name="SQLParameter">The SQL parameter.</param>
@@ -681,13 +780,21 @@ namespace connect
         public bool ModelToProcedure(object Model, string SQLParameter)
         {
             bool respuesta = false;
+
             var atributos = Model.GetType().GetProperties();
+
+            //Se crea una lista de parametros
             List<SqlParameter> parametros = new List<SqlParameter>();
+
+            //Se obtiene el tipo del objeto mediante reflexion
             foreach (System.Reflection.PropertyInfo campo in atributos)
                 try
                 {
-
+                    //Se crea un nuevo parametro seguido de @pm y la propiedad
+                    //Se obtiene el valor de la propiedad actual del objeto Model.
                     parametros.Add(new SqlParameter("@pm" + campo.Name, Model.GetType().GetProperty(campo.Name).GetValue(Model)));
+
+                    //Se agrega a la lista de parametros
                     addParametersProc(parametros);
                     ejecutarProcedimiento(SQLParameter);
                     respuesta = true;
@@ -699,8 +806,9 @@ namespace connect
             return respuesta;
 
         }
+
         /// <summary>
-        /// Inserts the model.
+        /// Mapea propiedades de un objeto de modelo a parámetros de un procedimiento almacenado en una base de datos.
         /// </summary>
         /// <param name="Model">The model.</param>
         /// <returns></returns>
@@ -708,14 +816,23 @@ namespace connect
         {
 
             bool respuesta = false;
+            //Obtiene el tipos de datos mediante reflexion
             var atributos = Model.GetType().GetProperties();
+
+            //Crea una lista de parametros
             List<SqlParameter> parametros = new List<SqlParameter>();
+
+
             foreach (System.Reflection.PropertyInfo campo in atributos)
                 try
                 {
+                    //Por cada parametro creado lo añade en la columna correspondiente añadiendole @pm
                     qryValues.Add("@pm" + campo.Name, Model.GetType().GetProperty(campo.Name).GetValue(Model));
+                    //Lo añade a la lista
                     addParametersProc(parametros);
                     insert();
+
+                    //Se ejecuta una consulta (query) 
                     ejecutarQuery();
                     respuesta = true;
                 }
@@ -727,33 +844,38 @@ namespace connect
         }
 
         /// <summary>
-        /// Gets the fecha server.
+        /// Obtiene la fecha y hora actual del servidor de la base de datos
         /// </summary>
         /// <returns></returns>
         public DateTime getFechaServer()
         {
+            //elecciona la fecha y hora actual del servidor de base de datos utilizando la función GETDATE()
             this.sqlQuery = "select GETDATE() as FechaServer";
             this.ejecutarQuery();
+            //Se accede a la primera tabla y la primera columna como un objeto de tipo Date time
             return this.ds.Tables[0].Rows[0].Field<DateTime>("FechaServer");
         }
 
         /// <summary>
-        /// Get current user ip address.
+        /// Se utiliza para obtener la direccion ip del cliente que visitia al sitio web
         /// </summary>
         /// <returns>The IP Address</returns>
         public static string GetUserIPAddress()
         {
+            //Se obtiene el contexto actual de la aplicación web 
             var context = System.Web.HttpContext.Current;
             string ip = String.Empty;
 
+            //Se verifica si el contexto no es nulo, se le  asigna su valor a ip.
             if (context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"] != null)
                 ip = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"].ToString();
+            //Se verifica la direccion ip del cliente para  asignar su valor a ip.
             else if (!String.IsNullOrWhiteSpace(context.Request.UserHostAddress))
                 ip = context.Request.UserHostAddress;
-
+            //se verifica si la direccion es igual  a “::1” (que representa la dirección IP local de loopback). Si es igual, se cambia a “127.0.0.1”.
             if (ip == "::1")
                 ip = "127.0.0.1";
-
+            //Se retorna la direccion.
             return ip;
         }
 
@@ -770,6 +892,8 @@ namespace connect
         {
             strName = _connectionStringName;
             Connect();
+            //Se relaciona y depende del metodo Connect
+            //El cual se conecta a la base de datos con el parametro de entrada
         }
 
         /// <summary>
@@ -777,18 +901,37 @@ namespace connect
         /// </summary>
         private void Connect()
         {
+            //Se realiza una instancia de la clase SqlConnection, la cual se utiliza para establecer conexiones con bases de datos SQL Server.
             this.sqlConn = new SqlConnection();
+
+            //contendrá la cadena de conexión específica que se utilizará para conectarse a la base de datos.
             string cadenaconex = ConfigurationManager.ConnectionStrings[this.strName].ConnectionString;
+
+            //crea una instancia de SqlConnectionStringBuilder, que es útil para construir y manipular cadenas de conexión de manera programática.
             System.Data.SqlClient.SqlConnectionStringBuilder builder = new System.Data.SqlClient.SqlConnectionStringBuilder();
+
+            //Se asigna la cadena de conexión obtenida previamente al constructor de SqlConnectionStringBuilder.
             builder.ConnectionString = cadenaconex;
+
+            //Se extrae el nombre de la base de datos (catálogo inicial) de la cadena de conexión y se almacena en la propiedad DataBase.
             this.DataBase = builder.InitialCatalog;
+
+            //Se obtiene el nombre del servidor 
             this.Server = builder.DataSource;
+
+            //Se extrae el nombre de usuario y se almacena en UserID
             this.User = builder.UserID;
+
+            //Se instancia la clase pwdSyscom la cual se encarga de decodificar las contraseñas 
             pwdSyscom pwdSys = new pwdSyscom();
             pwdSys.Decodificar(builder.Password);
             builder.Password = pwdSys.contrasenna;
             this.Pass = builder.Password;
+
+            //Finalmente, se establece la cadena de conexión completa en la instancia de SqlConnection llamada sqlConn.
             this.sqlConn.ConnectionString = builder.ConnectionString;
+
+            //Se crea una instancia de DataSet para  almacenar datos en memoria.
             this.ds = new DataSet();
 
         }
@@ -798,8 +941,11 @@ namespace connect
         /// </summary>
         public void beginTran()
         {
+            //Llama al metodo connect
             Connect();
+            //Abre la conexion
             this.sqlConn.Open();
+            //Inicia la trasaccion
             this.transaccion = this.sqlConn.BeginTransaction();
         }
 
@@ -823,58 +969,31 @@ namespace connect
             this.sqlConn.Close();
         }
 
+     
+
         /// <summary>
-        /// Converts a DataTable to a list with generic objects
+        /// Funcion  para convertir una data table en una cadena de objetos
         /// </summary>
-        /// <typeparam name="T">Generic object</typeparam>
+        /// <typeparam name="T">Objeto generico</typeparam>
         /// <param name="table">DataTable</param>
         /// <returns>List with generic objects</returns>
-        public List<T> DataTableToList<T>() where T : class, new()
-        {
-            try
-            {
-                List<T> list = new List<T>();
-
-                foreach (DataRow row in ds.Tables[0].Rows)
-                {
-                    T obj = new T();
-
-                    foreach (var prop in obj.GetType().GetProperties())
-                    {
-                        try
-                        {
-                            PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
-                            propertyInfo.SetValue(obj, Convert.ChangeType(row[prop.Name], propertyInfo.PropertyType), null);
-                        }
-                        catch
-                        {
-                            continue;
-                        }
-                    }
-
-                    list.Add(obj);
-                }
-
-                return list;
-            }
-            catch
-            {
-                return null;
-            }
-        }
+        /// 
 
         public List<T> DataTableToList<T>(DataTable dtDatos) where T : class, new()
         {
             try
-            {
+            {   
+                //Genera una lista vacia de objetos tipos genericos
                 List<T> list = new List<T>();
 
+                //Recorre el DataTable 
                 foreach (DataRow row in dtDatos.Rows)
                 {
+                    //Para cada fila genera una instancia del objeto generico
                     T obj = new T();
 
                     foreach (var prop in obj.GetType().GetProperties())
-                    {
+                    {   //Luego recorre las propiedades de T y asigna los valores de la columna al objeto
                         try
                         {
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
@@ -882,10 +1001,11 @@ namespace connect
                         }
                         catch
                         {
+                            //Si hay algun error durante la asignacion de valores como de coincidencia de datos , este se omite y continua
                             continue;
                         }
                     }
-
+                    // Si en el proceso de asignacion todo sale bien se agrega a una lista los objetos con los valores
                     list.Add(obj);
                 }
 
@@ -893,22 +1013,37 @@ namespace connect
             }
             catch
             {
+                //Si no se lleva acabo dicho proceso, la funcion devuelve null
                 return null;
             }
         }
 
+        /// <summary>
+        /// Funcion de DataTable que recibe un DataSet y lo convierte en una lista de objetos
+        /// </summary>
+        /// <typeparam name="T">Generic object</typeparam>
+        /// <param name="DatosDt">DataTable</param>
+        /// <param name="ds">DataSet</param>
+        /// <returns>List with generic objects</returns>
+        /// 
         public List<T> DataTableToList<T>(string[] DatosDt = null, DataSet ds = null) where T : class, new()
         {
             try
             {
+                //Crea una lista de objetos genericos
                 List<T> list = new List<T>();
+
+                //Si el DataTable es nulo toma la primera tabla del objeto data set , 
+                //de lo contrario le asgina una vista al DataTable original utilizando las columnas especificadas en DatosDt.
                 DataTable dt = DatosDt == null ? ds.Tables[0] : ds.Tables[0].DefaultView.ToTable(true, DatosDt);
                 foreach (DataRow row in dt.Rows)
                 {
+                    //Recorre el data table e inicia un nuevo objeto generico
                     T obj = new T();
-
+                    //Para cada fila genera una instancia del objeto generico
                     foreach (var prop in obj.GetType().GetProperties())
                     {
+                        //Luego recorre las propiedades de T y asigna los valores de la columna al objeto
                         try
                         {
                             PropertyInfo propertyInfo = obj.GetType().GetProperty(prop.Name);
@@ -916,20 +1051,23 @@ namespace connect
                         }
                         catch
                         {
+                            //Si hay algun error durante la asignacion de valores como de coincidencia de datos , este se omite y continua
                             continue;
                         }
                     }
-
+                    // Si en el proceso de asignacion todo sale bien se agrega a una lista los objetos con los valores
                     list.Add(obj);
                 }
-
+                //Luego de finalizar el proceso retorna la lista
                 return list;
             }
             catch
             {
+                //Si no se lleva acabo dicho proceso, la funcion devuelve null
                 return null;
             }
         }
+
         #endregion Configuracion
 
     }

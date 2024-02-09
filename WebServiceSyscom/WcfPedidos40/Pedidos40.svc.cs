@@ -245,6 +245,7 @@ namespace WcfPedidos40
             return existe;
         }
 
+         #region ObtenerCartera
 
         public CarteraResp RespCartera(CarteraReq ReqCartera)
         {
@@ -295,9 +296,6 @@ namespace WcfPedidos40
                             //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                             if (con.ejecutarQuery("WcfPedidos_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
-                                //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
-
-
 
                                 datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
                                 datItemCart.ForEach(m =>
@@ -306,7 +304,6 @@ namespace WcfPedidos40
 
                                     m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
                                 });
-
 
                                 //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
                                 respuesta.DatosCartera = datItemCart;
@@ -387,17 +384,19 @@ namespace WcfPedidos40
             }
             return respuesta;
         }
+        #endregion
 
+        #region ObtenerCarteraTotal
         public ResObtenerCarteraTotal resObtCartTotal(ObtCarTotal Info)
         {
             //Instanciamo la conexion
             connect.Conexion con = new connect.Conexion();
 
-            //Instanciamos la clase de CarteraResp para poder ingresar los resultados en dicha clase
+            //Instanciamos la clase de ResObtenerCarteraTotal para poder ingresar los resultados en dicha clase
             ResObtenerCarteraTotal respuesta = new ResObtenerCarteraTotal();
 
             try
-            {   //Realizamos un try para realizar todas las validaciones , incluyendo el usuario , contraseña y nit del cliente
+            {   //Realizamos un try para realizar todas las validaciones , incluyendo el usuario y contraseña
                 respuesta.Error = null;
                 if (Info.usuario == null)
                 {
@@ -434,7 +433,7 @@ namespace WcfPedidos40
                             //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                             if (con.ejecutarQuery("WSPedidoS40_consObtenerCarteraTotal", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
-                                //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
+                               //Llamamos el metodo  DataTableTolist y le pasamos los parametros necesarios para asi 
 
                                 datItemCart = con.DataTableToList<ResCarteraTotal>("Tercero,SaldoCartera".Split(','), Tablainfo);
 
@@ -461,8 +460,9 @@ namespace WcfPedidos40
             }
             return respuesta;
         }
+        #endregion
 
-
+        #region ObtenerCarteraTotalDef
         public ResObtenerCartera getCarteraTotalDet(authCartera Modelo)
         {
             //Instanciamo la conexion
@@ -484,11 +484,6 @@ namespace WcfPedidos40
                     if (ExistUsu.Existe(Modelo.usuario.UserName, Modelo.usuario.Password, out string[] mensajeNuevo))
                     {
                         respuesta.Error = new Log { Codigo = "999", Msg = "Ok" };
-                       
-                      
-
-
-                           
 
                             // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
                             DataSet Tablainfo = new DataSet();
@@ -521,11 +516,13 @@ namespace WcfPedidos40
                                 //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                                 if (con.ejecutarQuery("WSPedidoS40_consObtenerCarteraTotalDEF", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                                 {
-                                    //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
+                                    //Implementamos el metodo DataTableToList para de esta manera pasarle los parametros y convertir un DataSet en una lista que se llama "datItemCart"
 
                                     datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
                                     datItemCart.ForEach(m =>
                                     {
+                                        //A medida que se itera ItemCartera, se crea una nueva lista de objetos de tipo Cartera y se asigna a la propiedad Detalle del objeto ItemCartera. La lista de objetos Cartera.
+                                        // Esta se crea a partir de una tabla de datos que se filtra utilizando el valor de la propiedad Tercero
                                         m.Detalle = new List<Cartera>();
 
                                         m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
@@ -533,8 +530,6 @@ namespace WcfPedidos40
 
                                     //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
                                     respuesta.Datoscartera = datItemCart;
-                                    //respuesta.DatosCartera.Add(cartItem);
-
 
                                 }
 
@@ -555,8 +550,9 @@ namespace WcfPedidos40
             }
             return respuesta;
         }
+        #endregion
 
-       
+        #region InformacionMaestra
         public ResInfoMaestra GetInfMaestra(InfoMaestra Parametros)
         {
             //Instanciamo la conexion
@@ -603,23 +599,29 @@ namespace WcfPedidos40
                                 //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                                 if (con.ejecutarQuery("WSPedido_consInfoMaestra", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                                 {
-                                    //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
-
+                                    
+                                    //Creo una lista de tipo diccionario
                                     List<Dictionary<string, object>> ListData = new List<Dictionary<string, object>>();
+                                    //Iniciamos recorriendo la primera tabla del DataSet y verificamos si esta tiene algunos resultados
                                     dataTable = Tablainfo.Tables[0];
                                     if (Tablainfo.Tables[0].Rows.Count > 0) {
+                                        //Si tiene resultados empezamos a recorrer las columnas 
                                         foreach (DataRow row in dataTable.Rows)
                                         {
+                                            //
                                             Dictionary<string, object> rowDicc = new Dictionary<string, object>();
                                             foreach (DataColumn col in dataTable.Columns)
                                             {
+                                                //Cuando iteramos el data set asignamos los valores por "Claves:Valores"
                                                 rowDicc[col.ColumnName] = row[col];
                                             }
+                                            //Añadimos los datos a la lista de diccionario
                                             ListData.Add(rowDicc);
                                         }
+                                        //Pasamos la lista de diccionario a los bloques de contrato
                                         respuesta.Respuesta = ListData;
                                     }
-                                    //respuesta.Respuesta = con.DataTableToList<Regimen>("IdRegimen,regimen".Split(','), Tablainfo);
+                                 
                                 }
 
                             }
@@ -644,6 +646,7 @@ namespace WcfPedidos40
             return respuesta;
 
         }
+        #endregion
     }
 
 }
