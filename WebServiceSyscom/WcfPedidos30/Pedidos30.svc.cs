@@ -253,7 +253,7 @@ namespace WcfPedidos30
             }
         }
         #endregion
-                
+
         #region ObtenerCartera
 
 
@@ -280,69 +280,60 @@ namespace WcfPedidos30
                     if (ExistUsu.Existe(ReqCartera.usuario.UserName, ReqCartera.usuario.Password, out string[] mensajeNuevo))
                     {
                         respuesta.Error = new Log { Codigo = "999", Descripcion = "Ok" };
-                        if (ReqCartera.NitCliente == null || string.IsNullOrWhiteSpace(ReqCartera.NitCliente))
+
+                        // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
+                        DataSet Tablainfo = new DataSet();
+                        //Instanciamos la clase de cartera para poder ingresar los datos obtenidos en el metodo
+                        Cartera cart = new Cartera();
+                        //Instanciamos la clase item cartera para instanciar la lista de cartera que esta clase contiene 
+                        ItemCartera cartItem = new ItemCartera();
+                        //Creamos una nueva instancia de la lista de cartera la cual la contienen un nombre que se llama detalle.
+
+
+                        List<ItemCartera> datItemCart = new List<ItemCartera>();
+
+
+                        try
                         {
-                            // Codigo para obtener todas las carteras..
-                        }
-                        else
-                        {
-                            // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
-                            DataSet Tablainfo = new DataSet();
-                            //Instanciamos la clase de cartera para poder ingresar los datos obtenidos en el metodo
-                            Cartera cart = new Cartera();
-                            //Instanciamos la clase item cartera para instanciar la lista de cartera que esta clase contiene 
-                            ItemCartera cartItem = new ItemCartera();
-                            //Creamos una nueva instancia de la lista de cartera la cual la contienen un nombre que se llama detalle.
+                            //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
+                            // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
+                            con.setConnection("DBSAL");
+                            //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
+                            List<SqlParameter> parametros = new List<SqlParameter>();
+                            //Indicamos el parametro que vamos a pasar 
+                            parametros.Add(new SqlParameter("@NitCliente", ReqCartera.NitCliente));
+                            con.addParametersProc(parametros);
 
-
-                            List<ItemCartera> datItemCart = new List<ItemCartera>();
-
-
-                            try
+                            //Ejecuta procedimiento almacenado
+                            //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
+                            DataTable DT = new DataTable();
+                            // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
+                            con.resetQuery();
+                            //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
+                            if (con.ejecutarQuery("WcfPedido_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
-                                //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
-                                // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
-                                con.setConnection("DBSAL");
-                                //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
-                                List<SqlParameter> parametros = new List<SqlParameter>();
-                                //Indicamos el parametro que vamos a pasar 
-                                parametros.Add(new SqlParameter("@NitCliente", ReqCartera.NitCliente));
-                                con.addParametersProc(parametros);
 
-                                //Ejecuta procedimiento almacenado
-                                //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
-                                DataTable DT = new DataTable();
-                                // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
-                                con.resetQuery();
-                                //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
-                                if (con.ejecutarQuery("WcfPedidos30_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                                datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
+                                datItemCart.ForEach(m =>
                                 {
-                                    //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
+                                    m.Detalle = new List<Cartera>();
+
+                                    m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
+                                });
+
+                                //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
+                                respuesta.DatosCartera = datItemCart;
 
 
-
-                                    datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
-                                    datItemCart.ForEach(m =>
-                                    {
-                                        m.Detalle = new List<Cartera>();
-
-                                        m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
-                                    });
-
-
-                                    //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
-                                    respuesta.DatosCartera = datItemCart;
-                                    //respuesta.DatosCartera.Add(cartItem);
-
-
-                                }
 
                             }
-                            catch (Exception e)
-                            {
-                                respuesta.Error = new Log { Descripcion = e.Message };
-                            }
+
                         }
+                        catch (Exception e)
+                        {
+                            respuesta.Error = new Log { Descripcion = e.Message };
+                        }
+
                     }
                 }
 
@@ -381,64 +372,11 @@ namespace WcfPedidos30
                         respuesta.Error = new Log { Codigo = "USER_003", Descripcion = "¡El UserName no puede ser nulo o vacío!" };
 
                     }
-                    else if (obtenerConSolidado.usuario.Password == null || String.IsNullOrWhiteSpace(obtenerConSolidado.usuario.Password))
+                    else if (obtenerConSolidado.usuario.Password != null)
                     {
                         respuesta.Error = new Log { Codigo = "USER_003", Descripcion = "¡El Password no puede ser nulo o vacío!" };
 
-                    }
-                    else if (obtenerConSolidado.NitCliente == null || String.IsNullOrWhiteSpace(obtenerConSolidado.NitCliente))
-                    {
-                        // Si NitCliente es nulo o está en blanco, asumimos un valor predeterminado 
-                        //obtenerConSolidado.NitCliente = null; // Asigna un valor predeterminado 
 
-                        con.setConnection("DBACC");
-                        DataSet TablaCliente = new DataSet();
-                        //le pasamos el valor del nit ingresado por el usuario   
-                        cliente = obtenerConSolidado.NitCliente;
-
-                        //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
-                        List<SqlParameter> parametros = new List<SqlParameter>();
-                        PaginadorCliente<ClienteResponse> paginador = new PaginadorCliente<ClienteResponse>();
-                        
-                        int Regisros_X_Pagina = paginador.RegistrosPorPagina;
-                        int NumeroPagina = paginador.PaginaActual;
-
-                        //Indicamos el parametro que vamos a pasar 
-                        parametros.Add(new SqlParameter("@NitCliente", obtenerConSolidado.NitCliente));
-                        con.addParametersProc(parametros);
-
-                        //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
-                        DataTable DT = new DataTable();
-
-                        // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
-                        con.resetQuery();
-                        if (con.ejecutarQuery("WcfPedido_ConsolidacionClientes", parametros, out TablaCliente, out string[] NuevoMensaje, CommandType.StoredProcedure))
-                        {
-                            clientes = con.DataTableToList<ClienteResponse>("NitCliente,NombreCliente,Direccion,Ciudad,Telefono,NumLista,NitVendedor,NomVendedor".Split(','), TablaCliente);
-
-                            // creamos un DataTable con la cual asignando la primera tabla dentro del conjunto de tablas TablaCliente a la variable lista. 
-                            //Esto significa que lista contendrá la primera tabla del conjunto de datos TablaCliente.
-                            DataTable lista = TablaCliente.Tables[0];
-                            int TotalRegistros = TablaCliente.Tables[0].Rows.Count;
-
-                            clientes.ForEach(m =>
-                            {
-                                // Inicializa la lista de agencias
-                                m.ListaAgencias = new List<Agencia>();
-                                //Pasamos la instancia de la clase cliente la cual contiene una lista de agencias para poder obtener los valores de allí.
-                                //Le pasamos un objeto tipo DataTable de tipo lista para recibir listas de tipo string y poder asignarles el valor de la consulta
-                                m.ListaAgencias = con.DataTableToList<Agencia>(lista.Copy().Rows.Cast<DataRow>()
-                                                                .Where(r => r.Field<string>("NitCliente").Equals(m.NitCliente))
-                                                                .CopyToDataTable().AsDataView().ToTable(true, "CodAge,NomAge".Split(',')));
-                            });
-                            respuesta.ListadoClientes = new PaginadorCliente<ClienteResponse> { Resultado = clientes };
-
-                            respuesta.Error = new Log { Codigo = "008", Descripcion = "Se ejecutó correctamente la consulta" };
-
-                        }
-                    }
-                    else
-                    {
                         try
                         {
                             //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
@@ -468,7 +406,7 @@ namespace WcfPedidos30
 
 
 
-                            if (con.ejecutarQuery("ConsolidacionClientes", parametros, out TablaCliente, out string[] NuevoMensaje, CommandType.StoredProcedure))
+                            if (con.ejecutarQuery("WcfPedido_ConsolidacionClientes", parametros, out TablaCliente, out string[] NuevoMensaje, CommandType.StoredProcedure))
                             {
                                 // Calcula el número total de elementos en la tabla 1 de TablaCliente
                                 int ResultadoTotal = TablaCliente.Tables[0].Rows.Count;
@@ -539,6 +477,7 @@ namespace WcfPedidos30
                             respuesta.Error = new Log { Descripcion = e.Message };
                         }
                     }
+
                 }
 
                 else
