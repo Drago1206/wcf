@@ -7,5 +7,6 @@ namespace WcfDocTrasn.Model
 {
     public class DatosTrazabilidad
     {
+
     }
 }

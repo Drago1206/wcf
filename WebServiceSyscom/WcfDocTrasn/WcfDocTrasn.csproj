@@ -42,6 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="SyscomUtilities">
+      <HintPath>..\..\..\..\syscomUtilites\SyscomUtilities.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -69,13 +72,18 @@
       <DependentUpon>DocTrasn.svc</DependentUpon>
     </Compile>
     <Compile Include="IDocTrasn.cs" />
+    <Compile Include="Model\Conceptos.cs" />
     <Compile Include="Model\Conexion.cs" />
     <Compile Include="Model\DatosTrazabilidad.cs" />
+    <Compile Include="Model\Items.cs" />
     <Compile Include="Model\LogErrores.cs" />
     <Compile Include="Model\Pedidos.cs" />
+    <Compile Include="Model\Usuarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
