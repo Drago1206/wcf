@@ -302,13 +302,11 @@ namespace WcfPedidos30
                             List<SqlParameter> parametros = new List<SqlParameter>();
                             //Indicamos el parametro que vamos a pasar 
                             parametros.Add(new SqlParameter("@NitCliente", ReqCartera.NitCliente));
-                            con.addParametersProc(parametros);
 
                             //Ejecuta procedimiento almacenado
                             //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
                             DataTable DT = new DataTable();
                             // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
-                            con.resetQuery();
                             //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                             if (con.ejecutarQuery("WcfPedido_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
@@ -323,10 +321,8 @@ namespace WcfPedidos30
 
                                 //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
                                 respuesta.DatosCartera = datItemCart;
-
-
-
                             }
+                            con.resetQuery();
 
                         }
                         catch (Exception e)

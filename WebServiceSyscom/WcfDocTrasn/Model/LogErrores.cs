@@ -6,8 +6,17 @@ using System.Web;
 
 namespace WcfDocTrasn.Model
 {
+    public class Errores {
+        public string Codigo { get; set; }
+        public string Descripcion { get; set; }
+
+    }
+
+
+
     public static class LogErrores
     {
+        
         private static string dir = AppDomain.CurrentDomain.BaseDirectory;
         public static List<string> tareas = new List<string>();
 
