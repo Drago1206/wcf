@@ -291,8 +291,7 @@ namespace WcfPedidos40
                             //Ejecuta procedimiento almacenado
                             //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
                             DataTable DT = new DataTable();
-                            // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
-                            con.resetQuery();
+                            
                             //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                             if (con.ejecutarQuery("WcfPedidos_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
@@ -308,6 +307,8 @@ namespace WcfPedidos40
                                 //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
                                 respuesta.DatosCartera = datItemCart;
                                 //respuesta.DatosCartera.Add(cartItem);
+                                // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
+                                con.resetQuery();
                             }
                             else {
                                 respuesta.Error = new Log { Msg = "No se pudieron ejecutar las consultas" };
@@ -442,6 +443,8 @@ namespace WcfPedidos40
                                 //respuesta.DatosCartera.Add(cartItem);
 
                             }
+                            // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
+                            con.resetQuery();
 
                         }
                         catch (Exception e)
@@ -511,8 +514,7 @@ namespace WcfPedidos40
                                 //Ejecuta procedimiento almacenado
                                 //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
                                 DataTable DT = new DataTable();
-                                // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
-                                con.resetQuery();
+                                
                                 //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                                 if (con.ejecutarQuery("WSPedidoS40_consObtenerCarteraTotalDEF", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                                 {
@@ -530,10 +532,12 @@ namespace WcfPedidos40
 
                                     //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
                                     respuesta.Datoscartera = datItemCart;
-
+                                // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
+                                con.resetQuery();
                                 }
+                                
 
-                            }
+                        }
                             catch (Exception e)
                             {
                                 respuesta.Error = new Log { Msg = e.Message };
