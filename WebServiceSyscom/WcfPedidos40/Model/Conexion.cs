@@ -99,6 +99,7 @@ namespace connect
                             this.adapter.Fill(ds);
                         break;
                 }
+
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
@@ -235,6 +236,7 @@ namespace connect
                 else
                     this.adapter.Fill(this.ds);
                 this.adapter.SelectCommand.Parameters.Clear();
+                sqlParameters.Clear();
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
@@ -571,6 +573,14 @@ namespace connect
 
                         // Se establece el segundo elemento del mensaje a un mensaje de error que incluye la consulta SQL y el mensaje de la excepción
                         mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
+                    }
+                    finally
+                    {
+                        if (this.transaccion == null)
+                        {
+                            this.adapter.Dispose();
+                            this.sqlConn.Close();
+                        }
                     }
 
                 }

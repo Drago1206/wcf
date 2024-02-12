@@ -9,3 +9,28 @@
 08/02/2024 9:45:23 a. m.: La cadena de entrada no tiene el formato correcto.
 08/02/2024 1:29:04 p. m.: El pedido es==>
 08/02/2024 1:29:04 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+09/02/2024 9:57:07 a. m.: El pedido es==>
+09/02/2024 9:57:07 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 8:33:35 a. m.: El pedido es==>
+12/02/2024 8:33:35 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 8:47:03 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Otro SqlParameterCollection ya contiene SqlParameter.
+12/02/2024 8:47:03 a. m.: El pedido es==>
+12/02/2024 8:47:03 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 9:05:17 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Procedure or function 'WcfPedidos40_MultipleCons' expects parameter '@numCons', which was not supplied.
+12/02/2024 9:05:17 a. m.: El pedido es==>
+12/02/2024 9:05:17 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 9:05:38 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: Procedure or function 'WcfPedidos40_MultipleCons' expects parameter '@numCons', which was not supplied.
+12/02/2024 9:56:37 a. m.: El pedido es==>
+12/02/2024 9:56:37 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 10:51:45 a. m.: El pedido es==>
+12/02/2024 10:51:45 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 10:51:54 a. m.: El pedido es==>
+12/02/2024 10:51:54 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 10:58:57 a. m.: El pedido es==>
+12/02/2024 10:58:57 a. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 2:17:15 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Incorrect syntax near ' AND isnull(CdCia, '.
+Unclosed quotation mark after the character string ''.
+12/02/2024 3:47:12 p. m.: El pedido es==>
+12/02/2024 3:47:12 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+12/02/2024 3:57:33 p. m.: El pedido es==>
+12/02/2024 3:57:33 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]

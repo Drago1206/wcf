@@ -50,8 +50,8 @@ namespace WcfPedidos40.Model
                 DataSet TablaProdPedidos = new DataSet();
                 List<SqlParameter> parametrosProd = new List<SqlParameter>();
                 con.ejecutarQuery("WcfPedidos40_ProductosPedidos", parametrosProd, out TablaProdPedidos, out string[] mensajeProdPed, CommandType.StoredProcedure);
-
                 this.Productos = TablaProdPedidos.Tables[0].Copy();
+
                 _dtProductos = this.Productos.Clone();
                 List<SqlParameter> parametrosValor = new List<SqlParameter>();
                 parametrosValor.Add(new SqlParameter("@IdUsuario", this.Usuario));
@@ -73,6 +73,8 @@ namespace WcfPedidos40.Model
 
                 foreach (ProductosResponse prod in pmProductos)
                 {
+
+                    /*
                     con.resetQuery();
                     con.setCustomQuery(@"
                     select Id,Tipo,NumLista,CdMney as IdMoneda, Cddct as IdDcto from (
@@ -85,16 +87,23 @@ namespace WcfPedidos40.Model
                     left join Bodegas b on (p.IdBodega = b.IdBodega)
                     where p.IdProducto = '" + prod.IdProducto + @"' and p.Inactivo = 0
                     ) NumLista order by Id
-                ");
-                    con.ejecutarQuery();
+                    ");*/
+                    List<SqlParameter> parametrosPrecios = new List<SqlParameter>();
+                    DataSet TablaPrecios = new DataSet();
+                    parametrosPrecios.Add(new SqlParameter("@IdProducto", prod.IdProducto));
+                    parametrosPrecios.Add(new SqlParameter("@IdTercero", this.Cliente.IdTercero));
+                    parametrosPrecios.Add(new SqlParameter("@IdUsuario", this.Usuario));
+                    con.ejecutarQuery("WcfPedidos40_ConsPrecios", parametrosPrecios, out TablaPrecios, out string[] mensajePrecios, CommandType.StoredProcedure);
+                    
                     Int32 numLista = 0;
-                    if (!Int32.TryParse(con.getDataTable().Rows[0].Field<string>("NumLista"), out numLista))
+                    if (!Int32.TryParse(TablaPrecios.Tables[0].Rows[0].Field<string>("NumLista"), out numLista))
                         numLista = 2;
 
                     DataTable _tmpDt = this.getProducto(prod.IdProducto, this.IdCia, IdBodega, numLista, prod.Cantidad, prod.EsObsequio, con);
 
-                    if (con.getDataTable().Rows.Count > 0)
-                        _dtProductos.Rows.Add(con.getDataTable().Rows[0].ItemArray);
+                    if (_tmpDt.Rows.Count > 0)
+                        _dtProductos = _tmpDt;
+                        //_dtProductos.Rows.Add(_tmpDt.Rows[0].ItemArray);
                 }
             }
             catch (Exception ex)
@@ -134,94 +143,74 @@ namespace WcfPedidos40.Model
                 try
                 {
                     con.setConnection("Syscom");
-                    /*Se importan los campos necesarios para grabar el pedido partiendo de las tablas OPedido y Kardex*/
-                    #region Estructura de los registros
-                    con.resetQuery();
-                    con.setCustomQuery(@"select top 0 * from Trn_Kardex");
-                    con.ejecutarQuery();
-                    this.Kardex = con.getDataTable().Copy();
-
-                    con.resetQuery();
-                    con.setCustomQuery(@"select top 0 * from Trn_Opedido");
-                    con.ejecutarQuery();
-                    this.OPedido = con.getDataTable().Copy();
-
-                    #region Aprobacion
-                    /*
-                    con.resetQuery();
-                    con.setCustomQuery(@"select top 0 * from Trn_Aprobacion");
-                    con.ejecutarQuery();
-                    this.Aprobacion = con.getDataTable().Copy();
-                    */
-                    #endregion
-                    #endregion
-
+                    List<SqlParameter> parametrosTablas = new List<SqlParameter>();
+                    parametrosTablas.Add(new SqlParameter("@Tabla", "Trn_Kardex"));
+                    DataSet TablaImpTablas = new DataSet();
+                    con.ejecutarQuery("WcfPedidos40_ImpTablas", parametrosTablas, out TablaImpTablas, out string[] mensajeTablas, CommandType.StoredProcedure);
+                    this.Kardex = TablaImpTablas.Tables[0];
+                    parametrosTablas.Clear();
+                    parametrosTablas.Add(new SqlParameter("@Tabla", "Trn_Opedido"));
+                    con.ejecutarQuery("WcfPedidos40_ImpTablas", parametrosTablas, out TablaImpTablas,  out mensajeTablas, CommandType.StoredProcedure);
+                    this.OPedido = TablaImpTablas.Tables[0];
                     con.beginTran();
                 inicio:
+                    List<SqlParameter> parametroCons = new List<SqlParameter>();
+                    DataSet TablaCons = new DataSet();
+                    string[] mensajeCons;
+                    // Crear un array para almacenar los DataTables
+                    DataTable[] tablas = new DataTable[5];
+                    parametroCons.Add(new SqlParameter("@numCons", Convert.ToInt32(0)));
+                    parametroCons.Add(new SqlParameter("@IdTercero", this.Cliente.IdTercero));
+                    parametroCons.Add(new SqlParameter("@Agencia", this.Agencia));
+                    parametroCons.Add(new SqlParameter("@IdCia", this.IdCia));
+                    parametroCons.Add(new SqlParameter("@Usuario", this.Usuario));
 
-                    /*Se obtienen las variables comunes para el encabezado y detalle del pedido*/
+                    // Iterar sobre cada consulta
+                    //SqlCommand.Transaccion =  DataManager.transaction;
+                    for (int i = 0; i < 5; i++)
+                    {
+                        con.addParametersProc(parametroCons);
+                        con.ejecutarProcedimiento("WcfPedidos40_MultipleCons");
+                        parametroCons[0].Value = i + 1;
+                        tablas[i] = con.getDataTable().Copy();
+                    }
+                    DataTable InfAgencia = tablas[0];
+                    DataTable InfCliente = tablas[1];
+                    DataTable InfCompania = tablas[2];
+                    DataTable InfTercero = tablas[3];
+                    DataTable InfVendedor = tablas[4];
+
+                    /*
+                    //Se obtienen las variables comunes para el encabezado y detalle del pedido
                     #region VariablesComunes
                     con.resetQuery();
                     con.setCustomQuery(@"select a.IdAgencia, a.IdClie, a.DirAgncia, a.NitCont, a.NomCont, a.TelAgncia, a.EmlCont, a.CargoCont, a.IdForma, a.IdPlazo, a.CdCCBonif, a.CdSubCCBonif, a.IdLocal, l.Localidad, a.IdSZona, a.IdVend, a.CdCms, a.CodRuta, tp.Tarifa from Agencias a left join tablapor tp on (a.CdCms = tp.IdTarifa and tp.IdClase = 'COM') join Localidades l on (a.IdLocal = l.IdLocal) where IdClie = '" + this.Cliente.IdTercero + "' and IdAgencia = '" + this.Agencia + "'");
                     con.ejecutarQuery();
-                    DataTable InfAgencia = con.getDataTable().Copy();
+                    //DataTable InfAgencia = con.getDataTable().Copy();
 
                     con.resetQuery();
                     con.setCustomQuery(@"select tc.IdClie, tc.DirEnv, tc.NitContac, tc.NomContac, tc.TelContac, tc.emlContac, tc.CargContac, tc.IdForma, tc.IdPlazo, tc.CodCCosto, tc.CodSubCosto, tc.IdLocEnv, l.Localidad, tc.IdSZona, tc.NitFact, tc.IdVend, tc.CdCms, tp.Tarifa, tc.NumLista, tc.IdRuta, tc.CdMney, tc.DiasEntga, tc.IdEstado from TercCliente tc left join tablapor tp on (tc.CdCms = tp.IdTarifa and tp.IdClase = 'COM') join Localidades l on (tc.IdLocEnv = l.IdLocal) where IdClie = '" + this.Cliente.IdTercero + "'");
                     con.ejecutarQuery();
-                    DataTable InfCliente = con.getDataTable().Copy();
+                    //DataTable InfCliente = con.getDataTable().Copy();
 
                     con.resetQuery();
                     con.setCustomQuery(@"select IdCCosto, IdSubCos, FechaActual from Companias where IdCia = '" + this.IdCia + "'");
                     con.ejecutarQuery();
-                    DataTable InfCompania = con.getDataTable().Copy();
+                    //DataTable InfCompania = con.getDataTable().Copy();
 
                     con.resetQuery();
                     con.setCustomQuery(@"select t.IdLocal, l.Localidad, t.Direccion, t.RazonSocial from Terceros t join Localidades l on (t.IdLocal = l.IdLocal) where IdTercero = '" + this.Cliente.IdTercero + "'");
                     con.ejecutarQuery();
-                    DataTable InfTercero = con.getDataTable().Copy();
+                    //DataTable InfTercero = con.getDataTable().Copy();
 
                     con.resetQuery();
                     con.setCustomQuery(@"select tv.IdTarCms, tp.Tarifa from TercVendedor tv left join tablapor tp on (tv.IdTarCms = tp.IdTarifa and tp.IdClase = 'COM') where IdVend = '" + this.Usuario + "'");
                     con.ejecutarQuery();
-                    DataTable InfVendedor = con.getDataTable().Copy();
+                    //DataTable InfVendedor = con.getDataTable().Copy();
+                   
+                    */
                     if (InfVendedor.Rows.Count == 0)
                         this.Errores.Add("El vendedor no existe en la base de datos.");
-                    //LogErrores.tareas.Add("desapues de selects");
-                    //LogErrores.write();
-                    //Antes DM
-                    //                    verificarDoc:
-                    //                    con.resetQuery();
-                    //                    con.setCustomQuery(@"select Numero + 1 as Numero from tiposdoccons where IdDoc = 'PED' and IdCia = '" + this.IdCia + "'");
-                    //                    con.ejecutarQuery();
-                    //                    DataTable InfDocumento = con.getDataTable().Copy();
-                    //                    if (InfDocumento.Rows.Count == 0)
-                    //                    {
-                    //                        con.resetQuery();
-                    //                        con.setCustomQuery(@"insert into TiposDocCons (IdDoc,IdCia,LDesde,LHasta,Resolucion,RangoNum,Prefijo,Numero,NumManual,IntLotes,ConfigFecha,Formato,TipoPapel,Orientacion,VistaPrevia,VerSetup,NumCopias,FechaAdd)
-                    //values ('PED','" + this.IdCia + @"',0,0,'','','',0,0,0,'','',1,1,1,0,1,'" + InfCompania.Rows[0].Field<DateTime>("FechaActual").ToString("dd/MM/yyyy") + "')");
-                    //                        con.ejecutarQuery();
-                    //                        goto verificarDoc;
-                    //                    }
-
-                    #region Aprobacion
-                    /*
-                verificarAprob:
-                    con.resetQuery();
-                    con.setCustomQuery(@"select Numero + 1 as Numero from tiposdoccons where IdDoc = 'APR' and IdCia = '" + this.IdCia + "'");
-                    con.ejecutarQuery();
-                    DataTable InfDocAprobacion = con.getDataTable().Copy();
-                    if (InfDocAprobacion.Rows.Count == 0)
-                    {
-                        con.resetQuery();
-                        con.setCustomQuery(@"insert into TiposDocCons (IdDoc,IdCia,LDesde,LHasta,Resolucion,RangoNum,Prefijo,Numero,NumManual,IntLotes,ConfigFecha,Formato,TipoPapel,Orientacion,VistaPrevia,VerSetup,NumCopias,FechaAdd)
-    values ('APR','" + this.IdCia + @"',0,0,'','','',0,0,0,'','',1,1,1,0,1,'" + InfCompania.Rows[0].Field<DateTime>("FechaActual").ToString("dd/MM/yyyy") +"')");
-                        con.ejecutarQuery();
-                        goto verificarAprob;
-                    }
-                     */
-                    #endregion
-
                     string CdCCosto = "";
                     string CdSubCos = "";
                     string CdLocal = "";
@@ -239,12 +228,12 @@ namespace WcfPedidos40.Model
                     string IdPlazo = "";
 
 
-                    //Int32 Documento = 1;
+                    
                     Int32 DocAprobacion = 1;
 
-                    //Documento = InfDocumento.Rows[0].Field<Int32>("Numero");
+                    
                     #region Aprobacion
-                    //                DocAprobacion = InfDocAprobacion.Rows[0].Field<Int32>("Numero");
+                    
                     #endregion Aprobacion
                     NitContac = "";
                     TelContac = "";
@@ -252,8 +241,7 @@ namespace WcfPedidos40.Model
                     CargContac = "";
                     CdCCosto = InfCompania.Rows[0].Field<string>("IdCCosto");
                     CdSubCos = InfCompania.Rows[0].Field<string>("IdSubCos");
-                    //LogErrores.tareas.Add("InfTercero");
-                    //LogErrores.write();
+                    
                     if (InfTercero.Rows.Count > 0)
                     {
                         CdLocal = InfTercero.Rows[0].Field<string>("IdLocal");
@@ -285,8 +273,7 @@ namespace WcfPedidos40.Model
                         IdPlazo = InfCliente.Rows[0].Field<string>("IdPlazo") ?? IdPlazo;
                     }
 
-                    //LogErrores.tareas.Add("InfAgencia");
-                    //LogErrores.write();
+                    
                     if (InfAgencia.Rows.Count > 0)
                     {
                         this.Agencia = InfAgencia.Rows[0].Field<string>("IdAgencia");
@@ -306,10 +293,7 @@ namespace WcfPedidos40.Model
                         IdForma = !String.IsNullOrEmpty(InfAgencia.Rows[0].Field<string>("IdForma")) ? InfAgencia.Rows[0].Field<string>("IdForma") : IdForma;
                         IdPlazo = !String.IsNullOrEmpty(InfAgencia.Rows[0].Field<string>("IdPlazo")) ? InfAgencia.Rows[0].Field<string>("IdPlazo") : IdPlazo;
                     }
-                    #endregion
-                    //LogErrores.tareas.Add("paso 1");
-                    //LogErrores.write();
-                    /*Verifica que el cliente exista, si no existe inserta el cliente de lo contrario procede a actualizar el pedido*/
+                    
                     if (InfCliente.Rows.Count == 0)
                     {
                         if (!String.IsNullOrEmpty(this.Cliente.IdTercero) && !String.IsNullOrEmpty(this.Cliente.IdTercero) && !String.IsNullOrEmpty(this.Cliente.IdCentroCosto) && !String.IsNullOrEmpty(this.Cliente.DiasEntrega) && !String.IsNullOrEmpty(this.Cliente.Direccion) && !String.IsNullOrEmpty(this.Cliente.Nombres) && !String.IsNullOrEmpty(this.Cliente.IdPlazo))
@@ -497,10 +481,10 @@ namespace WcfPedidos40.Model
 
                         PrecioEspecial TarEsp = new PrecioEspecial();
                         TarEsp.ObtenerTarifaEspecial(InfCompania.Rows[0].Field<DateTime>("FechaActual"), dr.Field<Int32>("NumLista"), IdCia, dr.Field<string>("IdLinea"), dr.Field<string>("IdGrupo"), dr.Field<string>("IdSubGrupo"), dr.Field<string>("IdMarca"), dr.Field<string>("IdProducto"), "", this.Cliente.IdTercero, Agencia, this.Usuario, CdLocal, "", CdSZona, "", "");
+                        
                         con.resetQuery();
                         con.setCustomQuery("select Tarifa from tablapor where IdClase = 'IVA' and IdTarifa = '" + dr.Field<string>("IdTarIva") + "'");
                         con.ejecutarQuery();
-
                         decimal TarifaIva = con.getDataTable().Rows[0].Field<decimal>("Tarifa");
                         decimal VrPrecio = TarEsp.Numero != null ? (TarEsp.SimbTfa == "$" ? TarEsp.Tarifa.Value : dr.Field<decimal>("VrPrecio") - (dr.Field<decimal>("VrPrecio") * (TarEsp.Tarifa.Value) / 100)) : dr.Field<decimal>("VrPrecio");
                         decimal Cantidad = dr.Field<Int32>("Cantidad");
@@ -582,7 +566,7 @@ namespace WcfPedidos40.Model
                         drKardex["Comision"] = TarifaCms;
                         drKardex["CdOperario"] = "";
                         drKardex["ComisnOper"] = 0;
-                        drKardex["Referencia"] = Convert.ToBoolean(dr.Field<string>("Obsequio")) ? "Producto Obsequio" : "";
+                        drKardex["Referencia"] = dr.Field<bool>("Obsequio") ? "Producto Obsequio" : "";
                         drKardex["Descripcion"] = dr.Field<string>("DescripProd");
                         drKardex["Comptmntos"] = "";
                         drKardex["CdProdEquiv"] = "";
@@ -639,8 +623,8 @@ namespace WcfPedidos40.Model
                         drKardex["VrImvCosto"] = 0;
                         drKardex["TarifaIco"] = 0;
                         drKardex["VrImpCon"] = 0;
-                        drKardex["CantObseq"] = Convert.ToBoolean(dr.Field<string>("Obsequio")) ? Cantidad : 0;
-                        drKardex["VrIvaObseq"] = Convert.ToBoolean(dr.Field<string>("Obsequio")) ? ((((VrPrecio * Cantidad) - (dr.Field<decimal>("VrCostPmd") * Cantidad)) / 100) * TarifaIva) : 0;
+                        drKardex["CantObseq"] = dr.Field<bool>("Obsequio") ? Cantidad : 0;
+                        drKardex["VrIvaObseq"] = dr.Field<bool>("Obsequio") ? ((((VrPrecio * Cantidad) - (dr.Field<decimal>("VrCostPmd") * Cantidad)) / 100) * TarifaIva) : 0;
                         drKardex["BaseIvaCom"] = 0;
                         drKardex["ImpCarbono"] = 0;
                         drKardex["IngBaseCom"] = 0;
@@ -906,34 +890,19 @@ namespace WcfPedidos40.Model
             return this.Errores;
         }
 
-        public DataTable getProducto(string IdProducto, string IdCia, string IdBodega, int numLista, int Cantidad, bool EsObsequio, connect.Conexion con)
+        public DataTable getProducto(string IdProducto, string IdCia, string IdBodega, int numLista, int Cantidad, bool EsObsequio, Conexion con)
         {
-            con.resetQuery();
-            con.setCustomQuery(
-            @"
-if(exists(select IdProducto from prodprecios where IdProducto = '" + IdProducto + @"' and IdCia = '" + IdCia + @"' and VrPrecio" + numLista + @" > 0))
-select pm.IdProducto,	pm.DescripProd,	pm.DescripAbrv,	pm.CodBarras,	pm.Referencia,	pm.TipoRef,	l.IdLinea, g.IdGrupo, pm.IdSubgrupo,	pm.IdMarca,	pm.Color,	pm.Tamano,	pm.MedAlto,	pm.MedAncho,	pm.MedLargo,	pm.MedVolm,	pm.UndMed,	pp.IdUnd,	pm.IdUndP,	pm.CdUndS,	pm.CdUndE,	pm.CdUndEb,	pm.IdEmp,	pm.IdNat,	pm.IdMnjo,	pm.IdTmcia,	" + (String.IsNullOrWhiteSpace(IdBodega) ? "pp.IdBodega" : "'" + IdBodega + "' as IdBodega") + ",	pm.IdUbic,	pm.DesUbic,	pm.IdProv,	pm.GarProv,	pm.GarClie,	pm.CdDctCom,	pm.VrCostAnt,	pm.VrCosto,	isnull(pcos.CostoPmd,pm.VrCostPmd) as VrCostPmd,	pp.CdTarIva as IdTarIva, tiva.Tarifa as TarifaIva,	pp.IvaInc,	pm.LtPreDef,	pp.VrPrecio" + numLista + " as VrPrecio, pp.CdMoney" + numLista + @" as CdMoney,	pp.BaseMargen,	pp.CdMargen" + numLista + @" as CdMargen,	pp.CdDcto" + numLista + @" as CdDcto, tdct.Tarifa as TarifaDcto,	pm.CdTarIca,	pm.CdTarRet,	pm.ExtciaMin,	pm.ExtciaMax,	pm.ExtciaAct,	pm.Factor" + numLista + @" as Factor,	pm.Seriales,	pm.Lotes,	pm.Combo,	pm.NoAjustes,	pm.Tanques,	pm.ValesComb,	pm.FecUltcom,	pm.FecUltVta,	pm.CodMcia,	pm.DescripLong,	pm.Cmntarios,	pm.PathFoto,	pm.CantTpv,	pm.IdEstado,	pm.Inactivo,	pm.FechaAdd,	pm.FechaUpdate,	pm.IdUsuario,	pm.TipoZonaFront,	pm.ExcluidoImp, " + numLista + @" as NumLista, " + Cantidad + @" as Cantidad, '" + EsObsequio + @"' as Obsequio
-from
-ProdMcias pm join
-ProdPrecios pp on (pm.IdProducto = pp.IdProducto and pp.IdCia = '" + IdCia + @"') join
-SubGrupos sg on (pm.IdSubGrupo = sg.IdSubGrupo) join
-Grupos g on (sg.IdGrupo = g.IdGrupo) join
-Lineas l on (g.IdLinea = l.IdLinea)
-left join TablaPor tiva on (pp.CdTarIva = tiva.IdTarifa and tiva.IdClase = 'IVA') 
-left join TablaPor tdct on (pp.CdDcto" + numLista + @" = tdct.IdTarifa and tdct.IdClase = 'DCT')
-left join ProdCostos pcos on (pm.IdProducto = pcos.IdProducto and pcos.IdCia = '" + IdCia + @"')
-where pm.IdProducto = '" + IdProducto + @"'
-else
-select pm.IdProducto,	pm.DescripProd,	pm.DescripAbrv,	pm.CodBarras,	pm.Referencia,	pm.TipoRef,	l.IdLinea, g.IdGrupo, pm.IdSubgrupo,	pm.IdMarca,	pm.Color,	pm.Tamano,	pm.MedAlto,	pm.MedAncho,	pm.MedLargo,	pm.MedVolm,	pm.UndMed,	pm.IdUnd,	pm.IdUndP,	pm.CdUndS,	pm.CdUndE,	pm.CdUndEb,	pm.IdEmp,	pm.IdNat,	pm.IdMnjo,	pm.IdTmcia,	" + (String.IsNullOrWhiteSpace(IdBodega) ? "pm.IdBodega" : "'" + IdBodega + "' as IdBodega") + ",	pm.IdUbic,	pm.DesUbic,	pm.IdProv,	pm.GarProv,	pm.GarClie,	pm.CdDctCom,	pm.VrCostAnt,	pm.VrCosto,	isnull(pcos.CostoPmd,pm.VrCostPmd) as VrCostPmd,	pm.IdTarIva, tiva.Tarifa as TarifaIva,	pm.IvaInc,	pm.LtPreDef,	pm.Precio" + numLista + @" as VrPrecio,	pm.CdMon" + numLista + @" as CdMoney,	pm.BaseMgn,	pm.CdMgn" + numLista + @" as CdMargen,	pm.CdDct" + numLista + " as CdDcto,	tdct.Tarifa as TarifaDcto, pm.CdTarIca,	pm.CdTarRet,	pm.ExtciaMin,	pm.ExtciaMax,	pm.ExtciaAct,	pm.Factor" + numLista + @" as Factor,	pm.Seriales,	pm.Lotes,	pm.Combo,	pm.NoAjustes,	pm.Tanques,	pm.ValesComb,	pm.FecUltcom,	pm.FecUltVta,	pm.CodMcia,	pm.DescripLong,	pm.Cmntarios,	pm.PathFoto,	pm.CantTpv,	pm.IdEstado,	pm.Inactivo,	pm.FechaAdd,	pm.FechaUpdate,	pm.IdUsuario,	pm.TipoZonaFront,	pm.ExcluidoImp, " + numLista + " as NumLista, " + Cantidad + @" as Cantidad, '" + EsObsequio + @"' as Obsequio from prodmcias pm join
-SubGrupos sg on (pm.IdSubGrupo = sg.IdSubGrupo) join
-Grupos g on (sg.IdGrupo = g.IdGrupo) join
-Lineas l on (g.IdLinea = l.IdLinea)
-left join ProdCostos pcos on (pm.IdProducto = pcos.IdProducto and pcos.IdCia = '" + IdCia + @"')
-left join TablaPor tiva on (pm.IdTarIva = tiva.IdTarifa and tiva.IdClase = 'IVA') left join TablaPor tdct on (pm.CdDct" + numLista + @" = tdct.IdTarifa and tdct.IdClase = 'DCT') where pm.IdProducto = '" + IdProducto + @"'");
-            con.ejecutarQuery();
+            DataSet getPProducto = new DataSet();
+            List<SqlParameter> pProducto = new List<SqlParameter>();
+            pProducto.Add(new SqlParameter("@IdProducto", IdProducto));
+            pProducto.Add(new SqlParameter("@IdCia", IdCia));
+            pProducto.Add(new SqlParameter("@IdBodega", IdBodega));
+            pProducto.Add(new SqlParameter("@Cantidad", Cantidad));
+            pProducto.Add(new SqlParameter("@EsObsequio", EsObsequio));
+            pProducto.Add(new SqlParameter("@numLista", numLista));
+            con.ejecutarQuery("WcfPedidos40_ConsDinPProductoD", pProducto, out getPProducto, out string[] mensajepProducto, CommandType.StoredProcedure);
 
-
-            return con.getDataTable();
+            return getPProducto.Tables[0];
         }
 
         public string ObtenerTipoPed(string agTipoPed)

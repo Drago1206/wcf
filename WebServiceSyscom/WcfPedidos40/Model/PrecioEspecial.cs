@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
@@ -39,7 +40,31 @@ namespace WcfPedidos40.Model
         {
             Conexion con = new Conexion();
             con.setConnection("Syscom");
+            List<SqlParameter> parametrosTarifa = new List<SqlParameter>();
+            parametrosTarifa.Add(new SqlParameter("@FechaActual", _FechaActual));
+            parametrosTarifa.Add(new SqlParameter("@ListaPrecio", _ListaPrecio));
+            parametrosTarifa.Add(new SqlParameter("@CdCia", _CdCia));
+            parametrosTarifa.Add(new SqlParameter("@CdLinea", _CdLinea));
+            parametrosTarifa.Add(new SqlParameter("@CdGrupo", _CdGrupo));
+            parametrosTarifa.Add(new SqlParameter("@CdSubgrupo", _CdSubgrupo));
+            parametrosTarifa.Add(new SqlParameter("@CdMarca", _CdMarca));
+            parametrosTarifa.Add(new SqlParameter("@CdProducto", _CdProducto));
+            parametrosTarifa.Add(new SqlParameter("@CdTarifa", _CdTarifa));
+            parametrosTarifa.Add(new SqlParameter("@CdClie", _CdClie));
+            parametrosTarifa.Add(new SqlParameter("@CdAgencia", _CdAgencia));
+            parametrosTarifa.Add(new SqlParameter("@CdVend", _CdVend));
+            parametrosTarifa.Add(new SqlParameter("@CdCiudad", _CdCiudad));
+            parametrosTarifa.Add(new SqlParameter("@CdZona", _CdZona));
+            parametrosTarifa.Add(new SqlParameter("@CdSzona", _CdSzona));
+            parametrosTarifa.Add(new SqlParameter("@CdGruCli", _CdGruCli));
+            parametrosTarifa.Add(new SqlParameter("@OtrosCrit", _OtrosCrit));
+            con.addParametersProc(parametrosTarifa);
+            con.ejecutarProcedimiento("WcfPedidos40_ObtenerTarifaEspecial");
+
+            #region Condiciones
+
             /*Se importan los campos necesarios para grabar el pedido partiendo de las tablas OPedido y Kardex*/
+            /*
             con.resetQuery();
             con.qryTables.Add(@"(
                 SELECT 
@@ -69,9 +94,8 @@ namespace WcfPedidos40.Model
                     ,IdUsuario
                     ,CodBod
                 FROM Trn_ProdTarf) v");
-            con.addWhereAND("Anulado = 0 and FecInicial <= '" + _FechaActual.ToString("yyyyMMdd") + "' and FecFinal >= '" + _FechaActual.ToString("yyyyMMdd") + "' and LtaPre = '" + _ListaPrecio.ToString() + "'");
+            con.addWhereAND("Anulado = 0 and FecInicial <= '" + _FechaActual.ToString("yyyyMMdd") + "' and FecFinal >= '" + _FechaActual.ToString("yyyyMMdd") + "' and LtaPre = '" + _ListaPrecio.ToString() +"'");
 
-            #region Condiciones
             if (!String.IsNullOrEmpty(_CdCia))
                 con.addWhereAND("isnull(CdCia, '" + _CdCia + "') = '" + _CdCia + "'");
 
@@ -113,9 +137,8 @@ namespace WcfPedidos40.Model
 
             if (!String.IsNullOrEmpty(_CdGruCli))
                 con.addWhereAND("isnull(CdGruCli, '" + _CdGruCli + "') = '" + _CdGruCli + "'");
+                */
             #endregion
-            con.select();
-            con.ejecutarQuery();
 
             if (con.getDataTable().Rows.Count > 0)
             {
