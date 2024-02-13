@@ -40,6 +40,7 @@ namespace WcfPedidos40.Model
         {
             Conexion con = new Conexion();
             con.setConnection("Syscom");
+            con.resetQuery();
             List<SqlParameter> parametrosTarifa = new List<SqlParameter>();
             parametrosTarifa.Add(new SqlParameter("@FechaActual", _FechaActual));
             parametrosTarifa.Add(new SqlParameter("@ListaPrecio", _ListaPrecio));

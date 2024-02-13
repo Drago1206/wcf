@@ -177,11 +177,15 @@ namespace WcfPedidos40
                         prods.ForEach(r =>
                         {
                             con.resetQuery();
-                            con.qryFields.Add(@"IdCia");
+                            List<SqlParameter> paramProductos = new List<SqlParameter>();
+                            paramProductos.Add(new SqlParameter("@IdProducto", r.IdProducto));
+                            con.addParametersProc(paramProductos);
+                            con.ejecutarProcedimiento("WcfPedidos40_GetProductos");
+                            /*con.qryFields.Add(@"IdCia");
                             con.qryTables.Add(@"ProdCompanias");
                             con.addWhereAND("IdProducto = '" + r.IdProducto + "'");
                             con.select();
-                            con.ejecutarQuery();
+                            con.ejecutarQuery();*/
                             r.DisponibleEnCia = con.getDataTable().AsEnumerable().Select(s => s.Field<string>("IdCia")).ToList();
                         });
                         productos.Productos = prods;

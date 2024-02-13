@@ -47,12 +47,14 @@ namespace WcfPedidos40.Model
             {
                 connect.Conexion con = new connect.Conexion();
                 con.setConnection("Syscom");
+                con.resetQuery();
                 DataSet TablaProdPedidos = new DataSet();
                 List<SqlParameter> parametrosProd = new List<SqlParameter>();
                 con.ejecutarQuery("WcfPedidos40_ProductosPedidos", parametrosProd, out TablaProdPedidos, out string[] mensajeProdPed, CommandType.StoredProcedure);
                 this.Productos = TablaProdPedidos.Tables[0].Copy();
-
                 _dtProductos = this.Productos.Clone();
+
+                con.resetQuery();
                 List<SqlParameter> parametrosValor = new List<SqlParameter>();
                 parametrosValor.Add(new SqlParameter("@IdUsuario", this.Usuario));
                 DataSet TablaCompania = new DataSet();
@@ -61,6 +63,7 @@ namespace WcfPedidos40.Model
                     IdCia = TablaCompania.Tables[0].Rows[0][0].ToString();
                 else
                     this.Errores.Add("El vendedor " + this.Usuario + " no tiene una compañia asignada");
+                con.resetQuery();
                 List<SqlParameter> parametrosBodega = new List<SqlParameter>();
                 parametrosBodega.Add(new SqlParameter("@IdUsuario", this.Usuario));
                 DataSet TablaBodega = new DataSet();
@@ -88,6 +91,7 @@ namespace WcfPedidos40.Model
                     where p.IdProducto = '" + prod.IdProducto + @"' and p.Inactivo = 0
                     ) NumLista order by Id
                     ");*/
+                    con.resetQuery();
                     List<SqlParameter> parametrosPrecios = new List<SqlParameter>();
                     DataSet TablaPrecios = new DataSet();
                     parametrosPrecios.Add(new SqlParameter("@IdProducto", prod.IdProducto));
@@ -143,17 +147,20 @@ namespace WcfPedidos40.Model
                 try
                 {
                     con.setConnection("Syscom");
+                    con.resetQuery();
                     List<SqlParameter> parametrosTablas = new List<SqlParameter>();
                     parametrosTablas.Add(new SqlParameter("@Tabla", "Trn_Kardex"));
                     DataSet TablaImpTablas = new DataSet();
                     con.ejecutarQuery("WcfPedidos40_ImpTablas", parametrosTablas, out TablaImpTablas, out string[] mensajeTablas, CommandType.StoredProcedure);
                     this.Kardex = TablaImpTablas.Tables[0];
                     parametrosTablas.Clear();
+                    con.resetQuery();
                     parametrosTablas.Add(new SqlParameter("@Tabla", "Trn_Opedido"));
                     con.ejecutarQuery("WcfPedidos40_ImpTablas", parametrosTablas, out TablaImpTablas,  out mensajeTablas, CommandType.StoredProcedure);
                     this.OPedido = TablaImpTablas.Tables[0];
                     con.beginTran();
                 inicio:
+                    con.resetQuery();
                     List<SqlParameter> parametroCons = new List<SqlParameter>();
                     DataSet TablaCons = new DataSet();
                     string[] mensajeCons;
@@ -301,10 +308,14 @@ namespace WcfPedidos40.Model
                             /*Se inserta la informacion del cliente*/
                             #region agregarTercero
                             con.resetQuery();
+                            con.ejecutarProcedimiento("WcfPedidos40_CopiaTerceros");
+                            /*
+                            con.resetQuery();
                             con.qryFields.Add("top 0 IdTercero,RazonSocial,Codigo,TipoId,Dv,NomCial,SiglaRaz,Direccion,IdLocal,Telefono,Fax,TelMovil,SitioWeb,e_mail,EsCliente,EsVendedor,EsConductor,EsPropietario,EsProveedor,EsEmpleado,EsOperario,EsAccnista,EsCiaAseg,EsCliePres,IdSector,IdProf,IdRegimen,TipEnte,IdLugarCed,FecExpCed,Observacion,IniStgNom,IdEstado,Inactivo,FechaAdd,FechaUpdate,IdUsuario,ImgFoto,ImgFirma");
                             con.qryTables.Add("Terceros");
                             con.select();
                             con.ejecutarQuery();
+                            */
                             DataTable Terceros = con.getDataTable();
                             DataRow dr = Terceros.NewRow();
                             dr["IdTercero"] = Cliente.IdTercero;
@@ -335,7 +346,7 @@ namespace WcfPedidos40.Model
                             dr["IdProf"] = "0";
                             dr["IdRegimen"] = Cliente.IdRegimen;
                             dr["TipEnte"] = Cliente.TipEnte;
-                            dr["IdLugarCed"] = Cliente.TipoDoc == "C" ? Cliente.MunCCExp : null;
+                            dr["IdLugarCed"] = Cliente.TipoDoc == "C" ? Cliente.MunCCExp : "0";
                             dr["FecExpCed"] = DBNull.Value;
                             dr["Observacion"] = "Usuario Importado desde Inkco";
                             dr["IniStgNom"] = Cliente.Apellidos.Length + 1;
@@ -346,6 +357,17 @@ namespace WcfPedidos40.Model
                             dr["IdUsuario"] = this.Usuario;
                             dr["ImgFoto"] = null;
                             dr["ImgFirma"] = null;
+                            dr["ImagenDoc1"] = null;
+                            dr["ImagenDoc2"] = null;
+                            dr["ImagenDoc3"] = null;
+                            dr["FechaNac"] = DBNull.Value;
+                            dr["IdEstOper"] = null;
+                            dr["IdLocUbic"] = null;
+                            dr["DescUbicac"] = null;
+                            dr["CdGrupoTerc"] = null;
+                            dr["RegimenFE"] = 0;
+                            dr["PN_RUT"] = 0;
+                            dr["RegimenSimple"] = "";
                             Terceros.Rows.Add(dr);
                             #endregion AgregarTerceros
 
@@ -353,11 +375,16 @@ namespace WcfPedidos40.Model
 
                             #region agregarCliente
                             con.resetQuery();
+                            con.ejecutarProcedimiento("WcfPedidos40_CopiaTerClientes");
+                            /*
+                            con.resetQuery();
                             con.qryFields.Add("top 0 IdClie,NitRepLeg,NomRepLeg,NitContac,NomContac,TelContac,emlContac,CargContac,DirEnv,IdLocEnv,DiasEntga,IdSzona,IdGrupo,IdPlazo,IdForma,IdEstrato,CdBandera,IdVend,NitFact,IdRuta,IdClase,NumCuenta,IdBanco,CdMney,CdDct,CdRet,CdRiv,CdCms,PlazosImp,ExcIva,TrfIntMora,DiasGracia,LiqFletes,FactSold,Autoret,IncRet,IncRiv,IncIca,FactTipo,VrCupo,VrSaldo,UidClie,PwdClie,Contrato,NContrato,CiaContMay,CodClieSicom,FecIngreso,FecVigencia,FecRetiro,MatMerc,FecMat,PathFoto,PathFirma,Cmntario1,Cmntario2,Cmntario3,PrendGarant,FecUpCupo,TipoCliente,IdEstado,Inactivo,FechaAdd,FechaUpdate,IdUsuario,Restric_Cia,CdPlazoComb,CupoGalones,FecPlazoDoc,EdoRadicaDoc,CdTipBloq,DescEdoDoc,ComIndustrial,NumLista,Termicas,CodRetCom,CodCCosto,CodSubCosto");
                             con.qryTables.Add("TercCliente");
                             con.select();
                             con.ejecutarQuery();
+                            */
                             DataTable TercCliente = con.getDataTable();
+                            int columns = TercCliente.Columns.Count;
                             dr = TercCliente.NewRow();
                             dr["IdClie"] = Cliente.IdTercero;
                             dr["NitRepLeg"] = Cliente.IdTercero;
@@ -369,7 +396,7 @@ namespace WcfPedidos40.Model
                             dr["CargContac"] = "";
                             dr["DirEnv"] = Cliente.Direccion;
                             dr["IdLocEnv"] = Cliente.IdLocal;
-                            dr["DiasEntga"] = Cliente.DiasEntrega;
+                            dr["DiasEntga"] = Cliente.DiasEntrega.GetType() == Type.GetType("System.string") ? Cliente.DiasEntrega = "100" : Cliente.DiasEntrega;
                             dr["IdSzona"] = Cliente.IdZona;
                             dr["IdGrupo"] = Cliente.IdGrupo;
                             dr["IdPlazo"] = Cliente.IdPlazo;
@@ -483,8 +510,12 @@ namespace WcfPedidos40.Model
                         TarEsp.ObtenerTarifaEspecial(InfCompania.Rows[0].Field<DateTime>("FechaActual"), dr.Field<Int32>("NumLista"), IdCia, dr.Field<string>("IdLinea"), dr.Field<string>("IdGrupo"), dr.Field<string>("IdSubGrupo"), dr.Field<string>("IdMarca"), dr.Field<string>("IdProducto"), "", this.Cliente.IdTercero, Agencia, this.Usuario, CdLocal, "", CdSZona, "", "");
                         
                         con.resetQuery();
-                        con.setCustomQuery("select Tarifa from tablapor where IdClase = 'IVA' and IdTarifa = '" + dr.Field<string>("IdTarIva") + "'");
-                        con.ejecutarQuery();
+                        List<SqlParameter> paramTarifa = new List<SqlParameter>();
+                        paramTarifa.Add(new SqlParameter("@Tarifa", dr.Field<string>("IdTarIva")));
+                        con.addParametersProc(paramTarifa);
+                        con.ejecutarProcedimiento("WcfPedidos40_ConsTarifa");
+                        //con.setCustomQuery("select Tarifa from tablapor where IdClase = 'IVA' and IdTarifa = '" + dr.Field<string>("IdTarIva") + "'");
+                        //con.ejecutarQuery();
                         decimal TarifaIva = con.getDataTable().Rows[0].Field<decimal>("Tarifa");
                         decimal VrPrecio = TarEsp.Numero != null ? (TarEsp.SimbTfa == "$" ? TarEsp.Tarifa.Value : dr.Field<decimal>("VrPrecio") - (dr.Field<decimal>("VrPrecio") * (TarEsp.Tarifa.Value) / 100)) : dr.Field<decimal>("VrPrecio");
                         decimal Cantidad = dr.Field<Int32>("Cantidad");
@@ -496,8 +527,12 @@ namespace WcfPedidos40.Model
                             Int32 numLista = dr.Field<Int32>("NumLista");
 
                             con.resetQuery();
-                            con.setCustomQuery("SELECT IdProducto, IdProdBas, Cant FROM ProdCombo WHERE IdProducto = '" + dr.Field<string>("IdProducto") + "'");
-                            con.ejecutarQuery();
+                            List<SqlParameter> paramCombo = new List<SqlParameter>();
+                            paramCombo.Add(new SqlParameter("@IdProducto", dr.Field<string>("IdProducto")));
+                            con.addParametersProc(paramCombo);
+                            con.ejecutarProcedimiento("WcfPedidos40_ItemsCombo");
+                            //con.setCustomQuery("SELECT IdProducto, IdProdBas, Cant FROM ProdCombo WHERE IdProducto = '" + dr.Field<string>("IdProducto") + "'");
+                            //con.ejecutarQuery();
 
                             decimal ComboVrIva = 0;
                             DataTable dtItems = con.getDataTable();
@@ -635,6 +670,16 @@ namespace WcfPedidos40.Model
                         drKardex["BaseIvp"] = 0;
                         drKardex["TarifaIvp"] = 0;
                         drKardex["IvaIngProd"] = 0;
+                        drKardex["TarifaIba"] = 0;
+                        drKardex["VrImpuBa"] = 0;
+                        drKardex["TarifaCup"] = 0;
+                        drKardex["CodTarBa"] = 0;
+                        drKardex["VrImpuCup"] = 0;
+                        drKardex["CodTarCup"] = "";
+                        drKardex["TarifaIat"] = 0;
+                        drKardex["VrAviTab"] = 0;
+                        drKardex["TarifaBom"] = 0;
+                        drKardex["VrSobBom"] = 0;
 
                         /*                    if (VrPrecio == 0 && !Convert.ToBoolean(dr.Field<string>("Obsequio")))
                                                 this.Errores.Add("El valor del precio del producto " + dr.Field<string>("IdProducto") + " - " + dr.Field<string>("DescripProd") + " es 0. Comuniquese con el Administrador.");
@@ -729,6 +774,8 @@ namespace WcfPedidos40.Model
                     drPedido["VrImpCarbono"] = 0;
                     drPedido["BaseIvaIgp"] = 0;
                     drPedido["VrIvaIngProd"] = 0;
+                    drPedido["VrImpuBA"] = 0;
+                    drPedido["VrImpuCUP"] = 0;
                     #endregion
 
                     /*Se almacena la informacion de la aprobacion*/
@@ -781,16 +828,29 @@ namespace WcfPedidos40.Model
                     verificarDoc:
                         {
                             con.resetQuery();
+                            List<SqlParameter> paramTipoDoc = new List<SqlParameter>();
+                            paramTipoDoc.Add(new SqlParameter("@IdCia", this.IdCia));
+                            con.addParametersProc(paramTipoDoc);
+                            con.ejecutarProcedimiento("WcfPedidos40_NumeroTipoDoc");
+                            /*
                             con.setCustomQuery(@"select Numero + 1 as Numero from tiposdoccons where IdDoc = 'PED' and IdCia = '" + this.IdCia + "'");
                             con.ejecutarQuery();
+                            */
                             InfDocumento = new DataTable();
                             InfDocumento = con.getDataTable().Copy();
                             if (InfDocumento.Rows.Count == 0)
                             {
                                 con.resetQuery();
+                                List<SqlParameter> paramTiposDoc = new List<SqlParameter>();
+                                paramTipoDoc.Add(new SqlParameter("@IdCia", this.IdCia));
+                                paramTipoDoc.Add(new SqlParameter("@FechaActual", InfCompania.Rows[0].Field<DateTime>("FechaActual").ToString("dd/MM/yyyy")));
+                                con.addParametersProc(paramTipoDoc);
+                                con.ejecutarProcedimiento("WcfPedidos40_InsTiposDoc");
+                                /*
                                 con.setCustomQuery(@"insert into TiposDocCons (IdDoc,IdCia,LDesde,LHasta,Resolucion,RangoNum,Prefijo,Numero,NumManual,IntLotes,ConfigFecha,Formato,TipoPapel,Orientacion,VistaPrevia,VerSetup,NumCopias,FechaAdd)
                                 values ('PED','" + this.IdCia + @"',0,0,'','','',0,0,0,'','',1,1,1,0,1,'" + InfCompania.Rows[0].Field<DateTime>("FechaActual").ToString("dd/MM/yyyy") + "')");
                                 con.ejecutarQuery();
+                                */
                                 goto verificarDoc;
                             }
                         }
@@ -801,9 +861,14 @@ namespace WcfPedidos40.Model
                         Conexion conTD = new Conexion();
                         conTD.setConnection("Syscom");
                         conTD.resetQuery();
+                        List<SqlParameter> paramUptTipsDoc = new List<SqlParameter>();
+                        paramUptTipsDoc.Add(new SqlParameter("@IdCia", this.IdCia));
+                        conTD.addParametersProc(paramUptTipsDoc);
+                        conTD.ejecutarProcedimiento("WcfPedidos40_UptTiposDoc");
+                        /*
                         conTD.setCustomQuery("update TiposDocCons set Numero = '" + Documento + "' where IdDoc = 'PED' and IdCia = '" + this.IdCia + "'");
                         conTD.ejecutarQuery();
-
+                        */
                         //LogErrores.tareas.Add("Doc 2 =>" + Documento + " " + drPedido["Pedido"].ToString() + " " + drPedido["IdCliente"].ToString());
                         //LogErrores.write();
 
@@ -892,6 +957,7 @@ namespace WcfPedidos40.Model
 
         public DataTable getProducto(string IdProducto, string IdCia, string IdBodega, int numLista, int Cantidad, bool EsObsequio, Conexion con)
         {
+            con.resetQuery();
             DataSet getPProducto = new DataSet();
             List<SqlParameter> pProducto = new List<SqlParameter>();
             pProducto.Add(new SqlParameter("@IdProducto", IdProducto));
