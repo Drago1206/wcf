@@ -596,7 +596,7 @@ namespace WcfDocTrasn
 
                                             if (con.ejecutarQuery("WSPedidosTrasn_ObtenerRol", param, out TablaPedidos, out string[] nuevomennsaje, CommandType.StoredProcedure))
                                             {
-                                                //Recibir los datos
+                                               ///Obtener datos de la consulta
                                             }
                                         }
                                     }
