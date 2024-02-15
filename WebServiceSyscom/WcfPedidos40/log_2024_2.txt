@@ -164,3 +164,63 @@ Datos=>
 PED///333///01///26/01/2024 12:00:00 a. m.///26/01/2024 12:00:00 a. m.///PED///860037707///1//////99345,0000///0,0000///18875,5500000000///0///0///0///0///0///0///118220,5500000000///1///prueba///0,000000///C001///BOGOTA///11001///BOGOTA D.C.///0/////////0/////////EFE//////False///0001///COP///0//////False///0///0///0/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///26/01/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///13/02/2024 2:22:14 p. m.//////01///prueba//////0///0///0///0///0
 13/02/2024 2:23:24 p. m.: El pedido es==>
 13/02/2024 2:23:24 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:38:48 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Otro SqlParameterCollection ya contiene SqlParameter.
+15/02/2024 1:38:48 p. m.: El pedido es==>
+15/02/2024 1:38:48 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:38:56 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Otro SqlParameterCollection ya contiene SqlParameter.
+15/02/2024 1:38:56 p. m.: El pedido es==>
+15/02/2024 1:38:56 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:40:16 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Otro SqlParameterCollection ya contiene SqlParameter.
+15/02/2024 1:40:31 p. m.: El pedido es==>
+15/02/2024 1:40:31 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:43:17 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Otro SqlParameterCollection ya contiene SqlParameter.
+15/02/2024 1:46:28 p. m.: El pedido es==>
+15/02/2024 1:46:28 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:46:44 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///860037707///1//////99345,0000///0,0000///18875,5500000000///0///0///0///0///0///0///118220,5500000000///1///prueba///0,000000///C001///BOGOTA///11001///BOGOTA D.C.///0/////////0/////////EFE//////False///0001///COP///0//////False///0///0///0/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:46:44 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 1:46:44 p. m.: El pedido es==>
+15/02/2024 1:46:44 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:48:43 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///860037707///1//////345,0000///0,0000///65,5500000000///0///0///0///0///0///0///410,5500000000///1///prueba///0,000000///C001///BOGOTA///11001///BOGOTA D.C.///0/////////0/////////EFE//////False///0001///COP///0//////False///0///0///0/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:48:43 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 1:48:43 p. m.: El pedido es==>
+15/02/2024 1:48:43 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:52:49 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///860037707///1//////345,0000///0,0000///65,5500000000///0///0///0///0///0///0///410,5500000000///1///prueba///0,000000///C001///BOGOTA///11001///BOGOTA D.C.///0/////////0/////////EFE//////False///0001///COP///0//////False///0///0///0/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:52:04 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 1:53:02 p. m.: El pedido es==>
+15/02/2024 1:53:02 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:54:19 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///860037707///1//////345,0000///0,0000///65,5500000000///0///0///0///0///0///0///410,5500000000///1///prueba///0,000000///C001///BOGOTA///11001///BOGOTA D.C.///0/////////0/////////EFE//////False///0001///COP///0//////False///0///0///0/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:53:08 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 1:54:19 p. m.: El pedido es==>
+15/02/2024 1:54:19 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:54:50 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///860037707///1//////345,0000///0,0000///65,5500000000///0///0///0///0///0///0///410,5500000000///1///prueba///0,000000///C001///BOGOTA///11001///BOGOTA D.C.///0/////////0/////////EFE//////False///0001///COP///0//////False///0///0///0/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:54:49 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 1:54:50 p. m.: El pedido es==>
+15/02/2024 1:54:50 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:55:19 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///900555555///4//////345,0000///0,0000///65,5500000000///0///0///0///0///0///0///410,5500000000///1///prueba///0,000000///C001///CRA 34 234///68001///BUCARAMANGA///0/////////6454545///0//////EFE//////False///0001///COP///0//////False///0///0///0015/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:55:19 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 1:55:19 p. m.: El pedido es==>
+15/02/2024 1:55:19 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 1:55:55 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///900555555///4//////345,0000///0,0000///65,5500000000///0///0///0///0///0///0///410,5500000000///1///prueba///0,000000///C001///CRA 34 234///68001///BUCARAMANGA///0/////////6454545///0//////EFE//////False///0001///COP///0//////False///0///0///0015/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:55:55 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 1:55:55 p. m.: El pedido es==>
+15/02/2024 1:55:55 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]
+15/02/2024 2:04:59 p. m.: Ha ocurrido un error al intentar ejecutar la consulta: Violation of PRIMARY KEY constraint 'PK_Trn_Opedido'. Cannot insert duplicate key in object 'dbo.Trn_Opedido'. The duplicate key value is (PED, 337, 01).
+The statement has been terminated.
+Datos=>
+PED///337///01///15/02/2024 12:00:00 a. m.///15/02/2024 12:00:00 a. m.///PED///900555555///4//////345,0000///0,0000///65,5500000000///0///0///0///0///0///0///410,5500000000///1///prueba///0,000000///C001///CRA 34 234///68001///BUCARAMANGA///0/////////6454545///0//////EFE//////False///0001///COP///0//////False///0///0///0015/// ///CONTADO///INVENTARIO///NORMAL///0///0///0///1999999999///01///15/02/2024 12:00:00 a. m.///APROBADO WS///prueba///0///0///00//////0///0///00//////0///00///WS///0///0/////////False//////Generado interfaz Web Services Incko///0001///15/02/2024 1:56:36 p. m.//////01///prueba//////0///0///0///0///0
+15/02/2024 2:04:59 p. m.: El pedido es==>
+15/02/2024 2:04:59 p. m.: Los errores son: Errores ==> System.Collections.Generic.List`1[System.String]

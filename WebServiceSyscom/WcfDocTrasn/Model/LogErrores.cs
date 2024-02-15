@@ -1,20 +1,26 @@
-﻿using connect;
-using SyscomUtilities;
+﻿using SyscomUtilities;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Web;
 
-using WcfPedidos40.Models;
-
-namespace WcfPruebas40.Models
+namespace WcfDocTrasn.Model
 {
+    public class Errores {
+        public string Codigo { get; set; }
+        public string Descripcion { get; set; }
+
+    }
+
+
+
     public class ExisteUsuario
     {
 
-        connect.Conexion con = new connect.Conexion();
+       Conexion con = new Conexion();
 
         /// <summary>
         /// Verifica si el usuario existe.
@@ -77,7 +83,7 @@ namespace WcfPruebas40.Models
                                 else
                                 {
                                     /// En caso de que la condición no se cumpla,
-                                   /// Define mensajes de respuesta negativo
+                                    /// Define mensajes de respuesta negativo
                                     mensaje = new string[2];
                                     mensaje[0] = "USER_003";
                                     mensaje[1] = "Usuario o Contraseña inválido";
@@ -100,11 +106,54 @@ namespace WcfPruebas40.Models
                         mensaje[1] = nuevoMennsaje[1];
                     }
                 }
-                catch (Exception e) {
+                catch (Exception e)
+                {
 
                 }
             }
             return existe;
         }
+    }
+
+    public static class LogErrores
+    {
+        private static string dir = AppDomain.CurrentDomain.BaseDirectory;
+        public static List<string> tareas = new List<string>();
+
+        public static void log(string mensaje)
+        {
+            tareas.Add(mensaje);
+        }
+
+        public static void write()
+        {
+            using (StreamWriter sw = new StreamWriter(dir + "\\log_" + DateTime.Now.Year + "_" + DateTime.Now.Month + ".txt", true))
+            {
+                foreach (var i in tareas)
+                {
+                    sw.WriteLine(DateTime.Now + ": " + i);
+                }
+                sw.Close();
+            }
+            tareas.Clear();
+        }
+        public static void escribirError(Exception ex)
+        {
+            string message =
+        "Exception type " + ex.GetType() + Environment.NewLine +
+        "Exception message: " + ex.Message + Environment.NewLine +
+        "Stack trace: " + ex.StackTrace + Environment.NewLine;
+            if (ex.InnerException != null)
+            {
+                message += "---BEGIN InnerException--- " + Environment.NewLine +
+                           "Exception type " + ex.InnerException.GetType() + Environment.NewLine +
+                           "Exception message: " + ex.InnerException.Message + Environment.NewLine +
+                           "Stack trace: " + ex.InnerException.StackTrace + Environment.NewLine +
+                           "---END Inner Exception";
+            }
+
+            tareas.Add(message);
+        }
+
     }
 }

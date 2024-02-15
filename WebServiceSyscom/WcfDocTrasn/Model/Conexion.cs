@@ -3,18 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Reflection;
-using WcfPedidos40.Model;
+using System.Web;
 
-namespace connect
+namespace WcfDocTrasn.Model
 {
-
-    /// <summary>
-    /// Clase Conexion
-    /// </summary>
     public class Conexion
     {
 
@@ -155,7 +150,7 @@ namespace connect
             this.sqlQuery = _sqlQuery;
         }
 
-       
+
         /// <summary>
         /// Inserta una condicion a la sentencia bajo el operador logico AND.
         /// </summary>
@@ -231,14 +226,12 @@ namespace connect
                 else
                     this.adapter.Fill(this.ds);
                 this.adapter.SelectCommand.Parameters.Clear();
-                sqlParameters.Clear();
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
                     this.sqlConn.Close();
                 }
             }
-
             catch (Exception e)
             {
                 LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message);
@@ -514,7 +507,7 @@ namespace connect
         public void dataRowtoParametersProc(Dictionary<string, object> _datos)
         {
             try
-            {   
+            {
                 //Se crea una nueva lista de parametros 
                 sqlParameters = new List<SqlParameter>();
 
@@ -525,7 +518,7 @@ namespace connect
                 foreach (var r in _datos)
                 {
                     try
-                        
+
                     {
                         ////El nombre del parametro se crea concadenando con el nombre de la columna correspondiente de cada tabla
                         ///El valor del dato se covierte al tipo de dato correspondiente
@@ -580,7 +573,7 @@ namespace connect
         public ConnectionState abrirConexion(bool isTransact = false)
         {
             try
-            {   
+            {
                 //Verifica si la conexion sql es diferente de nula para abrir la conexion
                 //Si se especifica el parametro isTrasnsact se inicia una trasaccion despues de la conexion.
                 if (sqlConn != null)
@@ -664,13 +657,74 @@ namespace connect
             return resultado;
         }
 
+
+        public bool ejecutarQuerys(string SqlQuery, List<SqlParameter> _parametros, out DataTable _Datos, out string[] mensaje, CommandType tipo = CommandType.Text)
+        {
+            // Se declara resultado como valor false por defecto
+            bool resultado = false;
+            // Se declara datos como un DataSet vacío
+            _Datos = new DataTable();
+            // Se declara mensje como un lista de string vacío
+            mensaje = new string[2];
+            try
+            {
+                // Condición que verifica si la conexión con la base de datos es nula
+                if (sqlConn != null)
+                {
+                    try
+                    {
+                        // Si la conexión SQL no está abierta, se abre la conexión
+                        if (this.sqlConn.State != ConnectionState.Open)
+                            abrirConexion();
+
+                        // Se crea un nuevo adaptador de datos SQL con la consulta SQL y la conexión SQL
+                        SqlDataAdapter adapter = new SqlDataAdapter(SqlQuery, this.sqlConn);
+
+                        // Se establece el tipo de comando para el comando de selección del adaptador
+                        adapter.SelectCommand.CommandType = tipo;
+
+                        // Se limpian los parámetros del comando de selección
+                        adapter.SelectCommand.Parameters.Clear();
+
+                        // Se establece el tiempo de espera del comando a un valor muy alto
+                        adapter.SelectCommand.CommandTimeout = 9999999;
+
+                        // Se limpia el conjunto de datos
+                        _Datos.Clear();
+
+                        // Se añaden los parámetros al comando de selección
+                        adapter.SelectCommand.Parameters.AddRange(_parametros.ToArray());
+
+                        // Se llena el conjunto de datos con los resultados de la consulta
+                        adapter.Fill(_Datos);
+
+                        // Si todo va bien, se establece el resultado a verdadero
+                        resultado = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Si ocurre una excepción, se establece el primer elemento del mensaje a "011"
+                        mensaje[0] = "011";
+
+                        // Se establece el segundo elemento del mensaje a un mensaje de error que incluye la consulta SQL y el mensaje de la excepción
+                        mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return resultado;
+        }
         /// <summary>
         /// Convierte un data set en una lista de objetos de modelo
         /// </summary>
         /// <typeparam name="TModel">The type of the model.</typeparam>
         /// <returns></returns>
         public List<TModel> ConvertToListModel<TModel>()
-        {   
+        {
             //Se crea una nueva lista de tipoTModel
             List<TModel> mo = new List<TModel>();
 
@@ -724,7 +778,7 @@ namespace connect
                     {
                         tipo.GetProperty(campo.Name).SetValue((TModel)objeto, filas[campo.Name]);
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
 
                     }
@@ -765,7 +819,7 @@ namespace connect
 
                     }
                 // se agrega el objeto TModel a la lista mo.
-               
+
                 mo.Add((TModel)objeto);
             }
             //El primer elemento de la lista mo se asigna al parámetro modelo.
@@ -971,7 +1025,7 @@ namespace connect
             this.sqlConn.Close();
         }
 
-     
+
 
         /// <summary>
         /// Funcion  para convertir una data table en una cadena de objetos
@@ -984,7 +1038,7 @@ namespace connect
         public List<T> DataTableToList<T>(DataTable dtDatos) where T : class, new()
         {
             try
-            {   
+            {
                 //Genera una lista vacia de objetos tipos genericos
                 List<T> list = new List<T>();
 
