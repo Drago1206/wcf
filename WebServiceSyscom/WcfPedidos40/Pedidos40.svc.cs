@@ -5,10 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.ServiceModel;
-using System.ServiceModel.Web;
 using WcfPedidos40.Model;
-
 
 namespace WcfPedidos40
 {
@@ -18,8 +15,6 @@ namespace WcfPedidos40
     {
 
         private connect.Conexion con = new connect.Conexion();
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Producto")]
         public RespProducto GetProducto(ProductoReq reqProducto)
         {
             //List<Errores> Errores = new List<Errores>();
@@ -65,8 +60,6 @@ namespace WcfPedidos40
             return rta;
         }
 
-        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductoTP", BodyStyle = WebMessageBodyStyle.Bare)]
-        [return: MessageParameter(Name = "Producto")]
         public RespProducto GetProductoTP(ProductoTPReq reqProdTP)
         {
             //List<Errores> Errores = new List<Errores>();
@@ -184,11 +177,15 @@ namespace WcfPedidos40
                         prods.ForEach(r =>
                         {
                             con.resetQuery();
-                            con.qryFields.Add(@"IdCia");
+                            List<SqlParameter> paramProductos = new List<SqlParameter>();
+                            paramProductos.Add(new SqlParameter("@IdProducto", r.IdProducto));
+                            con.addParametersProc(paramProductos);
+                            con.ejecutarProcedimiento("WcfPedidos40_GetProductos");
+                            /*con.qryFields.Add(@"IdCia");
                             con.qryTables.Add(@"ProdCompanias");
                             con.addWhereAND("IdProducto = '" + r.IdProducto + "'");
                             con.select();
-                            con.ejecutarQuery();
+                            con.ejecutarQuery();*/
                             r.DisponibleEnCia = con.getDataTable().AsEnumerable().Select(s => s.Field<string>("IdCia")).ToList();
                         });
                         productos.Productos = prods;
@@ -214,34 +211,270 @@ namespace WcfPedidos40
             bool respuesta = con.ejecutarQuery("WSPedidos40Sesion", parametros, out TablaUsuario, out string[] mensajeUsuario, CommandType.StoredProcedure);
             return TablaUsuario.Tables[0];
         }
-        private bool existeUsuario(Usuario usuario)
+        public RespClientes GetClientes(Usuario usuario)
         {
-            bool existe = false;
-            con.setConnection("Syscom");
-            con.resetQuery();
-            con.qryFields.Add("IdUsuario, PwdLog");
-            con.qryTables.Add("adm_Usuarios");
-            con.addWhereAND("Inactivo = 0 and lower(IdUsuario) = lower('" + usuario.IdUsuario + "')");
-            con.select();
-            con.ejecutarQuery();
-            DataTable ds = con.getDataTable();
-            DataRow row = ds.Rows[0];
-            if (ds.Rows.Count > 0)
+            //LogErrores.tareas.Add("ingreso ==>" + DateTime.Now.ToShortDateString());
+            //LogErrores.write();
+            RespClientes resultado = new RespClientes();
+            List<ClienteResponse> clientes = new List<ClienteResponse>();
+            if (existeUsuario(usuario))
             {
-                pwdSyscom pwdSys = new pwdSyscom();
-                pwdSys.Decodificar(row["PwdLog"].ToString());
-                var contra = pwdSys.contrasenna.Split('=');
-                if (contra[2] == usuario.Contrasena)
+                DateTime pmFecha_Actual = DateTime.Parse(usuario.Fecha_Act);
+
+                connect.Conexion log = new connect.Conexion();
+                DataSet TablaVendedores = new DataSet();
+                DataSet TablaClientes = new DataSet();
+                List<SqlParameter> parametrosVendedores = new List<SqlParameter>();
+                List<SqlParameter> parametrosClientes = new List<SqlParameter>();
+                parametrosVendedores.Add(new SqlParameter("@FechaActual", pmFecha_Actual));
+                log.setConnection("dbsLog");
+                if (log.ejecutarQuery("WcfPedidos40_LogVendedores", parametrosVendedores, out TablaVendedores, out string[] mensajeVendedores, CommandType.StoredProcedure))
                 {
-                    existe = true;
+                    DataTable tmpDt = TablaVendedores.Tables[0];
+                    int count = TablaVendedores.Tables[0].Rows.Count;
+
+
+                    List<LogVendedores> vendedoresNuevos = tmpDt.AsEnumerable().Select(r => new LogVendedores
+                    {
+                        Numero = r.Field<int>("Numero"),
+                        Fecha = r.Field<DateTime>("Fecha"),
+                        ClaveReg = r.Field<string>("ClaveReg"),
+                        TipoProc = r.Field<string>("TipoProc"),
+                        IdCliente = r.Field<string>("IdCliente"),
+                        CdAgencia = r.Field<string>("CdAgencia"),
+                        CdVendAnt = r.Field<string>("CdVendAnt"),
+                        IdVend = r.Field<string>("IdVend"),
+                        FechaCrea = r.Field<DateTime>("FechaCrea"),
+                        IdUsuario = r.Field<string>("IdUsuario"),
+                        Nombre = r.Field<string>("Nombre"),
+                        NomCliente = r.Field<string>("NomCliente"),
+                        NomAgencia = r.Field<string>("NomAgencia"),
+                        NomVendedor = r.Field<string>("NomVendedor"),
+                        NomVendAnt = r.Field<string>("NomVendAnt")
+                    }).ToList();
+
+                    try
+                    {
+                        parametrosClientes.Add(new SqlParameter("@FechaActual", pmFecha_Actual));
+                        string idcliente = (vendedoresNuevos.Count > 0 ? String.Join(",", vendedoresNuevos.GroupBy(c => c.IdCliente).Select(c => c.First().IdCliente).ToList().Select(s => "'" + s + "'").ToArray()) : "" + "");
+                        parametrosClientes.Add(new SqlParameter("@IdCliente", idcliente));
+                        if (con.ejecutarQuery("WcfPedidos40_Clientes", parametrosClientes, out TablaClientes, out string[] mensajeClientes, CommandType.StoredProcedure))
+                        {
+                            tmpDt = TablaClientes.Tables[0];
+                            count = TablaClientes.Tables[0].Rows.Count;
+                            IEnumerable<DataRow> data = tmpDt.AsEnumerable();
+                            IEnumerable<DataRow> dataFil = data.GroupBy(g => g.Field<string>("IdTercero")).Select(g => g.First());
+
+                            dataFil.ToList().ForEach(i => clientes.Add(new ClienteResponse
+                            {
+
+                                IdTercero = i.Field<string>("IdTercero"),
+                                RazonSocial = i.Field<string>("RazonSocial"),
+                                Direccion = i.Field<string>("Direccion"),
+                                IdLocal = i.Field<string>("IdLocal"),
+                                Localidad = i.Field<string>("Localidad"),
+                                Telefono = i.Field<string>("Telefono"),
+                                IdRegimen = i.Field<string>("IdRegimen"),
+                                Regimen = i.Field<string>("Regimen"),
+                                IdGrupo = i.Field<string>("IdGrupo"),
+                                IdSector = i.Field<string>("IdSector"),
+                                SectorEco = i.Field<string>("SectorEco"),
+                                IdPlazo = i.Field<string>("IdPlazo"),
+                                Plazo = i.Field<string>("Plazo"),
+                                CdCms = i.Field<string>("CdCms"),
+                                TarCms = i.Field<decimal?>("TarCms"),
+                                IdVend = i.Field<string>("IdVend"),
+                                Vendedor = i.Field<string>("Vendedor"),
+                                DiasEntrega = i.Field<string>("CdDiaEnt"),
+                                NumLista = i.Field<string>("NumLista"),
+                                CodVend = i.Field<string>("Codigo"),
+                                IdSZona = i.Field<string>("IdSZona"),
+                                Subzona = i.Field<string>("SubZona"),
+                                IdZona = i.Field<string>("IdZona"),
+                                Zona = i.Field<string>("Zona"),
+                                IdRuta = i.Field<string>("IdRuta"),
+                                Ruta = i.Field<string>("Ruta"),
+                                Inactivo = (i.Field<bool>("Inactivo") ? "1" : "0")
+                            }));
+
+                            try
+                            {
+                                clientes.ForEach(c =>
+                                {
+                                    if (data.Where(r => r.Field<string>("IdTercero") == c.IdTercero && r.Field<string>("IdAgencia") != null).Count() > 0)
+                                    {
+                                        c.Agencias = new List<Agencia>();
+                                        data.Where(ca => ca.Field<string>("IdTercero") == c.IdTercero && ca.Field<string>("IdAgencia") != null).ToList().ForEach(i => c.Agencias.Add(new Agencia
+                                        {
+
+                                            IdAgencia = i.Field<string>("IdAgencia"),
+                                            NomAgencia = i.Field<string>("Agencia"),
+                                            DirAgncia = i.Field<string>("DirAgncia"),
+                                            AgIdLocal = i.Field<string>("AgIdLocal"),
+                                            AgLocalidad = i.Field<string>("AgLocalidad"),
+                                            TelAgncia = i.Field<string>("TelAgncia"),
+                                            NomCont = i.Field<string>("NomCont"),
+                                            emlCont = i.Field<string>("emlCont"),
+                                            AgIdVend = i.Field<string>("AgIdVend"),
+                                            AgVendedor = i.Field<string>("AgVendedor"),
+                                            AgCdCms = i.Field<string>("AgCdCms"),
+                                            AgTarCms = i.Field<decimal?>("AgTarCms"),
+                                            AgCdDct = i.Field<string>("AgCdDct"),
+                                            AgTarDct = i.Field<decimal?>("AgTarDct"),
+                                            DiasEntrega = i.Field<string>("CodDiaEnt"),
+                                    //Versión 003
+                                    AgIdSZona = i.Field<string>("IdSZonaA"),
+                                            AgSubZona = i.Field<string>("SubzonaA"),
+                                            AgIdZona = i.Field<string>("IdZonaA"),
+                                            AgZona = i.Field<string>("ZonaA"),
+                                            AgIdRuta = i.Field<string>("IdRutaA"),
+                                            AgRuta = i.Field<string>("RutaA")
+                                        }));
+                                    }
+                                });
+                            }
+                            catch (Exception exx)
+                            {
+                                LogErrores.tareas.Add(exx.Message);
+                                LogErrores.write();
+                            }
+                        }
+                    }
+
+                    catch (Exception ex)
+                    {
+                        LogErrores.tareas.Add(ex.Message);
+                        LogErrores.write();
+                    }
+                    resultado.Clientes = clientes;
+                    resultado.Registro = new Log { Codigo = "1", Fecha = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), Registros = clientes.Count, Msg = "Se ejecutó correctamente la consulta." };
+                }
+            }
+            else
+                resultado.Registro = new Log { Codigo = "USER_001", Fecha = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"), Registros = clientes.Count, Msg = "No se encontró el usuario o la contraseña es incorrecta." };
+
+            return resultado;
+        }
+
+        public PedidoResponse SetPedido(PedidoRequest pedido)
+        {
+            bool continuar = true;
+            if (String.IsNullOrEmpty(pedido.Agencia))
+                pedido.Agencia = "0";
+            PedidoResponse resp = new PedidoResponse();
+            con = new connect.Conexion();
+            con.setConnection("Syscom");
+            if (existeUsuario(pedido.Usuario))
+            {
+                //Buscar si la agencia pertence al cliente
+                if (pedido.Agencia != "0")
+                {
+                    List<SqlParameter> parametrosCliente = new List<SqlParameter>();
+                    DataSet TablaAgencia = new DataSet();
+                    parametrosCliente.Add(new SqlParameter("@IdTercero", pedido.Cliente.IdTercero));
+                    parametrosCliente.Add(new SqlParameter("@IdAgencia", pedido.Agencia));
+                    if (con.ejecutarQuery("WcfPedidos40_ConsultarAgencia", parametrosCliente, out TablaAgencia, out string[] mensajeAgencia, CommandType.StoredProcedure))
+                    {
+                        if (TablaAgencia.Tables[0].Rows.Count <= 0)
+                        {
+                            resp.Errores.Add("La agencia '" + pedido.Agencia + " del cliente '" + pedido.Cliente.IdTercero + "', NO existe!");
+                            goto fin;
+                        }
+                    }
+                }
+
+                if (continuar)
+                {
+                    DataTable Trn_OPedido = new DataTable();
+                    DataTable Trn_Kardex = new DataTable();
+
+                    //LogErrores.tareas.Add(pedido.Agencia);
+                    //LogErrores.tareas.Add(pedido.Cliente.IdTercero);
+                    //LogErrores.write();
+                    Pedido ped = new Pedido(pedido.Usuario.IdUsuario, pedido.Cliente, pedido.TipoPedido, pedido.Agencia);
+
+                    DataSet tablaAdmusuario = new DataSet();
+                    List<SqlParameter> parametrosAdmUsuario = new List<SqlParameter>();
+                    parametrosAdmUsuario.Add(new SqlParameter("@IdUsuario", pedido.Usuario.IdUsuario));
+                    con.ejecutarQuery("WcfPedidos40_admUsuario", parametrosAdmUsuario,out tablaAdmusuario, out string[] mensajeAdm, CommandType.StoredProcedure);
+
+                    DataTable adm_Usuario = tablaAdmusuario.Tables[0];
+
+                    DataTable productos = ped.obtenerProductos(pedido.Productos);
+                    List<string> inactivos = productos.Rows.Cast<DataRow>().Where(r => r.Field<bool>("Inactivo") == true).Select(r => r.Field<string>("IdProducto")).ToList();
+                    if (inactivos.Count == 0)
+                    {
+                        if (productos.Rows.Cast<DataRow>().Where(r => !new string[] { "1000", "1001", "1002" }.Contains(r.Field<string>("IdProducto"))).Count() > 0 && pedido.TipoPedido == "A")
+                        {
+                            resp.Errores.Add("Los pedidos tipo Abono, solo pueden contener productos con los codigos '1000', '1001' y '1002'");
+                            goto fin;
+                        }
+
+                        ped.setProductos(productos);
+                        ped.Procesar();
+                    }
+
+                    var serializerSettings = new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects };
+                    if (ped.obtenerErrores().Count == 0)
+                        resp.Pedido = new PedidoResp
+                        {
+                            TipDoc = ped.OPedido.Rows[0]["TipDoc"].ToString(),
+                            Pedido = ped.OPedido.Rows[0]["Pedido"].ToString() + "-" + ped.OPedido.Rows[0]["IdCia"].ToString(),
+                            Fecha = ped.OPedido.Rows[0]["Fecha"].ToString(),
+                            Agencia = pedido.Agencia
+                        };
+
+                    resp.Errores = ped.obtenerErrores();
+                    if (inactivos.Count > 0)
+                        resp.Errores.Add(String.Join(@"\n", inactivos.Select(r => "El producto '" + r + "' está inactivo.").ToArray()));
 
                 }
-                else
+            }
+            else
+            {
+                resp.Errores = new List<string>();
+                resp.Errores.Add("¡No se encontró el usuario o la contraseña es incorrecta!");
+            }
+
+        fin:
+            { }
+            LogErrores.tareas.Add("El pedido es==>" + resp.Pedido);
+            LogErrores.tareas.Add("Los errores son: Errores ==> " + resp.Errores);
+            LogErrores.write();
+            return resp;
+        }
+
+        private bool existeUsuario(Usuario usuario)
+        {
+            DataTable ds = new DataTable();
+            bool existe = false;
+            DataSet TablaSesion = new DataSet();
+            List<SqlParameter> parametros = new List<SqlParameter>();
+            parametros.Add(new SqlParameter("@IdUsuario", usuario.IdUsuario));
+            con.setConnection("Syscom");
+            if (con.ejecutarQuery("WSPedidos40Sesion", parametros, out TablaSesion, out string[] mensajeSesion, CommandType.StoredProcedure))
+            {
+                ds = TablaSesion.Tables[0];
+
+                if (ds.Rows.Count > 0)
                 {
-                    existe = false;
+                DataRow row = ds.Rows[0];
+                    pwdSyscom pwdSys = new pwdSyscom();
+                    pwdSys.Decodificar(row["PwdLog"].ToString());
+                    var contra = pwdSys.contrasenna.Split('=');
+                    if (contra[2] == usuario.Contrasena)
+                    {
+                        existe = true;
+
+                    }
+                    else
+                    {
+                        existe = false;
+                    }
                 }
             }
             return existe;
+
         }
     }
 }

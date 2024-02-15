@@ -99,6 +99,7 @@ namespace connect
                             this.adapter.Fill(ds);
                         break;
                 }
+
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
@@ -235,6 +236,7 @@ namespace connect
                 else
                     this.adapter.Fill(this.ds);
                 this.adapter.SelectCommand.Parameters.Clear();
+                sqlParameters.Clear();
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
@@ -367,18 +369,18 @@ namespace connect
                     this.sqlConn.Close();
                 }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message + "\nDatos=>\n" + string.Join("///", _datos.Rows.Cast<DataRow>().FirstOrDefault().ItemArray));
+                LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + ex.Message + "\nDatos=>\n" + string.Join("///", _datos.Rows.Cast<DataRow>().FirstOrDefault().ItemArray));
                 LogErrores.write();
                 insertado = false;
 
             }
-            finally
+            /*finally
             {
                 if (this.transaccion == null)
                     sqlConn.Dispose();
-            }
+            }*/
             return insertado;
         }
         /// <summary>
@@ -572,6 +574,7 @@ namespace connect
                         // Se establece el segundo elemento del mensaje a un mensaje de error que incluye la consulta SQL y el mensaje de la excepción
                         mensaje[1] = "Error al ejecutar la consulta" + SqlQuery + " ha ocurrido  " + ex.Message + "]";
                     }
+
 
                 }
             }

@@ -25,7 +25,7 @@ namespace WcfPedidos30.Model
             if (usuario != null)
             {
                 /// Configuración de la cadena de conexión para determinar a qué base de datos va dirigida la consulta
-                con.setConnection("DBSYSCOMSOPORTE");
+                con.setConnection("DBACC");
 
                 /// Se inicializa el DataSet que contendrá la respuesta del procedimiento de almacenado
                 DataSet TablaIncio = new DataSet();
@@ -35,7 +35,7 @@ namespace WcfPedidos30.Model
                 parametros.Add(new SqlParameter("@Usuario", usuario));
 
                 /// Condición para verificar si el procedimiento de almacenado se ejecuta correctamente
-                if (con.ejecutarQuery("WSPedidosInicioSeccion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                if (con.ejecutarQuery("WSPedidosIniciaSesion", parametros, out TablaIncio, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                 {
                     /// Condición para verificar si la cantidad de registros recibidos son mayor a cero
                     if (TablaIncio.Tables[0].Rows.Count > 0)
@@ -48,7 +48,9 @@ namespace WcfPedidos30.Model
 
                         /// Condición que verifica si la la contraseña recibida en la solicitud 
                         /// Es igual a la contraseña decodificada de la base de datos
-                        if (password.ToLower() == pwd.contrasenna.ToLower())
+                        
+                        var contra = pwd.contrasenna.Split('=');
+                        if (pwd.contrasenna == password.ToLower())
                         {
                             /// Si la condición se cumple, 
                             /// Define mensajes de respuesta existoso,

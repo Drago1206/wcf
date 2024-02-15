@@ -14,7 +14,7 @@ namespace WcfPedidos30.Model
             datPedido = new List<PedidoResponse>();
             Log _error = new Log { Codigo = "error", Descripcion = "error" };
             List<SqlParameter> lsp = new List<SqlParameter>();
-            con.setConnection("WcfPedidos30_SelectPedidos");
+            con.setConnection("DBMOV");
             try
             {
                 List<SqlParameter> parametros = new List<SqlParameter>();
