@@ -231,12 +231,14 @@ namespace connect
                 else
                     this.adapter.Fill(this.ds);
                 this.adapter.SelectCommand.Parameters.Clear();
+                sqlParameters.Clear();
                 if (this.transaccion == null)
                 {
                     this.adapter.Dispose();
                     this.sqlConn.Close();
                 }
             }
+
             catch (Exception e)
             {
                 LogErrores.tareas.Add("Ha ocurrido un error al intentar ejecutar la consulta: " + e.Message);

@@ -48,7 +48,10 @@ namespace WcfPedidos40
         [return: MessageParameter(Name = "Productos")]
         RespProductos GetProductos(Usuario usuario);
 
-
+        [OperationContract]
+        [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GenerarPedido", BodyStyle = WebMessageBodyStyle.Bare)]
+        [return: MessageParameter(Name = "Pedido")]
+        PedidoResponse SetPedido(PedidoRequest pedido);
     }
 
 
@@ -122,7 +125,6 @@ namespace WcfPedidos40
         [DataMember]
         public List<ProductosResponse> Productos { get; set; }
     }
-
     [DataContract]
     public class Usuario
     {
@@ -183,7 +185,26 @@ namespace WcfPedidos40
             set { _mensaje = value; }
         }
     }
+    [DataContract]
+    public class RespClientes
+    {
+        Log _registro;
+        List<ClienteResponse> _clientes;
 
+        [DataMember]
+        public Log Registro
+        {
+            get { return _registro; }
+            set { _registro = value; }
+        }
+
+        [DataMember]
+        public List<ClienteResponse> Clientes
+        {
+            get { return _clientes; }
+            set { _clientes = value; }
+        }
+    }
     public class RespProducto
     {
         List<Errores> _errores;
@@ -283,6 +304,60 @@ namespace WcfPedidos40
             get { return preciol5; }
             set { preciol5 = value; }
         }
+    }
+
+    [DataContract]
+    public class PedidoRequest
+    {
+        private Usuario _usuario;
+        private List<ProductosResponse> _productos;
+        private ClienteRequest _cliente;
+        private string _tipopedido;
+        private string _cdAgencia = "0";
+
+        [DataMember]
+        public Usuario Usuario
+        {
+            get { return _usuario; }
+            set { _usuario = value; }
+        }
+        [DataMember]
+        public ClienteRequest Cliente
+        {
+            get { return _cliente; }
+            set { _cliente = value; }
+        }
+
+        [DataMember]
+        public List<ProductosResponse> Productos
+        {
+            get { return _productos; }
+            set { _productos = value; }
+        }
+
+        [DataMember]
+        public string TipoPedido
+        {
+            get { return _tipopedido; }
+            set { _tipopedido = value; }
+        }
+
+        [DataMember]
+        public string Agencia
+        {
+            get { return _cdAgencia; }
+            set { _cdAgencia = value; }
+        }
+    }
+    [DataContract]
+    public class PedidoResponse
+    {
+        [DataMember]
+        public PedidoResp Pedido { get; set; }
+
+        [DataMember]
+        public List<string> Errores { get; set; }
+
     }
 
     public class ProductoTPReq

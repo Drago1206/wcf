@@ -178,7 +178,20 @@ namespace WcfPedidos30
                             respuesta.DatosUsuarios = dtUsuario.FirstOrDefault();
                             respuesta.Registro = new Log { Codigo = "USER_064", Descripcion = "Respuesta exitosa" };
                         }
+                        else if (TablaUsuario.Tables[0].Rows.Count == 0)
+                        {
+                            respuesta.Registro = new Log { Codigo = "USER_001", Descripcion = "¡Usuario no encontrado!" };
+                        }
+                        else
+                        {
+                            respuesta.Registro = new Log { Codigo = "USER_004", Descripcion = "El usuario no está creado como cliente" };
+                        }
                     }
+                    else
+                    {
+                        respuesta.Registro = new Log { Codigo = nuevoMennsaje[0], Descripcion = nuevoMennsaje[1] };
+                    }
+                    
                 }
                 else
                 {
