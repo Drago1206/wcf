@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // La información general de un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos valores de atributo para modificar la información
 // asociada a un ensamblado.
-[assembly: AssemblyTitle("WcfDocTrasn")]
+[assembly: AssemblyTitle("WcfDocTrans")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("WcfDocTrasn")]
+[assembly: AssemblyProduct("WcfDocTrans")]
 [assembly: AssemblyCopyright("Copyright ©  2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como id. de typelib si este proyecto se expone a COM.
-[assembly: Guid("34355645-25a1-4f06-b9f8-30ad13a6b7a3")]
+[assembly: Guid("0560ac18-7030-4ca0-9356-b59e2b359d72")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //

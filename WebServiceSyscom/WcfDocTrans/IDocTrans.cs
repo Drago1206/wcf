@@ -8,12 +8,13 @@ using System.ServiceModel.Web;
 using System.Text;
 using WcfDocTrasn.Model;
 
-namespace WcfDocTrasn
+namespace WcfDocTrans
 {
     // NOTA: puede usar el comando "Rename" del menú "Refactorizar" para cambiar el nombre de interfaz "IService1" en el código y en el archivo de configuración a la vez.
     [ServiceContract]
-    public interface IDocTrasn
+    public interface IDocTrans
     {
+
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GenerarToken", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Token")]
@@ -28,13 +29,10 @@ namespace WcfDocTrasn
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GenerarTrazabilidad", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Trazabilidad")]
         RespuestaTrazabilidad GetTrazabilida(DtTrazabilidad DtTrazabilidad);
-
-
     }
 
 
     // Utilice un contrato de datos, como se ilustra en el ejemplo siguiente, para agregar tipos compuestos a las operaciones de servicio.
-
     [DataContract]
     public class User
     {
@@ -169,10 +167,12 @@ namespace WcfDocTrasn
     }
     [DataContract]
 
-    public class Usuario {
+    public class Usuario
+    {
         string _Token;
         [DataMember]
-        public string Token {
+        public string Token
+        {
             get { return _Token; }
             set { _Token = value; }
         }

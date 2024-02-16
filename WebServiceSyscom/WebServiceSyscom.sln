@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos30", "WcfPedidos3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfPedidos40", "WcfPedidos40\WcfPedidos40.csproj", "{140DC560-18B1-4EBC-978E-ABECFE149AA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfDocTrasn", "WcfDocTrasn\WcfDocTrasn.csproj", "{34355645-25A1-4F06-B9F8-30AD13A6B7A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfDocTrans", "WcfDocTrans\WcfDocTrans.csproj", "{0560AC18-7030-4CA0-9356-B59E2B359D72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{140DC560-18B1-4EBC-978E-ABECFE149AA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{140DC560-18B1-4EBC-978E-ABECFE149AA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{140DC560-18B1-4EBC-978E-ABECFE149AA2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34355645-25A1-4F06-B9F8-30AD13A6B7A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34355645-25A1-4F06-B9F8-30AD13A6B7A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34355645-25A1-4F06-B9F8-30AD13A6B7A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34355645-25A1-4F06-B9F8-30AD13A6B7A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0560AC18-7030-4CA0-9356-B59E2B359D72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0560AC18-7030-4CA0-9356-B59E2B359D72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0560AC18-7030-4CA0-9356-B59E2B359D72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0560AC18-7030-4CA0-9356-B59E2B359D72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
