@@ -117,12 +117,63 @@ namespace WcfDocTrasn
             return respuesta;
         }
 
+       
         public RespuestaTrazabilidad GetTrazabilida(DtTrazabilidad DtTrazabilidad)
         {
-            throw new NotImplementedException();
+            var handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken tokenD = handler.ReadJwtToken(DtTrazabilidad.Token.Contains("Bearer") ? DtTrazabilidad.Token.Replace("Bearer", "").Trim() : DtTrazabilidad.Token) as JwtSecurityToken;
+            pwdSyscom pwd = new pwdSyscom();
+            pwd.Decodificar(tokenD.Payload["unique_name"].ToString());
+            string[] tokendecod = pwd.contrasenna.Split('=');
+            DateTime dateTimeOffset = Convert.ToDateTime(tokendecod[4]);
+            RespuestaTrazabilidad respuesta = new RespuestaTrazabilidad();
+
+
+            if (DtTrazabilidad.Token == null)
+            {
+                respuesta.Errores = new Errores { Codigo = "001", Descripcion = "¡El token es requerido!" };
+            }
+            else if (DtTrazabilidad.NumPedido == 0)
+            {
+                respuesta.Errores = new Errores { Codigo = "001", Descripcion = "¡El número de pedido es requerido!" };
+            }
+            else if (DtTrazabilidad.CiaPedido == null || String.IsNullOrWhiteSpace(DtTrazabilidad.CiaPedido))
+            {
+                respuesta.Errores = new Errores { Codigo = "003", Descripcion = "¡La compañía es requerida!" };
+            }
+            else {
+
+                Model.Conexion con = new Model.Conexion();
+
+                List<SqlParameter> parametros = new List<SqlParameter>();
+                parametros.Add(new SqlParameter("@CiaPedido", DtTrazabilidad.CiaPedido));
+                parametros.Add(new SqlParameter("@NumeroPedido", DtTrazabilidad.NumPedido));
+
+                DataSet Tablainfo = new DataSet();
+                DataTable Dt = new DataTable();
+
+
+                if (dateTimeOffset > DateTime.Now)
+                {
+                    if (con.ejecutarQuery("WSPedidosTrans_Trazabilidad", parametros, out Tablainfo, out string[] nuevomennsaje, CommandType.StoredProcedure))
+                    {
+                        respuesta.Respuesta = con.DataTableToList<DatosTrazabilidad>("TipoDocumento,Numero,Compania,Fecha,Valor,Placa,Modelo,ClaseVeh,IdConductor,NomConductor,GPSoperador,GPSUsuario,GPSClave,FechaInicioCargue,HoraInicioCargue,FechaFinCargue,HoraFinCargue,FechaSalida,HoraSalida,Precinto".Split(','));
+                        respuesta.Respuesta.ForEach(m =>
+                        {
+                            if (m.TipoDocumento == "RMT" || m.TipoDocumento == "MUC")
+                            {
+                                m.novedad = new List<itemnovedad>();
+                                m.novedad = con.DataTableToList<itemnovedad>(Dt.AsEnumerable().Where(r => r["Item"] != DBNull.Value && r.Field<string>("TipoDocumento").Equals(m.TipoDocumento) && r.Field<int>("Numero").Equals(m.Numero) && r.Field<string>("Compania").Equals(m.Compania)).AsDataView().ToTable(true, "Item,Descripcion,Rubro,Total".Split(',')));
+                            }
+                        });
+                    }
+                }
+
+            }
+
+            return respuesta;
         }
 
-        
         public RespuestaPedido SetPedido(DtPedido DtPedido)
         {
             RespuestaPedido respuesta = new RespuestaPedido();
@@ -180,8 +231,11 @@ namespace WcfDocTrasn
                         // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                         con.resetQuery();
                         //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
-                        if (con.ejecutarQuery("WcfPedidosTrasn_ObtenerToken", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                        if (con.ejecutarQuery("WcfPedidosTrasn_ObtenerPedido", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                         {
+                           
+
+                            
                             List<DataRow> _mercancia = Tablainfo.Tables[7].AsEnumerable().ToList();
                             List<DataRow> _remitente = Tablainfo.Tables[5].AsEnumerable().ToList();
                             List<DataRow> _destinatario = Tablainfo.Tables[6].AsEnumerable().ToList();
@@ -365,8 +419,8 @@ namespace WcfDocTrasn
                                                     row["Descripcion"] = d.Descripcion;
                                                     row["Tarifa"] = (d.Cantidad * d.VrUnitario);
                                                     row["TipoConc"] = d.TipoConcepto == "" ? "CARGOS" : d.TipoConcepto;
-                                                    row["RubroConcep"] = d.Rubro == "" ? "CARGOS" : d.Rubro;
                                                     row["Cantidad"] = d.Cantidad;
+                                                    row["RubroConcep"] = d.Rubro == "" ? "CARGOS" : d.Rubro;
                                                     row["VrUnitario"] = d.VrUnitario;
                                                     row["TarifIva"] = Tablainfo.Tables[21].Rows[0]["TarifIva"] == DBNull.Value ? 0 : Tablainfo.Tables[21].Rows[0]["TarifIva"]; //_conceptos.Where(pi => pi.Field<string>("IdConcepto").Equals(d.CodigoConcepto)).SingleOrDefault().Field<decimal>("TarifIva");
                                                     row["IdConcepto"] = d.CodigoConcepto;
@@ -382,7 +436,7 @@ namespace WcfDocTrasn
                                                     row["Referencia2"] = "";
                                                     row["Referencia3"] = "";
                                                 Tablainfo.Tables[20].Rows.Add(row);
-                                                param.Add(new SqlParameter("@dataTypeTrn_Conceptos", Tablainfo.Tables[20]));
+                                                param.Add(new SqlParameter("@dataTypeTrn_TraConceptos", Tablainfo.Tables[20]));
                                                 Item++;
 
                                             }
@@ -440,7 +494,7 @@ namespace WcfDocTrasn
                                                     row["SedeRem"] = d.SedeRemitente;
                                                     row["SedeDest"] = d.SedeDestinatario;
                                                     Tablainfo.Tables[1].Rows.Add(row);
-                                                param.Add(new SqlParameter("@dataTypeTrn_Detalle", Tablainfo.Tables[1]));
+                                                param.Add(new SqlParameter("@dataTypeTrn_TraPedAnexo", Tablainfo.Tables[1]));
                                                 Item++;
                                                 
                                             }
@@ -468,32 +522,7 @@ namespace WcfDocTrasn
                                                 {
                                                 rows["IdVend"] = tokendecod[2];
                                                 }
-                                                else
-                                                {
-                                                    con.setConnection("Syscom");
-                                                    DataSet TablaIncio = new DataSet();
-                                                    List<SqlParameter> parametro = new List<SqlParameter>();
-                                                    parametros.Add(new SqlParameter("@IdUsuario", tokendecod[0]));
 
-                                                    if (con.ejecutarQuery("WSPedidosTrasn_ObtenerRol", parametro, out TablaIncio, out string[] nuevomensaje, CommandType.StoredProcedure))
-                                                    {
-                                                        if (TablaIncio.Tables[0].Rows.Count > 0)
-                                                        {
-                                                            string Rol = (TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("EsVendedor"));
-                                                            if (Rol != null)
-                                                            {
-                                                            rows["IdVend"] = Rol;
-                                                            }
-                                                            else
-                                                            {
-                                                                parametros.Add(new SqlParameter("IdCliente", tokendecod[0]));
-                                                                string id = (TablaIncio.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("IdVend"));
-                                                                rows["IdVend"] = id;
-
-                                                            }
-                                                        }
-                                                    }
-                                                }
 
                                                 rows["IdTarifCom"] = DtPedido.Encabezado.TarifaComision == null ? "C1" : DtPedido.Encabezado.TarifaComision;
                                                 rows["Modalidad"] = DtPedido.Encabezado.Modalidad == null ? "ESTANDAR" : DtPedido.Encabezado.Modalidad;
@@ -542,8 +571,21 @@ namespace WcfDocTrasn
                                                 rows["FecUpdate"] = DBNull.Value;
                                                 rows["IdCiaCrea"] = tokendecod[1];
                                                 rows["IdUsuario"] = tokendecod[0];
+
+                                            string Rol = (Tablainfo.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("EsVendedor"));
+                                            if (Rol != null)
+                                            {
+                                                rows["IdVend"] = Rol;
+                                            }
+                                            else
+                                            {
+                                                parametros.Add(new SqlParameter("IdCliente", tokendecod[0]));
+                                                string id = (Tablainfo.Tables[0].AsEnumerable().FirstOrDefault().Field<string>("IdVend"));
+                                                rows["IdVend"] = id;
+
+                                            }
                                             Tablainfo.Tables[0].Rows.Add(rows);
-                                            param.Add(new SqlParameter("@dataTypetrn_Encabezado", Tablainfo.Tables[0]));
+                                            param.Add(new SqlParameter("@dataTypeTrn_TraPedido", Tablainfo.Tables[0]));
 
                                             DataRow rowEncab = Tablainfo.Tables[2].NewRow();
                                             rowEncab["TipDoc"] = "PDT";
@@ -592,12 +634,20 @@ namespace WcfDocTrasn
                                                 rowEncab["TipoServicio"] = "";
                                                 rowEncab["CodTipoOper"] = "";
                                             Tablainfo.Tables[2].Rows.Add(rowEncab);
-                                            param.Add(new SqlParameter("@dataTypetrn_rowEncab", Tablainfo.Tables[2]));
+                                            param.Add(new SqlParameter("@dataTypeTrn_TraPedMcias", Tablainfo.Tables[2]));
 
-                                            if (con.ejecutarQuery("WSPedidosTrasn_ObtenerRol", param, out TablaPedidos, out string[] nuevomennsaje, CommandType.StoredProcedure))
+                                            if (con.ejecutarQuery("WSPedidosTrans_GenerarPedido", param, out TablaPedidos, out string[] nuevomennsaje, CommandType.StoredProcedure))
                                             {
-                                               ///Obtener datos de la consulta
+                                                if (TablaPedidos != null)
+                                                {
+                                                    respuesta.Respuesta = con.ConvertRowToModel<Pedidos>();
+                                                }
+                                                else
+                                                {
+                                                    respuesta.Errores = new Errores {Codigo = "002", Descripcion = "No se pudo generar el pedido" };
+                                                }
                                             }
+
                                         }
                                     }
                                 }

@@ -48,32 +48,28 @@ namespace WcfPedidos30.Model
 
                         /// Condición que verifica si la la contraseña recibida en la solicitud 
                         /// Es igual a la contraseña decodificada de la base de datos
-                        string cadena = pwd.contrasenna;
-                        int indice = cadena.LastIndexOf("=");
-                        string contrasena;
-                        if (indice != -1)
+
+
+                        if (password.ToLower() == pwd.contrasenna)
                         {
-                            contrasena = cadena.Substring(indice + 1);
-                            if (password.ToLower() == contrasena)
-                            {
-                                /// Si la condición se cumple, 
-                                /// Define mensajes de respuesta existoso,
-                                /// y define la variable como true
-                                mensaje = new string[2];
-                                mensaje[0] = "USER_064";
-                                mensaje[1] = "Respuesta exitosa";
-                                existe = true;
-                            }
-                            else
-                            {
-                                /// En caso de que la condición no se cumpla,
-                                /// Define mensajes de respuesta negativo
-                                mensaje = new string[2];
-                                mensaje[0] = "USER_003";
-                                mensaje[1] = "Usuario o Contraseña inválido";
-                            }
+                            /// Si la condición se cumple, 
+                            /// Define mensajes de respuesta existoso,
+                            /// y define la variable como true
+                            mensaje = new string[2];
+                            mensaje[0] = "USER_064";
+                            mensaje[1] = "Respuesta exitosa";
+                            existe = true;
                         }
-                        
+                        else
+                        {
+                            /// En caso de que la condición no se cumpla,
+                            /// Define mensajes de respuesta negativo
+                            mensaje = new string[2];
+                            mensaje[0] = "USER_003";
+                            mensaje[1] = "Usuario o Contraseña inválido";
+                        }
+
+
                     }
                     else
                     {

@@ -693,7 +693,7 @@ namespace WcfPedidos40.Model
                     #region Encabezado
                     DataRow drPedido = this.OPedido.NewRow();
                     drPedido["TipDoc"] = "PED";
-                    //drPedido["Pedido"] = Documento;
+                    //drPedido["Documento"] = Documento;
                     drPedido["IdCia"] = this.IdCia;
                     drPedido["Fecha"] = InfCompania.Rows[0].Field<DateTime>("FechaActual");
                     drPedido["FechaVence"] = InfCompania.Rows[0].Field<DateTime>("FechaActual").AddDays(InfCliente.Rows[0].Field<Int32>("DiasEntga"));
