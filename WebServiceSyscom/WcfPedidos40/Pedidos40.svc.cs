@@ -490,7 +490,7 @@ namespace WcfPedidos40
 
         public CarteraResp RespCartera(CarteraReq ReqCartera)
         {
-            //Instanciamo la conexion
+            //Instanciamos la conexion
             connect.Conexion con = new connect.Conexion();
 
             //Instanciamos la clase de CarteraResp para poder ingresar los resultados en dicha clase
@@ -499,68 +499,91 @@ namespace WcfPedidos40
             try
             {   //Realizamos un try para realizar todas las validaciones , incluyendo el usuario , contraseña y nit del cliente
                 respuesta.Error = null;
+
+                //Verficamos que los datos del usuario no vengan nulos
                 if (ReqCartera.usuario == null)
                 {
                     respuesta.Error = new Log { Codigo = "user_002", Msg = "¡todas las variables del usuario no pueden ser nulas!" };
                 }
+               
+                //Verificamos que la contraseña del usuario no venga nula ni vacia
+                if (ReqCartera.usuario.Password == null || string.IsNullOrWhiteSpace(ReqCartera.usuario.Password))
+                {
+                    respuesta.Error = new Log { Codigo = "002", Msg = "¡La contraseña no puede llegar vacia o nula!" };
+                }
+
+                //Verficamos que el Nombre del usuario no sea nula o venga vacia
+                if (ReqCartera.usuario.UserName == null || string.IsNullOrWhiteSpace(ReqCartera.usuario.UserName))
+                {
+                    respuesta.Error = new Log { Codigo = "002", Msg = "¡El usuario no puede llegar vacio o nulo!" };
+                }
+
+                //Una vez validado que los datos del usuario vengan diligenciados verificamos si este existe en la base de datos
                 else
                 {
+                    //Creamos un objeto usuario y lo instanciamos para obtener sus propiedades y poder verificar los valores
                     ExisteUsuario ExistUsu = new ExisteUsuario();
                     if (ExistUsu.Existe(ReqCartera.usuario.UserName, ReqCartera.usuario.Password, out string[] mensajeNuevo))
                     {
-                        respuesta.Error = new Log { Codigo = "999", Msg = "Ok" };
+                        //Si el Metodo Existe nos regresa true, entonces damos a entender 
+                        respuesta.Error = new Log { Codigo = "001", Msg = "!!Usuario Logueado¡¡" };
 
-                            // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
-                            // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
-                            DataSet Tablainfo = new DataSet();
-                            //Instanciamos la clase de cartera para poder ingresar los datos obtenidos en el metodo
-                            Cartera cart = new Cartera();
-                            //Instanciamos la clase item cartera para instanciar la lista de cartera que esta clase contiene 
-                            ItemCartera cartItem = new ItemCartera();
-                            //Creamos una nueva instancia de la lista de cartera la cual la contienen un nombre que se llama detalle.
+                        // Creamos un objeto dataset y lo instanciamos  para almacenar los datos obtenidos del procedimiento de almacenado 
+                        DataSet Tablainfo = new DataSet();
 
-                            List<ItemCartera> datItemCart = new List<ItemCartera>();
+                        //Instanciamos la clase de cartera para poder obtener las propiedades de esta y darle los valores respectivos 
+                        Cartera cart = new Cartera();
 
-                            try
+                        //Instanciamos la clase item cartera para instanciar la lista de cartera que esta clase contiene 
+                        ItemCartera cartItem = new ItemCartera();
+
+                        //Creamos una nueva instancia de la lista de cartera la cual la contienen un nombre que se llama detalle.
+                        List<ItemCartera> datItemCart = new List<ItemCartera>();
+
+                        try
+                        {
+                            //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
+                            // Tiene la funcionalidad de conectar con la base de datos y de esta manera ejecutar los  procedimientos de almacenado que se encuentran en estas
+                            con.setConnection("Syscom");
+
+                            //Se realiza una lista de parametros para pasar los datos  obtenidos a los procedimientos de almacenado
+                            List<SqlParameter> parametros = new List<SqlParameter>();
+
+                            //Indicamos el nombre del parametro que vamos a pasar con el respectivo valor 
+                            parametros.Add(new SqlParameter("@NitCliente", ReqCartera.NitCliente));
+
+                            // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
+                            con.resetQuery();
+                            //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
+                            if (con.ejecutarQuery("WcfPedidos_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
-                                //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
-                                // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
-                                con.setConnection("Syscom");
-                                //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
-                                List<SqlParameter> parametros = new List<SqlParameter>();
-                                //Indicamos el parametro que vamos a pasar 
-                                parametros.Add(new SqlParameter("@NitCliente", ReqCartera.NitCliente));
-                                con.addParametersProc(parametros);
+                                //Añadimos a la lista datItemCart los datos de tercero y saldo cartera mediante el metodo "DataTableToList"
+                                //dicho metodo obtiene un data set y lo convierte en una cadena de strings 
+                                datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
 
-                                //Ejecuta procedimiento almacenado
-                                //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
-                                DataTable DT = new DataTable();
-                                // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
-                                con.resetQuery();
-                                //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
-                                if (con.ejecutarQuery("WcfPedidos_ConsultarCartera", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                                //Recorremos la lista datItemCart para que dentro de esta podamos insertar los datos del detalle de la cartera
+                                datItemCart.ForEach(m =>
                                 {
-                                    //IEnumerable Convierte la tabla en una secuencia de objetos DataRow que se pueden usar en consultas LINQ.
+                                    //m.Detalle es un objeto en el cual se instancia la clase de cartera para que por medio de esta podamos representar los datos de resultado
+                                    m.Detalle = new List<Cartera>();
 
-                                    datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
-                                    datItemCart.ForEach(m =>
-                                    {
-                                        m.Detalle = new List<Cartera>();
+                                    //Luego del instanciamiento agregamos los valores de las columnas de las tablas si dichos datos vienen representados por el IdTercero
+                                    m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
+                                });
 
-                                        m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
-                                    });
+                                //Pasamos la lista con los valores obtenidos al modelo de cartera response para visualizar los resultados.
+                                respuesta.DatosCartera = datItemCart;
 
-                                    //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
-                                    respuesta.DatosCartera = datItemCart;
-                                    //respuesta.DatosCartera.Add(cartItem);
-
-                                }
 
                             }
-                            catch (Exception e)
-                            {
-                                respuesta.Error = new Log { Msg = e.Message };
-                            }
+
+                        }
+                        catch (Exception e)
+                        {
+                            respuesta.Error = new Log { Msg = e.Message };
+
+                        }
+                        respuesta.Error = new Log { Codigo = "001", Msg = "El usuario no existe" };
                     }
                 }
 
@@ -577,33 +600,47 @@ namespace WcfPedidos40
         #region ObtenerCarteraTotal
         public ResObtenerCarteraTotal resObtCartTotal(ObtCarTotal Info)
         {
-            //Instanciamo la conexion
+            //Creamos un objeto de conexion y instanciamos la clase de conexion para poder conectarse con la base de datos
             connect.Conexion con = new connect.Conexion();
 
-            //Instanciamos la clase de ResObtenerCarteraTotal para poder ingresar los resultados en dicha clase
+            //Creo un objeto de ResObtenerCartera e instancio dicha clase para poder ingresarle los resultados 
             ResObtenerCarteraTotal respuesta = new ResObtenerCarteraTotal();
 
             try
             {   //Realizamos un try para realizar todas las validaciones , incluyendo el usuario y contraseña
-                respuesta.Error = null;
+               
+                //Verificamos que los datos del usuario no sean nulos  asegurarlos que dicha clase contenga informacion
                 if (Info.usuario == null)
                 {
                     respuesta.Error = new Log { Codigo = "user_002", Msg = "¡todas las variables del usuario no pueden ser nulas!" };
                 }
+                //Verificamos que el nombre del usuario sea diligenciado y no sea un nulo o venga vacio para asegurarnos que sea el mismo usuario
+                if (Info.usuario.UserName == null || string.IsNullOrWhiteSpace(Info.usuario.UserName)) 
+                {
+                    respuesta.Error = new Log {Codigo = "002", Msg="El nombre del usuario no puede ser nulo" };
+                }
+                //Verificamos la contraseña del usuario que sea diligenciada para comprobar mas adelante la existencia del usuario 
+                if (Info.usuario.Password == null || string.IsNullOrWhiteSpace(Info.usuario.Password))
+                {
+                    respuesta.Error = new Log { Codigo = "002", Msg = "La contraseña del usuario no puede ser nula" };
+                }
                 else
                 {
+                    //Creamos un nuevo objeto tipo ExisteUsuario y lo instanciamos para acceder a un metodo
                     ExisteUsuario ExistUsu = new ExisteUsuario();
+
+                    //Accedemos al metodo "Existe" el cual es un booleano y nos arrojara true or false dependiendo si el usuario logueado se encuentra
                     if (ExistUsu.Existe(Info.usuario.UserName, Info.usuario.Password, out string[] mensajeNuevo))
-                    { 
+                    {
 
-                        // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
+                        // Creamos un nuevo objeto data set y lo instanciamos para poder obtener los resultados del procedimiento de datos 
                         DataSet Tablainfo = new DataSet();
-                        //Instanciamos la clase de cartera para poder ingresar los datos obtenidos en el metodo
+                        //Creo un nuevo objeto de cartera y lo instancio para acceder a sus propiedades y asginarles un valor 
                         Cartera cart = new Cartera();
-                        //Instanciamos la clase item cartera para instanciar la lista de cartera que esta clase contiene 
+                       // Creo un objeto CartItem y lo instancio para acceder a unas propiedades   
                         ItemCartera cartItem = new ItemCartera();
-                        //Creamos una nueva instancia de la lista de cartera la cual la contienen un nombre que se llama detalle.
 
+                        //Creo una lista de la clase ResCarteraTotal, la cual es donde mostraremos los resultados obtenidos del procedimiento 
                         List<ResCarteraTotal> datItemCart = new List<ResCarteraTotal>();
 
                         try
@@ -613,33 +650,28 @@ namespace WcfPedidos40
                             con.setConnection("Syscom");
                             //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
                             List<SqlParameter> parametros = new List<SqlParameter>();
-                            //Ejecuta procedimiento almacenado
-                            //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
-                            DataTable DT = new DataTable();
+            
                             // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                             con.resetQuery();
                             //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
                             if (con.ejecutarQuery("WSPedidoS40_consObtenerCarteraTotal", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
-                               //Llamamos el metodo  DataTableTolist y le pasamos los parametros necesarios para asi 
-
+                                //Llamamos el metodo  DataTableTolist y le paso los parametros del data set para asi obtener una lista de strings 
                                 datItemCart = con.DataTableToList<ResCarteraTotal>("Tercero,SaldoCartera".Split(','), Tablainfo);
 
-                                //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
+                                //Los los datos que tengo en la lista que alamceno en la lista datItemCart a la clase de datos cartera
+                                //en la cual mostraremos los resultados del procedimiento 
                                 respuesta.DatosCartera = datItemCart;
-                                //respuesta.DatosCartera.Add(cartItem);
 
                             }
-                            // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
-                            con.resetQuery();
 
                         }
                         catch (Exception e)
                         {
                             respuesta.Error = new Log { Msg = e.Message };
                         }
-                    
-                    } 
+
+                    }
                 }
 
 
@@ -655,81 +687,106 @@ namespace WcfPedidos40
         #region ObtenerCarteraTotalDef
         public ResObtenerCartera getCarteraTotalDet(authCartera Modelo)
         {
-            //Instanciamo la conexion
+            //Creo un nuevo objeto de conexion y creo una instancia para poder acceder a sus metodos 
             connect.Conexion con = new connect.Conexion();
 
             //Instanciamos la clase de CarteraResp para poder ingresar los resultados en dicha clase
             ResObtenerCartera respuesta = new ResObtenerCartera();
 
             try
-            {   //Realizamos un try para realizar todas las validaciones , incluyendo el usuario , contraseña y nit del cliente
-                respuesta.Error = null;
+            {   
+
+              //Verificamos que los datos del usuario no sean nulos , para pasar a validar campo por campo 
                 if (Modelo.usuario == null)
                 {
                     respuesta.Error = new Log { Codigo = "user_002", Msg = "¡todas las variables del usuario no pueden ser nulas!" };
                 }
+                ////Verificamos que el nombre del usuario no sea nulo ni vacio 
+                if (Modelo.usuario.UserName == null || String.IsNullOrWhiteSpace(Modelo.usuario.UserName))
+                {
+                    respuesta.Error = new Log { Codigo = "002", Msg = "¡El nombre del usuario no puede llegar nulo, ni venir vacio!" };
+                }
+                ////Verificamos que la contraseña no sea valida ni vacia  para verificar la identidad del usuario 
+                if (Modelo.usuario.Password == null || String.IsNullOrWhiteSpace(Modelo.usuario.Password))
+                {
+                    respuesta.Error = new Log { Codigo = "user_002", Msg = "¡La contraseña del usuario no puede ser nula !" };
+                }
+                //Verificamos que la fecha ingresada sea valida ya que se necesitara como base para saber desde cuando obtendremos las carteras
+                if (Modelo.FechaInicial == null || String.IsNullOrWhiteSpace(Modelo.FechaInicial))
+                {
+                    respuesta.Error = new Log { Codigo = "user_002", Msg = "¡Ingrese una fecha de incio valida!" };
+                }
+                //Verificamos la fecha final que sea valida para saber hasta que fecha obtendremos las carteras
+                if (Modelo.FechaFinal == null || String.IsNullOrWhiteSpace(Modelo.FechaFinal))
+                {
+                    respuesta.Error = new Log { Codigo = "user_002", Msg = "¡Ingrese una fecha final valida para obtener las carteras!" };
+                }
                 else
                 {
+                    //Creo un objeto de existe usuario y lo instancio para acceder a sus metodos 
                     ExisteUsuario ExistUsu = new ExisteUsuario();
+
+                    //Le ingreso los datos de Username y Password al metodo existe , para que me de un true or false dependiendo si se encuentra el usuario logueado
                     if (ExistUsu.Existe(Modelo.usuario.UserName, Modelo.usuario.Password, out string[] mensajeNuevo))
                     {
-                        respuesta.Error = new Log { Codigo = "999", Msg = "Ok" };
+                        respuesta.Error = new Log { Codigo = "000", Msg = "Usuario_Logueado" };
 
-                            // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
-                            DataSet Tablainfo = new DataSet();
-                            //Instanciamos la clase de cartera para poder ingresar los datos obtenidos en el metodo
-                            Cartera cart = new Cartera();
-                            //Instanciamos la clase item cartera para instanciar la lista de cartera que esta clase contiene 
-                            ItemCartera cartItem = new ItemCartera();
-                            //Creamos una nueva instancia de la lista de cartera la cual la contienen un nombre que se llama detalle.
+                        //Creo un objeto data set y lo instancio para almacenar aqui los resultados del procedimiento de almacenado
+                        DataSet Tablainfo = new DataSet();
+                        //Creo un objeto de cartera y la instancio para poder accerder a sus propiedades y asignarles su debido valor
+                        Cartera cart = new Cartera();
+                       //Creo un objeto de cartItem y la instancio para acceder a sus propiedades
+                      
+                        //Creo una lista de la clase ItemCartera para acceder a sus propiedades y asignarles un valor respectivo
+                        List<ItemCartera> datItemCart = new List<ItemCartera>();
 
-                            List<ItemCartera> datItemCart = new List<ItemCartera>();
-                             string fechaIni = DateTime.Parse(Modelo.FechaInicial).ToString("yyyyMMdd");
-                             string fechaFin = DateTime.Parse(Modelo.FechaFinal).ToString("yyyyMMdd");
+                        //Las variables FechaIni y FechaFin las implemento para de esta manera darles el debido formato y asi pasarlas al procedimiento de almacenado
+                        string fechaIni = DateTime.Parse(Modelo.FechaInicial).ToString("yyyyMMdd");
+                        string fechaFin = DateTime.Parse(Modelo.FechaFinal).ToString("yyyyMMdd");
                         try
+                        {
+                            //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
+                            // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
+                            con.setConnection("Syscom");
+
+                            //Se realiza una lista de parametros para poder pasar los datos al procedimiento de almacenado 
+                            List<SqlParameter> parametros = new List<SqlParameter>();
+
+                            //Indicamos el parametro que vamos a pasar con su respectivo valor 
+                            parametros.Add(new SqlParameter("@FechaInicial", fechaIni));
+                            parametros.Add(new SqlParameter("@FechaFinal", fechaFin));
+
+
+                            //Ejecuto el metodo "con.ejecutarQuery" donde le paso los parametros necesarios que son el data set , los parametros y el nombre del procedimiento
+                            //Si el metodo "con.ejecutarQuery" nos da true entonces pasamos a asginarlos los valores del data set a las listas
+                            if (con.ejecutarQuery("WSPedidoS40_consObtenerCarteraTotalDEF", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                             {
-                                //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
-                                // Tiene la funcionalidad de conectar con la base de datos y realizar los procedimientos
-                                con.setConnection("Syscom");
-                                //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
-                                List<SqlParameter> parametros = new List<SqlParameter>();
-                                //Indicamos el parametro que vamos a pasar
-                                parametros.Add(new SqlParameter("@FechaInicial", fechaIni));
-                                parametros.Add(new SqlParameter("@FechaFinal", fechaFin));
-                                con.addParametersProc(parametros);
+                                //Implementamos el metodo DataTableToList para de esta manera pasarle los parametros y convertir un DataSet en una lista que se llama "datItemCart"
 
-                                //Ejecuta procedimiento almacenado
-                                //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
-                                DataTable DT = new DataTable();
-                                
-                                //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
-                                if (con.ejecutarQuery("WSPedidoS40_consObtenerCarteraTotalDEF", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                                datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
+                                datItemCart.ForEach(m =>
                                 {
-                                    //Implementamos el metodo DataTableToList para de esta manera pasarle los parametros y convertir un DataSet en una lista que se llama "datItemCart"
+                                    //A medida que se itera ItemCartera, se crea una nueva lista de objetos de tipo Cartera y se asigna a la propiedad Detalle del objeto ItemCartera. La lista de objetos Cartera.
+                                    
+                                    m.Detalle = new List<Cartera>();
 
-                                    datItemCart = con.DataTableToList<ItemCartera>("Tercero,SaldoCartera".Split(','), Tablainfo);
-                                    datItemCart.ForEach(m =>
-                                    {
-                                        //A medida que se itera ItemCartera, se crea una nueva lista de objetos de tipo Cartera y se asigna a la propiedad Detalle del objeto ItemCartera. La lista de objetos Cartera.
-                                        // Esta se crea a partir de una tabla de datos que se filtra utilizando el valor de la propiedad Tercero
-                                        m.Detalle = new List<Cartera>();
+                                    //Usuamos la lista cartera y validamos por medio del where que solo traiga los datos que tengan el mismo id del tercero
+                                    m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
+                                });
 
-                                        m.Detalle = con.DataTableToList<Cartera>(Tablainfo.Tables[0].Copy().Rows.Cast<DataRow>().Where(r => r.Field<string>("Tercero").Equals(m.Tercero)).CopyToDataTable().AsDataView().ToTable(true, "TipoDocumento,Documento,Compañia,Vencimiento,FechaEmision,FechaVencimiento,ValorTotal,Abono,Saldo".Split(',')));
-                                    });
-
-                                    //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
-                                    respuesta.Datoscartera = datItemCart;
+                                //Pasamos las listas obtenidas a los bloques de contrato para de esta manera poder obtener los datos.
+                                respuesta.Datoscartera = datItemCart;
                                 // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                                 con.resetQuery();
-                                }
-                                
+                            }
+
 
                         }
-                            catch (Exception e)
-                            {
-                                respuesta.Error = new Log { Msg = e.Message };
-                            }
-                        
+                        catch (Exception e)
+                        {
+                            respuesta.Error = new Log { Msg = e.Message };
+                        }
+
                     }
                 }
 
@@ -746,56 +803,74 @@ namespace WcfPedidos40
         #region InformacionMaestra
         public ResInfoMaestra GetInfMaestra(InfoMaestra Parametros)
         {
-            //Instanciamo la conexion
+            //Creo un nuevo objeto de conexion y lo instancio para acceder a sus metodos 
             connect.Conexion con = new connect.Conexion();
 
-            //Instanciamos la clase de CarteraResp para poder ingresar los resultados en dicha clase
+            //Creo un nuevo objeto ResInfoMaestra y la instancio para de esta manera pasarle los resultados y poder mostrarlos al usuario
             ResInfoMaestra respuesta = new ResInfoMaestra();
 
             try
-            {   //Realizamos un try para realizar todas las validaciones , incluyendo el usuario , contraseña y nit del cliente
-                respuesta.Error = null;
+            {   
+                //Verifico los datos del usuario para despues validar todos los campos que este contiene
                 if (Parametros.Usuario == null)
                 {
                     respuesta.Error = new Log { Codigo = "user_002", Msg = "¡todas las variables del usuario no pueden ser nulas!" };
                 }
+                //Verifico que el nombre de usuario sea valido para verificar la identidad del usuario
+                if (Parametros.Usuario.IdUsuario == null || String.IsNullOrWhiteSpace(Parametros.Usuario.IdUsuario))
+                {
+                    respuesta.Error = new Log { Codigo = "user_002", Msg = "¡Ingrese un nombre de usuario valido!" };
+                }
+                //Verifico la contraseña del usuario para validar la identidad de este
+                if (Parametros.Usuario.Contrasena == null || String.IsNullOrWhiteSpace(Parametros.Usuario.Contrasena))
+                {
+                    respuesta.Error = new Log { Codigo = "user_002", Msg = "¡Ingrese una contraseña valida!" };
+                }
+           
                 else
                 {
+                    //Creo un nuevo objeto de Existe usuario y lo instancio para poder accerder a su metodo 
                     ExisteUsuario ExistUsu = new ExisteUsuario();
+
+                    //Ingreso al metodo Existe y le paso los parametros los cuales son el nombre del usuario y la contraseña de este
+                    //Dependiendo de la respuesta del metodo booleano pasamos las respuestas a las listas
                     if (ExistUsu.Existe(Parametros.Usuario.IdUsuario, Parametros.Usuario.Contrasena, out string[] mensajeNuevo))
                     {
-                        respuesta.Error = new Log { Codigo = "999", Msg = "Ok" };
+                        respuesta.Error = new Log { Codigo = "000", Msg = "Usuario Logueado" };
 
+                        //Verifico que el tipo de registro sea diferente a cero para asi pasarle un dato valido al parametro que se va al procedimiento de almacenado.
                         if (Parametros.TipoRegistro != 0)
                         {
-                            // Implementamos la instancia de un dataset para representar un conjunto completo de datos, incluyendo las tablas que contienen, ordenan y restringen los datos
+                            //Creo un nuevo objeto de data set y lo instancio para poder ingresar los valores que reciba del procedimiento de almacenado 
                             DataSet Tablainfo = new DataSet();
-                            //Instanciamos la clase de cartera para poder ingresar los datos obtenidos en el metodo
-
                             try
                             {
-                                //Se conecta a la cadena de conexion la cual recibe como nombre syscom.
+                                //Por medio del metodo set connection de la clase conexion utilizamos la cadena de conexion que se llama syscom.
                                 con.setConnection("Syscom");
+
                                 //Se realiza una lista de parametros para poder ingresar los datos a los procesos de almacenado
                                 List<SqlParameter> parametros = new List<SqlParameter>();
-                                //Indicamos el parametro que vamos a pasar
-                                parametros.Add(new SqlParameter("@TipoRegistro", Parametros.TipoRegistro));
-                                con.addParametersProc(parametros);
 
-                                //Ejecuta procedimiento almacenado
-                                //Representa una tabla de datos en memoria, en esta mostraremos los datos obtenidos en una tabla.
+                                //Indicamos el respectivo parametro que pasaremos al procedimiento de almacenado con su debido valor 
+                                parametros.Add(new SqlParameter("@TipoRegistro", Parametros.TipoRegistro));
+
+                                //Creamos un objeto dataTable y lo instanciamos para poder pasarle los resultados del procedimiento de almacenado
                                 DataTable dataTable = new DataTable();
+
                                 // Se usa para limpiar cualquier estado interno o consultas previas que se hayan configurado en ese objeto con.
                                 con.resetQuery();
-                                //Verificamos y ejecutamos al mismo tiempo el procedimiento de almacenado 
+
+                                //Ingreso al metodo ejecutarQuery y le paso sus respectivos parametros como el data set , la lista de parametros y el nombre del procedimiento de almacenado 
                                 if (con.ejecutarQuery("WSPedido_consInfoMaestra", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                                 {
-                                    
-                                    //Creo una lista de tipo diccionario
+
+                                    //Creo una lista de tipo diccionario y la instancia de una lista de diccionarios 
                                     List<Dictionary<string, object>> ListData = new List<Dictionary<string, object>>();
-                                    //Iniciamos recorriendo la primera tabla del DataSet y verificamos si esta tiene algunos resultados
+
+                                 
                                     dataTable = Tablainfo.Tables[0];
-                                    if (Tablainfo.Tables[0].Rows.Count > 0) {
+                                    if (Tablainfo.Tables[0].Rows.Count > 0)
+                                    {
                                         //Si tiene resultados empezamos a recorrer las columnas 
                                         foreach (DataRow row in dataTable.Rows)
                                         {
@@ -812,7 +887,7 @@ namespace WcfPedidos40
                                         //Pasamos la lista de diccionario a los bloques de contrato
                                         respuesta.Respuesta = ListData;
                                     }
-                                 
+
                                 }
 
                             }
@@ -822,8 +897,9 @@ namespace WcfPedidos40
                             }
 
                         }
-                        else {
-                         
+                        else
+                        {
+
                         }
 
                     }

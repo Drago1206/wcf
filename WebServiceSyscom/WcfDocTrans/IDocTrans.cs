@@ -94,7 +94,7 @@ namespace WcfDocTrans
         string _token;
 
         [DataMember]
-        [Required]
+  
         public Pedidos Encabezado
         {
             get { return _DtEncabezado; }

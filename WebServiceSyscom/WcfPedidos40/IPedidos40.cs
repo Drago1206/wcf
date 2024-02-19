@@ -10,44 +10,83 @@ using WcfPedidos40.Models;
 
 namespace WcfPedidos40
 {
-    // NOTA: puede usar el comando "Rename" del menú "Refactorizar" para cambiar el nombre de interfaz "IService1" en el código y en el archivo de configuración a la vez.
+   
     [ServiceContract]
     public interface IPedidos40
     {
+
+        /// <summary>
+        /// Ruta del metodo para obtener la cartera del cliente
+        /// </summary>
+        /// <param name="obtenerCartera">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCartera", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "CarteraResponse")]
         CarteraResp RespCartera(CarteraReq ReqCartera);
 
+        /// <summary>
+        /// Ruta del metodo para obtener consultar el saldo total en deuda de todos los terceros al tiempo.
+        /// </summary>
+        /// <param name="obtenerCarteraTotal">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCarteraTotal", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "CarteraTotal")]
         ResObtenerCarteraTotal resObtCartTotal(ObtCarTotal Info);
 
+        /// <summary>
+        /// Ruta del metodo para obtener consultar el por un rango de fechas el saldo total en deuda de todos los clientes al mismo tiempo, 
+        /// </summary>
+        /// <param name="obtenerCarteraTotalDef">The information.</param>
+        /// <returns></returns>
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerCarteraTotalDet", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "CarteraTotalDet")]
         ResObtenerCartera getCarteraTotalDet(authCartera Modelo);
 
+        /// <summary>
+        ///Ruta del metodo para obtener la información necesaria para diligenciar la información de un cliente nuevo. 
+        /// </summary>
+        /// <param name="obtenerInformacionMaestra">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerInfMaestra", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Maestro")]
         ResInfoMaestra GetInfMaestra(InfoMaestra Parametros);
 
+        /// <summary>
+        ///Ruta del metodo para Obtener un producto
+        /// </summary>
+        /// <param name="obtenerProducto">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProducto", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
         RespProducto GetProducto(ProductoReq reqProducto);
 
+        /// <summary>
+        ///Ruta del metodo para consultar precio de lista fijo, también precio de venta calculado por margen de utilidad, de una sola compañía
+        /// </summary>
+        /// <param name="obtenerProducto">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductoTP", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Producto")]
         RespProducto GetProductoTP(ProductoTPReq reqProductoTP);
-
+        /// <summary>
+        ///Ruta del metodo para Obtener un productos
+        /// </summary>
+        /// <param name="obtenerProducto">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/ObtenerProductos", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Productos")]
         RespProductos GetProductos(Usuario usuario);
-
+        /// <summary>
+        ///Ruta del metodo para generar un pedido
+        /// </summary>
+        /// <param name="GenerarPedido">The information.</param>
+        /// <returns></returns>
         [OperationContract]
         [WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json, UriTemplate = "/GenerarPedido", BodyStyle = WebMessageBodyStyle.Bare)]
         [return: MessageParameter(Name = "Pedido")]
@@ -424,6 +463,9 @@ namespace WcfPedidos40
             set { _usuario = value; }
         }
     }
+    /// <summary>
+    /// Propiedad de la cartera del cliente
+    /// </summary>
     [DataContract]
     public class CarteraResp
     {
@@ -587,7 +629,7 @@ namespace WcfPedidos40
     [DataContract]
     public class usuario {
         string _id;
-        string __fechaAct;
+       
 
         [DataMember]
         public string IdUsuario
@@ -598,13 +640,6 @@ namespace WcfPedidos40
 
         [DataMember]
         public string Contrasena { get; set; }
-
-        [DataMember]
-        public string Fecha_Act
-        {
-            get { return __fechaAct; }
-            set { __fechaAct = value; }
-        }
 
     }
 

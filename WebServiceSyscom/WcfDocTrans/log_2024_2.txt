@@ -1,0 +1,3 @@
+17/02/2024 11:20:16 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: No hay ninguna asignación de tipo de objeto System.String[] a un tipo nativo de un proveedor administrado conocido.
+17/02/2024 11:23:33 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: No hay ninguna asignación de tipo de objeto System.String[] a un tipo nativo de un proveedor administrado conocido.
+17/02/2024 11:42:56 a. m.: Ha ocurrido un error al intentar ejecutar la consulta: No hay ninguna asignación de tipo de objeto System.String[] a un tipo nativo de un proveedor administrado conocido.
