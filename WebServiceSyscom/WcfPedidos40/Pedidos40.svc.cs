@@ -861,7 +861,7 @@ namespace WcfPedidos40
                                 con.resetQuery();
 
                                 //Ingreso al metodo ejecutarQuery y le paso sus respectivos parametros como el data set , la lista de parametros y el nombre del procedimiento de almacenado 
-                                if (con.ejecutarQuery("WSPedido_consInfoMaestra", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
+                                if (con.ejecutarQuery("WSPedido40_consInfoMaestra", parametros, out Tablainfo, out string[] nuevoMennsaje, CommandType.StoredProcedure))
                                 {
 
                                     //Creo una lista de tipo diccionario y la instancia de una lista de diccionarios 
